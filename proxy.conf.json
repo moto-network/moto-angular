@@ -1,0 +1,8 @@
+{
+    
+    "/ping":{
+      "target":"https://api.binance.com/api/v3/ping",
+      "secure": true,
+      "changeOrigin": true
+    }
+  }

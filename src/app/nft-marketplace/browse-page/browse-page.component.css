@@ -1,0 +1,36 @@
+
+
+#browse-page{
+  width:80%;
+  height:90%;
+  margin:auto;
+  margin-top: 40px;
+  display: grid;
+  gap:1em;
+  grid-template-columns: 15% auto;
+  grid-template-areas: "categories listed-nfts";
+
+}
+
+#categories-tab{
+  grid-area: categories;
+}
+
+#categories-list > button{
+  display:block;
+}
+
+#search-filter-bar{
+  display:none;
+}
+
+#categories-list > button {
+  display:block;
+  margin:5px;
+  padding:12px 50% 12px 22px;
+  text-align: left;
+  border:0px;
+  font-size: 16px;
+  border-radius: 8px;
+  width:100%
+}

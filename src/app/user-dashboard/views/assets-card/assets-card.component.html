@@ -1,0 +1,23 @@
+<div class="title-section">
+    <h2 class="section_title">Assets</h2>
+</div>
+<section id="assets-container" *ngIf="portfolioLoaded()">
+    <div class="square-card" *ngFor="let asset of assetArray">
+
+        <div class="simple-row top-row">
+            <div class="estimate-value-text"><span>Estimated value:</span></div>
+            <div class='estimate-value'><span>~</span>234234234 USD</div>
+            
+        </div>
+        <div class="simple-row middle-row">
+            <div class="numerical-amount">{{asset.info.amount | number}}<span class="asset-ticker">{{asset.name}}</span></div>
+            <div class="network-info"><a>NETWORK PROTOCOL: </a><span> {{asset.info.network}}</span>
+            </div><!--NFTs do not have receive -->
+        </div>
+        <div class="simple-row bottom-row">
+            <button class="asset-action-button">S</button>
+            <button class="asset-action-button">R</button>
+            <button class="asset-action-button">C</button>
+        </div>
+    </div>
+</section>

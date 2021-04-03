@@ -1,0 +1,36 @@
+<div id="transactions-component">
+  <div class="title-section">
+    <h2>Transactions</h2>
+  </div>
+ <div id="table-container" *ngIf="transactionsArray.length > 0">
+
+ <table class="transactions-table">
+   <thead>
+     <tr>
+       <th><p class="table-header">Symbol</p></th>
+       <th>Asset</th>
+       <th>Network</th>
+       <th>Amount</th>
+       <th>NFT</th>
+       <th>Status</th>
+       <th>Date Completed</th>
+     </tr>
+   </thead>
+   <tbody >
+     <tr class="transaction-row"  *ngFor="let transaction of transactionsArray">
+       <td><p class="row-element">{{transaction.data().asset.symbol}}</p></td>
+       <td><p class="row-element">US Dollar Coinbase</p></td>
+       <td><p class="row-element">{{transaction.data().asset.network | uppercase}}</p></td>
+       <td><p class="row-element">{{transaction.data().asset.amount| number}}</p></td>
+       <td><p class="row-element">{{transaction.data().asset.nft}}</p></td>
+       <td><p class="row-element" [ngClass]="{'green':transaction.data().completed}"><span >{{getCurrentStatus(transaction.data().completed)}}</span></p></td>
+       <td><p class="row-element"><span >{{getDateCompleted(transaction.data())}}</span></p></td>
+    </tr>
+     
+   </tbody>
+ </table>
+  <div class="transaction">
+
+  </div>
+
+</div>

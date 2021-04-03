@@ -12,13 +12,27 @@
   "private": true,
   "dependencies": {
     "@angular/animations": "~11.2.3",
+    "@angular/cdk": "^11.2.2",
     "@angular/common": "~11.2.3",
     "@angular/compiler": "~11.2.3",
     "@angular/core": "~11.2.3",
+    "@angular/fire": "^6.1.4",
     "@angular/forms": "~11.2.3",
+    "@angular/material": "^11.2.2",
     "@angular/platform-browser": "~11.2.3",
     "@angular/platform-browser-dynamic": "~11.2.3",
     "@angular/router": "~11.2.3",
+    "@fortawesome/angular-fontawesome": "^0.8.2",
+    "@fortawesome/fontawesome-svg-core": "^1.2.34",
+    "@fortawesome/free-solid-svg-icons": "^5.15.2",
+    "chart.js": "^2.9.4",
+    "chartjs-plugin-datalabels": "^0.7.0",
+    "firebase": "^8.2.9",
+    "material": "^0.4.3",
+    "ng2-charts": "^2.4.2",
+    "node-binance-api": "^0.12.5",
+    "primeicons": "^4.1.0",
+    "primeng": "^11.3.0-rc.1",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",
     "zone.js": "~0.11.3"
@@ -41,5 +55,10 @@
     "ts-node": "~8.3.0",
     "tslint": "~6.1.0",
     "typescript": "~4.1.2"
-  }
+  },
+  "styles": [
+    "node_modules/primeng/resources/themes/saga-blue/theme.css",
+    "node_modules/primeng/resources/primeng.min.css",
+    "node_modules/primeicons/primeicons.css"
+  ]
 }

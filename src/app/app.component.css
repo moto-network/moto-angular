@@ -1,0 +1,98 @@
+#header{  
+  display:flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: space-between;
+  width:80%;
+  margin:auto;
+}
+
+#top-menu-container{
+  display:flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+#top-menu-container > button { 
+  display:block;
+  margin:5px;
+  padding:12px 25px;
+  border:0px;
+  border-radius: 4px;
+  font-size: 16px;
+  background-color: #d3d7dd;
+}
+
+.active-link {
+  background: #46c3d1;
+  border:none;
+  color:#011734;
+  font-weight:bold;
+}
+
+
+.login-button {
+  display:block;
+  margin:5px;
+  padding:12px 26px;
+  border:0px;
+  border-radius: 4px;
+  color:white;
+  font-weight: bold;
+  font-size:16px;
+  background-color: #011734;
+}
+
+
+.signup-button {
+  display:block;
+  margin:5px;
+  padding:12px 26px;
+  border:2;
+  border-radius: 4px;
+  color:#011734;
+  font-weight: bold;
+  font-size:16px;
+  border-color: #011734;
+  background-color: white;
+}
+
+#login-button-group{
+  display:flex;
+  flex-direction: row;
+}
+.icon {
+  display:flex;
+  flex-direction: row;
+  margin:5px;
+  padding:12px 12px;
+  border:0px;
+  border-radius: 4px;
+  background-color: #011734;
+  color:white;
+}
+
+
+#right-menu-container{
+  display:flex;
+  flex-direction:row;
+  justify-content:space-between;
+  gap:5px;
+}
+
+.nav-button {
+  padding:10px;
+  background-color: #011734;
+  color:white;
+  border:0px;
+  border-radius:4px;
+
+}
+
+
+
+#header-logo{
+  width:auto;
+  height:auto;
+  max-height: 80px;
+}

@@ -1,0 +1,19 @@
+<div id="signup">
+  <div><img src="../../assets/moto-logo.png"></div>
+  <div>
+    <h1>Moto Network is currently under closed beta.</h1>
+    <h2>Enter your email below to receive updates.</h2>
+
+    <form class="signUp-form"[formGroup]="signUpForm" >
+      <input type="text" placeholder="email" formControlName="email" required (focus)="reset()"/>
+    
+      <button id="send-button" (click)="addEmail()">Notify Me</button>
+
+    </form>
+
+  </div>
+
+  <div id="error-box" *ngIf="error">
+    <p>{{error_message}}</p>
+  </div>
+</div>

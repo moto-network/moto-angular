@@ -1,0 +1,17 @@
+
+
+
+
+
+
+<div class="login-page">
+    <div class="form">
+      <img src="../../assets/ICON-PNG.png">
+      <form class="login-form" [formGroup]="loginForm">
+        <input type="text" placeholder="email" formControlName="email" required/>
+        <input type="password" placeholder="password" formControlName="password" required/>
+        <button (click)="signIn()">login</button>
+
+      </form>
+    </div>
+  </div>

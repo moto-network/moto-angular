@@ -1,0 +1,95 @@
+#nft-results{
+  grid-area: listed-nfts;
+  display:grid;
+  gap:1em;
+  grid-template-columns: repeat(auto-fit,minmax(290px,1fr)) ;
+
+  padding:10px;
+}
+
+.nft-card {
+	display: flex;
+  flex-direction: column;
+	justify-content: center;
+	width: 320px;
+	height: auto;
+	padding:10px 14px;
+	border-radius: 10px;
+	transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+  background-color: white;
+
+}
+
+.nft-img {
+  display:block;
+  max-width:300px;
+  max-height:300px;
+  width: auto;
+  height: auto;
+}
+
+
+.date {
+  position: absolute;
+  bottom: 0;
+  right: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 10px;
+  background-color: rgba(#f1c40f, 0.8);
+  color:white;
+  
+}
+
+.price {
+  font-weight:bold;
+  font-size: 16px;
+}
+
+.name{
+font-size:18px;
+font-weight:bold;
+margin-bottom:8px;
+}
+
+.text {
+  overflow: hidden;
+  white-space:nowrap;
+  text-overflow:ellipsis;
+  width:280px;
+
+  margin-top:10px;
+    
+}
+
+.long-text {
+  overflow: hidden;
+    white-space:nowrap;
+    text-overflow:ellipsis;
+    width:300px;
+    height:30px;
+}
+
+.loader {
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid #3498db;
+  width: 120px;
+  height: 120px;
+  -webkit-animation: spin 2s linear infinite; /* Safari */
+  animation: spin 2s linear infinite;
+  z-index: -1;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

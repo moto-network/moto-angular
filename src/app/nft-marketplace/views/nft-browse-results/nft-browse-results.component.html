@@ -1,0 +1,21 @@
+<div *ngIf="nftsArray.length==0" class="loader"></div>
+<div id="nft-results">
+
+  <div class="nft-card" *ngFor="let nft of nftsArray">
+    <span class="text name">{{nft.data().name}}</span>
+    <img class="nft-img" src={{nft.data().img}} />
+    <div>
+
+      <p class="text">contract address: {{nft.data().address}}</p>
+    </div>
+    <div>
+
+      <p class="text">NFT ID: {{nft.data().id}}</p>
+    </div>
+    <div>
+      <p class="long-text"> {{nft.data().desc}}</p>
+    </div>
+
+    <p class="price">{{nft.data().price}} moto</p>
+  </div>
+</div>
