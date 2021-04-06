@@ -3,25 +3,18 @@
   align-items: center;
   flex-direction: row;
   justify-content: space-between;
-  width:80%;
+  width:100vw;
   margin:auto;
 }
 
-#top-menu-container{
+
+#top-menu-center-container{
   display:flex;
   flex-direction: row;
   justify-content: space-between;
+  gap:2%;
 }
 
-#top-menu-container > button { 
-  display:block;
-  margin:5px;
-  padding:12px 25px;
-  border:0px;
-  border-radius: 4px;
-  font-size: 16px;
-  background-color: #d3d7dd;
-}
 
 .active-link {
   background: #46c3d1;
@@ -61,6 +54,7 @@
   display:flex;
   flex-direction: row;
 }
+
 .icon {
   display:flex;
   flex-direction: row;
@@ -68,8 +62,14 @@
   padding:12px 12px;
   border:0px;
   border-radius: 4px;
-  background-color: #011734;
-  color:white;
+  background-color: transparent;
+  color:#011734;
+  font-size: 40px;
+
+}
+
+.icon-image {
+  max-height:40px;
 }
 
 
@@ -95,4 +95,14 @@
   width:auto;
   height:auto;
   max-height: 80px;
+}
+
+#menu-img {
+  max-width: 32px;
+  max-height:32px;
+  
+}
+
+#holder{
+
 }

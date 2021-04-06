@@ -1,11 +1,12 @@
 
 
 #browse-page{
-  width:80%;
+  width:90%;
   height:90%;
   margin:auto;
   margin-top: 40px;
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap:1em;
   grid-template-columns: 15% auto;
   grid-template-areas: "categories listed-nfts";
@@ -16,21 +17,30 @@
   grid-area: categories;
 }
 
-#categories-list > button{
-  display:block;
+#categories-list{
+  display:flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  flex-flow: flex-start;
+
+
 }
+
 
 #search-filter-bar{
   display:none;
 }
 
 #categories-list > button {
-  display:block;
+
   margin:5px;
-  padding:12px 50% 12px 22px;
+  padding:12px 22px;
   text-align: left;
   border:0px;
   font-size: 16px;
   border-radius: 8px;
-  width:100%
+  width:auto;
+}
+
+#listed-nfts{
 }

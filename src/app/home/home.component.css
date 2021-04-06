@@ -1,11 +1,12 @@
 #home {
-  width:100%;
-  max-width:1920px;
+  width:100vw;
+
   margin:auto;
   margin-top: 40px;
   display: flex;
   flex-wrap: wrap;
   flex-direction: column;
+
 
 }
 
