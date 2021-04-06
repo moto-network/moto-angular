@@ -1,30 +1,29 @@
 <div id="header">
   <div id="logo-container">
-    <img id="header-logo" src="../../../assets/moto-logo2.png" width="80px" height="60px">
+    <img  id="header-logo" src="../../../assets/moto-logo2.png" width="80px" height="60px">
   </div>
 
     <div id="top-menu-center-container">
 
-      <a routerLink='/' class="button icon">
+      <a routerLink='/' class="icon">
         <fa-icon [icon]="homeIcon"></fa-icon>
       </a>
-      
-      <a class="button icon" routerLink='/nft_marketplace'>
-        <img class="icon-image" src="../assets/peer-to-peer.svg" />
+      <a class="icon" routerLink='/nft_marketplace'>
+        <img  src="../assets/peer-to-peer.svg" />
       </a>
-      <a class="button icon" routerLink='/user_dashboard'>
-       <img class="icon-image" src="../assets/wallet-filled-money-tool.png"/>
+      <a class="icon" routerLink='/user_dashboard'>
+       <img src="../assets/wallet-filled-money-tool.png"/>
       </a>
   
     </div>
     <div id="right-menu-container">
-      <div *ngIf="activeUser" id="login-button-group">
-        <button class="button nav-icon login-button" routerLink='/login'>
-          Login
-        </button>
-        <button class="button nav-icon signup-button" routerLink='/signup'>
-          Sign Up
-        </button>
+      <div *ngIf="!activeUser" id="login-button-group">
+        <a class="icon user-icons" routerLink='/login'>
+          <fa-icon [icon]="signIn"></fa-icon>
+        </a>
+        <a class="icon user-icons" routerLink='/signup'>
+          <fa-icon [icon]="signUp"></fa-icon>
+        </a>
       </div>
 
       <a class="button icon">

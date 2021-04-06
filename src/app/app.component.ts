@@ -1,6 +1,6 @@
 import { AnimationQueryMetadata } from '@angular/animations';
 import { Component, HostListener, Input } from '@angular/core';
-import { faBell, faUserCircle,faHome, faCoins } from '@fortawesome/free-solid-svg-icons';
+import { faBell, faUserCircle,faHome, faSignInAlt , faUserPlus} from '@fortawesome/free-solid-svg-icons';
 import { AuthenticationService } from './authentication.service';
 
 
@@ -13,8 +13,9 @@ export class AppComponent {
   title = 'motonetwork';
   bellIcon = faBell;
   homeIcon = faHome;
-  coin = faCoins;
+  signIn = faSignInAlt;
   userIcon = faUserCircle;
+  signUp = faUserPlus;
   displayMenu:boolean = false;
   @Input() userObject: any;
   activeUser: boolean = false;
