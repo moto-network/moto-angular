@@ -7,7 +7,15 @@
   margin:auto;
 }
 
+
+#header > a {
+  display:block;
+  margin-left:10px;
+}
+
+
 #header-logo{
+  margin-left:2vw;
   width:50%;
   height:100%;
 }
@@ -17,7 +25,9 @@
   flex-direction: row;
   justify-content: space-between;
   gap:2vw;
+  width:30vw;
 }
+
 
 
 .active-link {
@@ -45,19 +55,18 @@
 #login-button-group{
   display:flex;
   flex-direction: row;
+  gap:5vw;
 }
 
 .icon {
-  display:flex;
-  flex-direction: row;
   margin-top:5px;
-
   background-color: transparent;
   color:#011734;
   max-width: 10vw;
   max-height: 10vw;
   width:20px;
   height:20px;
+  display:block;
 }
 
 
@@ -67,7 +76,9 @@
   display:flex;
   flex-direction:row;
   justify-content:space-between;
-  gap:5px;
+  gap:5vw;
+  margin-right:2vw;
+  width:30vw;
 }
 
 

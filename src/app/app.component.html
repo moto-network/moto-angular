@@ -8,23 +8,23 @@
       <a routerLink='/' class="icon">
         <fa-icon [icon]="homeIcon"></fa-icon>
       </a>
-      <a class="icon" routerLink='/nft_marketplace'>
-        <img  src="../assets/peer-to-peer.svg" />
+      <a  routerLink='/nft_marketplace'>
+        <img  class="icon" src="../assets/peer-to-peer.svg" />
       </a>
-      <a class="icon" routerLink='/user_dashboard'>
-       <img src="../assets/wallet-filled-money-tool.png"/>
+      <a  routerLink='/user_dashboard'>
+       <img class="icon" src="../assets/wallet-filled-money-tool.png"/>
       </a>
   
     </div>
     <div id="right-menu-container">
-      <div *ngIf="!activeUser" id="login-button-group">
-        <a class="icon user-icons" routerLink='/login'>
+
+        <a class="icon user-icons" *ngIf="!activeUser" routerLink='/login'>
           <fa-icon [icon]="signIn"></fa-icon>
         </a>
-        <a class="icon user-icons" routerLink='/signup'>
+        <a class="icon user-icons" *ngIf="!activeUser" routerLink='/signup'>
           <fa-icon [icon]="signUp"></fa-icon>
         </a>
-      </div>
+
 
       <a class="button icon">
         <fa-icon [icon]="userIcon"></fa-icon>
