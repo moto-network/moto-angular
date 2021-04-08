@@ -17,6 +17,7 @@ import {RemoteDataManagerModule} from "./DataManagement/remote-data-manager/remo
 import { SignUpComponent } from './sign-up/sign-up.component';
 import { ThankYouComponent } from './thank-you/thank-you.component';
 import { faProjectDiagram } from '@fortawesome/free-solid-svg-icons';
+import { AccountComponent } from './account/account.component';
 
 
 @NgModule({
@@ -26,6 +27,7 @@ import { faProjectDiagram } from '@fortawesome/free-solid-svg-icons';
     HomeComponent,
     SignUpComponent,
     ThankYouComponent,
+    AccountComponent,
   ],
   imports: [
     ButtonModule,

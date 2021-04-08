@@ -35,6 +35,10 @@
   font-size:20px;
 }
 
+.big-text{
+  font-size:40px;
+}
+
 .home-content-row{
   width: 100%;
   display:flex;

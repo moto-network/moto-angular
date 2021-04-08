@@ -1,6 +1,7 @@
 import { AnimationQueryMetadata } from '@angular/animations';
 import { Component, HostListener, Input } from '@angular/core';
 import { faBell, faUserCircle,faHome, faSignInAlt , faUserPlus} from '@fortawesome/free-solid-svg-icons';
+import { Observable } from 'rxjs';
 import { AuthenticationService } from './authentication.service';
 
 
@@ -18,47 +19,32 @@ export class AppComponent {
   signUp = faUserPlus;
   displayMenu:boolean = false;
   @Input() userObject: any;
-  activeUser: boolean = false;
-  uid: string = "";
-  innerWidth:any;
-  displayMobileMenu: boolean = false;
+  uid: string | undefined;
+  activeUserBool: boolean = false;
 
-  constructor() {
-    if(localStorage.getItem("user")){
-      const userObject = JSON.parse(localStorage.getItem('user')!);
-      this.uid = userObject?.uid;
-    }
-    this.setActiveUserBool();
-    console.log("active user is ", this.uid);
-  }
+
+
+  constructor(private _auth:AuthenticationService) {
+    _auth.afAuth.authState.subscribe((user)=>{
+      this.changeActiveUserState();
+    });
+  } 
 
   ngOnInit():void{
-    this.innerWidth = window.innerWidth;
-    console.log(this.innerWidth);
+
   }
 
   ngOnChanges():void {
-    this.setActiveUserBool();
-  }
-
-  setActiveUserBool() {
-    if (this.uid.length > 0) {
-      this.activeUser = true;
-    }
-  }
-
-  public useMobileMenu():boolean{
-    if(this.innerWidth < 560){
-      return true;
+    if(this.uid){
+      console.log("user  here");
     }
     else{
-      return false;
-    }   
-  } 
+      console.log("nothing");
+    }
+  }
 
-  public changeMenuState():void{
-    console.log("menu state is ", this.displayMobileMenu);
-    this.displayMobileMenu = !this.displayMobileMenu;
+  changeActiveUserState():void{
+    this.activeUserBool = !this.activeUserBool;
   }
 
 }

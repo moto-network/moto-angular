@@ -16,8 +16,11 @@
 	padding:10px 14px;
 	border-radius: 10px;
 	transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
-  background-color: white;
-
+  
+  border-radius: 0px 20px;
+  background: #ffffff;
+  box-shadow:  7px 7px 15px #e8e8e8,
+               -7px -7px 15px #ffffff;
 }
 
 .nft-img {

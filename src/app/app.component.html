@@ -1,36 +1,26 @@
 <div id="header">
   <div id="logo-container">
-    <img  id="header-logo" src="../../../assets/moto-logo2.png" width="80px" height="60px">
+    <img  routerLink='/' id="header-logo" src="../../../assets/moto-logo2.png" width="80px" height="60px">
   </div>
 
-    <div id="top-menu-center-container">
+    
 
-      <a routerLink='/' class="icon">
-        <fa-icon [icon]="homeIcon"></fa-icon>
-      </a>
+
       <a  routerLink='/nft_marketplace'>
         <img  class="icon" src="../assets/peer-to-peer.svg" />
       </a>
-      <a  routerLink='/user_dashboard'>
+      <a  *ngIf="activeUserBool" routerLink='/user_dashboard'>
        <img class="icon" src="../assets/wallet-filled-money-tool.png"/>
       </a>
   
-    </div>
-    <div id="right-menu-container">
 
-        <a class="icon user-icons" *ngIf="!activeUser" routerLink='/login'>
-          <fa-icon [icon]="signIn"></fa-icon>
-        </a>
-        <a class="icon user-icons" *ngIf="!activeUser" routerLink='/signup'>
-          <fa-icon [icon]="signUp"></fa-icon>
-        </a>
+    
 
-
-      <a class="button icon">
-        <fa-icon [icon]="userIcon"></fa-icon>
+      <a id="user-icon" class="button icon">
+        <fa-icon routerLink='/account' [icon]="userIcon"></fa-icon>
       </a>
       
-    </div>  
+
     
 
 

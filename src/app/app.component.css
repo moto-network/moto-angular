@@ -8,26 +8,25 @@
 }
 
 
-#header > a {
-  display:block;
-  margin-left:10px;
-}
-
-
 #header-logo{
   margin-left:2vw;
-  width:50%;
+  width:auto;
   height:100%;
 }
 
 #top-menu-center-container{
   display:flex;
+
   flex-direction: row;
   justify-content: space-between;
-  gap:2vw;
-  width:30vw;
+
+  width:auto;
 }
 
+#top-menu-center-container > a{
+display:block;
+width:25vw;
+}
 
 
 .active-link {
@@ -50,7 +49,9 @@
   background-color: #011734;
 }
 
-
+#user-icon{
+  margin-right:2vw;
+}
 
 #login-button-group{
   display:flex;
@@ -78,7 +79,7 @@
   justify-content:space-between;
   gap:5vw;
   margin-right:2vw;
-  width:30vw;
+  width:auto;
 }
 
 

@@ -47,8 +47,8 @@ export class AuthenticationService {
         .then((result) => {
           if(result){
             this.uid = result.user?.uid!;
+            this.userState = result.user;
             this.router.navigate(['user_dashboard']);
-            console.log('user uid from signin function ',this.uid);
           }
           else{
             console.log('no users from signin');
