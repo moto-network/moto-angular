@@ -20,7 +20,7 @@ export class AppComponent {
   displayMenu:boolean = false;
   @Input() userObject: any;
   uid: string | undefined;
-  activeUserBool: boolean = false;
+  nullUserBool: boolean = true;
 
 
 
@@ -44,7 +44,7 @@ export class AppComponent {
   }
 
   changeActiveUserState():void{
-    this.activeUserBool = !this.activeUserBool;
+    this.nullUserBool = !this.nullUserBool;
   }
 
 }
