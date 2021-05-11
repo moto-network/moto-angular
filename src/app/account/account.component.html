@@ -5,5 +5,25 @@
       <p>demo data</p>
     </div>
   </div>
+  <div *ngIf="metaMaskStatus" id="meta-mask-id" div>
+    MetaMask Active
+  </div>
+  <button (click)="requestAccount()">Request Account</button>
   
 </div>
+
+<div id="meta-mask-notification" *ngIf="displayError">
+  <div id="logo-container">
+    <img src="../../assets/metamask-fox.svg"/>
+  </div>
+  <div id="notification-content">
+    <h1>Notice</h1>
+    <p>
+      Please install MetaMask
+      <br>
+      <a id="metamask-link" (click)="openMetaMask()">metamask.io</a>
+    </p>
+    <button class="confirm" (click)="displayError=!displayError">okay.</button>
+  </div>
+</div>
+

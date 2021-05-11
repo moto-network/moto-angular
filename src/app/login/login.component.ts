@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup , FormControl} from '@angular/forms';
+import { Router } from '@angular/router';
 import { AuthenticationService } from '../authentication.service';
+import { WalletService } from '../BlockchainServices/wallet.service';
 
 //import { FormControl } from "@angular/core";
 
@@ -15,7 +17,7 @@ export class LoginComponent implements OnInit {
     email: new FormControl(''),
     password: new FormControl('')
 });
-  constructor(private _authentication: AuthenticationService) { 
+  constructor(private _authentication: AuthenticationService, private _walletService:WalletService, private _router:Router) { 
     
   }
 
@@ -23,8 +25,15 @@ export class LoginComponent implements OnInit {
      const email: string = this.loginForm.get("email")?.value;
      const password: string = this.loginForm.get("password")?.value;
      this._authentication.SignIn(email, password);
-    }
     
+    }
+  
+  openMetaMask():void{
+    if(this._walletService.metaMaskCheck()){
+      this._walletService.requestAccount();
+      this._router.navigate(['nft_marketplace'])
+    }
+  }
 
   ngOnInit(): void {
   }

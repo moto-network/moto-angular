@@ -8,13 +8,30 @@
 .form {
   position: relative;
   z-index: 1;
+  border-radius:8px;
   background: #FFFFFF;
   max-width: 360px;
   margin: 0 auto 100px;
   padding: 45px;
   text-align: center;
- 
+  box-shadow:
+  0 2.8px 2.2px rgba(0, 0, 0, 0.02),
+  0 6.7px 5.3px rgba(0, 0, 0, 0.028),
+  0 12.5px 10px rgba(0, 0, 0, 0.035),
+  0 22.3px 17.9px rgba(0, 0, 0, 0.042),
+  0 41.8px 33.4px rgba(0, 0, 0, 0.05),
+  0 100px 80px rgba(0, 0, 0, 0.07)
+;
+
 }
+
+
+.form > img{
+  width:30%;
+  height:30%;
+}
+
+
 .form input {
   font-family: "Roboto", sans-serif;
   outline: 0;
@@ -26,6 +43,8 @@
   box-sizing: border-box;
   font-size: 14px;
 }
+
+
 .form button {
   font-family: "Roboto", sans-serif;
   text-transform: uppercase;
@@ -89,13 +108,27 @@
   color: #EF3B3A;
 }
 
-img {
-  max-width:100%;
-  max-height: 100%;
+#moto-logo{
+  height:40%;
+  width:40%;
 }
 
 #sign-up-button{
   background-color: aliceblue;
   border:2px #4c93af;
   color:#4c93af;
+}
+
+#metamask-logo{
+  height:40px;
+  width:40px;
+}
+
+#meta-mask-go{
+  display:flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  background-color:#F0EEBD;
+  margin-bottom:5px;
 }

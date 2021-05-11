@@ -1,0 +1,21 @@
+<div id="on-ramp">
+  <div id="transaction-input">
+    <h2>Buy Crypto</h2>
+
+    <form id="onRampForm" [formGroup]="onRampForm">  
+      <p>You Pay</p>
+      <input type="text" placeholder="Enter Amount" formControlName="fiatAmount" required/>
+      <p>You Receive</p>
+      <input type="text" placeholder="Enter Amount" formControlName="cryptoAmount" required/>
+      <p>Your Bitcoin (BTC) Address</p>
+      <input type="text" placeholder="Enter BTC Address" formControlName="btcAddress" required/>
+     <!--add drop down menus-->
+      
+
+    </form>
+    <div id="executeOrderContainer">
+      <button (click)="buyCrypto()" style="margin-bottom:2%">Create Order</button>
+    </div>
+    
+  </div>
+</div>

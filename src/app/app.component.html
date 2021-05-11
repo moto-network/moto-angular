@@ -5,28 +5,40 @@
 
     
 
-
+  <div id="middle-container">
+      <a  routerLink='/nft_marketplace'>
+        <img  class="icon" src="../assets/peer-to-peer.svg" />
+      </a>
       <a  routerLink='/nft_marketplace'>
         <img  class="icon" src="../assets/peer-to-peer.svg" />
       </a>
       <a  *ngIf="nullUserBool" routerLink='/user_dashboard'>
        <img class="icon" src="../assets/wallet-filled-money-tool.png"/>
       </a>
-  
+  </div>
 
     
-
+  <div id="right-container">
+      <div id="address-container">
+       <a> Account: <span id="address">{{address}}</span></a>
+      </div>
+      <!--
       <a id="user-icon" class="button icon">
         <fa-icon routerLink='/account' [icon]="userIcon"></fa-icon>
       </a>
-      
+     -->
+  </div>   
 
     
 
 
 </div>
-
+<div id="notification-bar" >
+  {{notificationMessage}}
+</div>
 <div id="holder">
   <router-outlet>
   </router-outlet>
 </div>
+
+<!--*ngIf="notificationBarVisible"-->

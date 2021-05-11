@@ -6,13 +6,20 @@
 
 <div class="login-page">
     <div class="form">
-      <img src="../../assets/ICON-PNG.png">
-      <form class="login-form" [formGroup]="loginForm">
+      <img id="moto-logo" src="../../assets/ICON-PNG.png">
+      <div id="meta-mask-go" (click)="openMetaMask()">
+        <img id="metamask-logo" src="../../assets/metamask-fox.svg">
+        <h2>MetaMask</h2>
+      </div>
+      <!--
+      <p>or</p>
+      <form class="login-form" [formGroup]="loginForm">  
         <input type="text" placeholder="email" formControlName="email" required/>
         <input type="password" placeholder="password" formControlName="password" required/>
         <button (click)="signIn()" style="margin-bottom:2%">login</button>
         <button routerLink="/signup" id="sign-up-button">Sign Up</button>
 
       </form>
+      -->
     </div>
   </div>

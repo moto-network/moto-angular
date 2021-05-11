@@ -1,12 +1,14 @@
 /* You can add global styles to this file, and also import other style files */
-
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@200;700&family=Lato:wght@100;300;900&display=swap');
 html, body { 
   height: 100%; 
   width:100vw;
-  background: rgb(236,246,247);
-  background: radial-gradient(circle, rgba(236,246,247,1) 11%, rgba(255,255,255,1) 100%);
+  /*background: rgb(236,246,247);
+  background: radial-gradient(circle, rgba(236,246,247,1) 11%, rgba(255,255,255,1) 100%);*/
+  background-image: url("./assets/background/webb.png");
+  background-repeat: repeat;
 }
 body { 
   margin:0; 
-  font-family: "Open Sans", "Helvetica Neue", sans-serif; 
+  font-family: "Lato", sans-serif;
 }

@@ -18,8 +18,10 @@ import { SignUpComponent } from './sign-up/sign-up.component';
 import { ThankYouComponent } from './thank-you/thank-you.component';
 import { faProjectDiagram } from '@fortawesome/free-solid-svg-icons';
 import { AccountComponent } from './account/account.component';
-
-
+import {DialogModule} from "primeng/dialog";
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import { OnRampComponent } from './on-ramp/on-ramp.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -28,6 +30,7 @@ import { AccountComponent } from './account/account.component';
     SignUpComponent,
     ThankYouComponent,
     AccountComponent,
+    OnRampComponent,
   ],
   imports: [
     ButtonModule,
@@ -40,7 +43,10 @@ import { AccountComponent } from './account/account.component';
     FormsModule,
     ReactiveFormsModule,
     FontAwesomeModule,
-    RemoteDataManagerModule
+    RemoteDataManagerModule,
+    DialogModule,
+    BrowserAnimationsModule,
+    NoopAnimationsModule
   ],
   exports:[FontAwesomeModule],
   providers: [AuthenticationService],

@@ -7,6 +7,7 @@ import {SignUpComponent} from './sign-up/sign-up.component';
 import {AuthGuard } from './auth.guard';
 import { ThankYouComponent } from './thank-you/thank-you.component';
 import { AccountComponent } from './account/account.component';
+import { OnRampComponent } from './on-ramp/on-ramp.component';
 
 const routes: Routes = [{path:"", component:HomeComponent},
 {path:"login",component:LoginComponent},
@@ -14,7 +15,8 @@ const routes: Routes = [{path:"", component:HomeComponent},
 {path:"thank-you", component:ThankYouComponent},
 {path:"user_dashboard",loadChildren:()=>import('./user-dashboard/user-dashboard.module').then(m=>m.UserDashboardModule),canActivate:[AuthGuard]},
 {path:"account",component:AccountComponent,canActivate:[AuthGuard]},
-{path:"nft_marketplace",loadChildren:()=>import('./nft-marketplace/nft-marketplace.module').then(m=>m.NftMarketplaceModule)}];
+{path:"nft_marketplace",loadChildren:()=>import('./nft-marketplace/nft-marketplace.module').then(m=>m.NftMarketplaceModule)},
+{path:"on-ramp",component:OnRampComponent}];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

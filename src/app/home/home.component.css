@@ -2,7 +2,7 @@
   width:100vw;
 
   margin:auto;
-  margin-top: 40px;
+
   display: flex;
   flex-wrap: wrap;
   flex-direction: column;
@@ -93,4 +93,14 @@
   font-weight: bolder;
   border-radius: 4px;
   border:0px;
+}
+
+
+#get-started-button{
+  padding:12px 32px;
+  border-radius: 8px;
+  font-size:2rem;
+  background-color: #46c3d1;
+  border:0;
+  color:white;
 }
