@@ -4,6 +4,7 @@ import { faBell, faUserCircle,faHome, faSignInAlt , faUserPlus} from '@fortaweso
 import { Observable } from 'rxjs';
 import { AuthenticationService } from './authentication.service';
 import { WalletService } from './BlockchainServices/wallet.service';
+
 declare var anime: any;
 
 

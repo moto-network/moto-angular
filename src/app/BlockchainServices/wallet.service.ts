@@ -4,7 +4,8 @@ import Web3 from "web3";
 //import WalletConnectProvider from "@walletconnect/web3-provider";
 import { Subject } from 'rxjs';
 import { fakeAsync } from '@angular/core/testing';
-
+const WAValidator = require('crypto-wallet-address-validator');
+  
 declare let window: any;
 
 @Injectable({
@@ -60,9 +61,11 @@ export class WalletService {
     }
   }
 
-  isValidAddress(address:string, network:string):boolean{
-    return false;
-
+  isValidAddress(address:string, network:string):boolean{ 
+    console.trace();
+    console.table({"address":address,"network":network});
+    console.log("isvalidAddress from isValidAddress",WAValidator.validate(address, network))
+    return WAValidator.validate(address, network);
   }
 
 }

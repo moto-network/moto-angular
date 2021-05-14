@@ -22,6 +22,7 @@ import {DialogModule} from "primeng/dialog";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import { OnRampComponent } from './on-ramp/on-ramp.component';
+import { HttpClientModule } from '@angular/common/http';
 @NgModule({
   declarations: [
     AppComponent,
@@ -46,7 +47,8 @@ import { OnRampComponent } from './on-ramp/on-ramp.component';
     RemoteDataManagerModule,
     DialogModule,
     BrowserAnimationsModule,
-    NoopAnimationsModule
+    NoopAnimationsModule,
+    HttpClientModule
   ],
   exports:[FontAwesomeModule],
   providers: [AuthenticationService],
