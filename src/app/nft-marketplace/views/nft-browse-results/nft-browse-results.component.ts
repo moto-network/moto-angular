@@ -8,16 +8,17 @@ import {NftManagerService} from '../../../DataManagement/remote-data-manager/ser
 export class NftBrowseResultsComponent implements OnInit {
   nftsArray:any = [];
   constructor(private _nfts:NftManagerService) { 
-      this._nfts.getNFTs().subscribe((remoteNFTs)=>{
-        if(remoteNFTs.docs.length > 0){
-          this.nftsArray = remoteNFTs.docs;
-          console.log("nfts are ",this.nftsArray[0].data());
-        }
-          
-      });
+      
   }
 
   ngOnInit(): void {
+    this._nfts.getNFTs().subscribe((remoteNFTs)=>{
+      if(remoteNFTs.docs.length > 0){
+        this.nftsArray = remoteNFTs.docs;
+
+      }
+        
+    });
   }
 
 }
