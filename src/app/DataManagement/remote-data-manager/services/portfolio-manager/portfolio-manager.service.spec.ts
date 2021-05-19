@@ -1,12 +1,15 @@
 import { TestBed } from '@angular/core/testing';
-
+import { AngularFirestore } from '@angular/fire/firestore';
 import { PortfolioManagerService } from './portfolio-manager.service';
 
 describe('PortfolioManagerService', () => {
   let service: PortfolioManagerService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    const aFireSpy = jasmine.createSpyObj('AngularFirestore',['']);
+    TestBed.configureTestingModule({
+      providers:[{provide:AngularFirestore,useValue:aFireSpy}]
+    });
     service = TestBed.inject(PortfolioManagerService);
   });
 

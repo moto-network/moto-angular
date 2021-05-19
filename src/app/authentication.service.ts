@@ -26,6 +26,10 @@ export class AuthenticationService {
       public router: Router,
       public ngZone: NgZone
     ) {
+      
+    }
+  
+    init(){
       this.afAuth.authState.subscribe(user => {
         if (user) {
           this.userState = user;
@@ -39,9 +43,8 @@ export class AuthenticationService {
           //localStorage.setItem('user', null);
           //JSON.parse(localStorage.getItem('user'));
         }
-      })
+      });
     }
-  
     SignIn(email: string, password:string ){
       return this.afAuth.signInWithEmailAndPassword(email, password)
         .then((result) => {

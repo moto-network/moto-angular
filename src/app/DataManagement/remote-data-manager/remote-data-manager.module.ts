@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {PortfolioManagerService} from './services/portfolio-manager/portfolio-manager.service';
-import {TransactionsService} from './services/transactions/transaction-service.service';
+import {TransactionsService} from './services/transactions/transactions.service';
 
 @NgModule({
   declarations: [],

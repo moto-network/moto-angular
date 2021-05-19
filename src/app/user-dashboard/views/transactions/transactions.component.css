@@ -1,0 +1,30 @@
+.transactions-table{
+  width:100%;
+}
+
+.transactions-table > thead{
+  color:cornflowerblue;
+  padding-top:20px;
+  padding-bottom:20px;
+
+}
+
+#table-container{
+  background-color: white;
+  border-radius: 12px;
+  width:100%;
+  height:100%;
+  overflow: hidden;
+}
+
+.transaction-row  > td{
+  text-align: center;
+}
+
+.red{
+  color:red;
+}
+
+.green{
+  color:green;
+}

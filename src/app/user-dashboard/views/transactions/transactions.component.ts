@@ -1,12 +1,12 @@
 
 import { Component, OnInit , Input} from '@angular/core';
-import {TransactionsService} from '../../../DataManagement/remote-data-manager/services/transactions/transaction-service.service';
+import {TransactionsService} from '../../../DataManagement/remote-data-manager/services/transactions/transactions.service';
 
 
 @Component({
-  selector: 'transactions-component',
-  templateUrl: './transactions-component.component.html',
-  styleUrls: ['./transactions-component.component.css']
+  selector: 'transactions',
+  templateUrl: './transactions.component.html',
+  styleUrls: ['./transactions.component.css']
 })
 export class TransactionsComponent implements OnInit {
   transactionsArray:any = [];

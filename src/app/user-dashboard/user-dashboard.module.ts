@@ -10,7 +10,7 @@ import { AssetsCardComponent } from './views/assets-card/assets-card.component';
 import { UserDashboardComponent } from './user-dashboard.component';
 import {ChartComponent} from './views/chart/chart.component';
 import {AssetConverterService} from './asset-converter.service';
-import { TransactionsComponent } from './views/transactions-component/transactions.component';
+import { TransactionsComponent } from './views/transactions/transactions.component';
 import {RemoteDataManagerModule} from '../DataManagement/remote-data-manager/remote-data-manager.module';
 
 @NgModule({
