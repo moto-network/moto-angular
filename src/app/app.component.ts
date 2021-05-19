@@ -34,12 +34,15 @@ export class AppComponent {
   addressAnimation:any;
   addressContainer:any;
   constructor(private _auth:AuthenticationService, private _walletService:WalletService) {
-    
+      
+  } 
 
-    _auth.afAuth.authState.subscribe((user)=>{
+
+  ngOnInit():void{
+    this._auth.afAuth.authState.subscribe((user)=>{
       this.changeActiveUserState();
     });
-    _walletService.account.subscribe((value)=>{
+    this._walletService.account.subscribe((value)=>{
       this.address = value;
       if(value){
         this.notificationMessage = "MetaMask Connected";
@@ -56,12 +59,6 @@ export class AppComponent {
         },3200);
       }
     });
-    
-  
-  } 
-
-  ngOnInit():void{
-
   }
 
   ngOnChanges():void {

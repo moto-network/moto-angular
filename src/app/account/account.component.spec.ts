@@ -8,8 +8,17 @@ describe('AccountComponent', () => {
   let fixture: ComponentFixture<AccountComponent>;
 
   beforeEach(async () => {
+    const authSpy = jasmine.createSpyObj('AuthenticationService',['']);
+    const walletSpy = jasmine.createSpyObj('WalletService',['metaMaskCheck']);
     await TestBed.configureTestingModule({
-      declarations: [ AccountComponent ]
+      declarations: [ AccountComponent ],
+      providers:[{
+        provide:WalletService,useValue:walletSpy
+      },
+      {
+        provide:AuthenticationService, useValue:authSpy
+      }
+    ]
     })
     .compileComponents();
   });
