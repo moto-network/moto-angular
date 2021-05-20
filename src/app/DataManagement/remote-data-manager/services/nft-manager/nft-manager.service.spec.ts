@@ -13,6 +13,7 @@ describe('NftManagerService', () => {
   });
 
   it('should be created', () => {
+    console.log("this service is ", service);
     expect(service).toBeTruthy();
   });
 });

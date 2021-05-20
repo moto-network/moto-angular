@@ -1,3 +1,4 @@
+import { ComponentFactoryResolver } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { PortfolioManagerService } from './portfolio-manager.service';
@@ -14,6 +15,7 @@ describe('PortfolioManagerService', () => {
   });
 
   it('should be created', () => {
+    console.log("portfolio is ",service);
     expect(service).toBeTruthy();
   });
 });

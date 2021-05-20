@@ -11,7 +11,7 @@ export class BitcoinService {
 
   }
 
-  getBTCPrice(): Observable<any>{
+  getBTCPrice(): Observable<any> | null{
     return this.http.get<any>("https://api.coinbase.com/v2/prices/BTC-USD/buy");
   }
 }

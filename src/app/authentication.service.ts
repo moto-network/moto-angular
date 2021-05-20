@@ -2,14 +2,6 @@ import { Injectable, NgZone } from '@angular/core';
 import { AngularFireAuth } from "@angular/fire/auth";
 import { Router } from "@angular/router";
 
-export interface User {
-    uid: string;
-    email: string;
-    displayName: string;
-    photoURL: string;
-    emailVerified: boolean;
- }
-
 @Injectable({
   providedIn: 'root'
 })
@@ -26,7 +18,7 @@ export class AuthenticationService {
       
     }
   
-    init(){
+    initialize(){
       this.afAuth.authState.subscribe(user => {
         if (user) {
           this.userState = user;
