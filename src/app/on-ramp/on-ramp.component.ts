@@ -27,7 +27,7 @@ export class OnRampComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.bitcoinService.getBTCPrice().subscribe((remoteData)=>{
+    this.bitcoinService.getBTCPrice()?.subscribe((remoteData)=>{
       this.btcPrice = remoteData.data.amount;
     });
   }

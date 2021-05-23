@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import {NftManagerService} from '../../../DataManagement/remote-data-manager/services/nft-manager/nft-manager.service';
 @Component({
   selector: 'app-nft-browse-results',
@@ -7,18 +8,25 @@ import {NftManagerService} from '../../../DataManagement/remote-data-manager/ser
 })
 export class NftBrowseResultsComponent implements OnInit {
   nftsArray:any = [];
-  constructor(private _nfts:NftManagerService) { 
-      
+  constructor(private _nfts:NftManagerService,private _router:Router) { 
+    _nfts.getNFTs().subscribe((results)=>{
+      if(results){
+        this.nftsArray = results;
+      }
+    }
+    );
   }
 
   ngOnInit(): void {
-    this._nfts.getNFTs().subscribe((remoteNFTs)=>{
-      if(remoteNFTs.docs.length > 0){
-        this.nftsArray = remoteNFTs.docs;
 
-      }
-        
-    });
   }
 
+  ngDoCheck(){
+    
+  }
+
+  openProductPage(nft:any):void{
+    this._nfts.setNFTProduct(nft);
+    this._router.navigate(['nft_marketplace','product-page']);
+  }
 }

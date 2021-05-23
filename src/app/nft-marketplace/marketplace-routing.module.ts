@@ -2,9 +2,11 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { BrowsePageComponent } from './browse-page/browse-page.component';
+import { ProductPageComponent } from './product-page/product-page.component';
 
 
-const routes: Routes = [{path:'',component:BrowsePageComponent}];
+const routes: Routes = [{path:'',component:BrowsePageComponent},
+{path:'product-page',component:ProductPageComponent}];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],

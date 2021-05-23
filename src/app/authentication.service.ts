@@ -24,7 +24,7 @@ export class AuthenticationService {
           this.userState = user;
           localStorage.setItem('user', JSON.stringify(this.userState));
           
-        } 
+      }
         else {
           this.userState = null;
         }
@@ -41,7 +41,7 @@ export class AuthenticationService {
           }
           else{
             console.log('no users from signin');
-          }          
+        }          
         }).catch((error) => {
           window.alert(error.message)
         });

@@ -113,7 +113,6 @@ export class AppComponent {
   }
 
   ngAfterViewChecked():void{
-    console.log("something happened");
     
   }
 
