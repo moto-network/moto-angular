@@ -1,17 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { NftManagerService } from 'src/app/DataManagement/remote-data-manager/services/nft-manager/nft-manager.service';
+import { NftManagerService } from '../../../DataManagement/remote-data-manager/services/nft-manager/nft-manager.service';
 import {of} from 'rxjs';
 import { NftBrowseResultsComponent } from './nft-browse-results.component';
+import { Router } from '@angular/router';
 
 describe('NftBrowseResultsComponent', () => {
   let component: NftBrowseResultsComponent;
   let fixture: ComponentFixture<NftBrowseResultsComponent>;
   const nftSpy = jasmine.createSpyObj('NftManagerService',['getNFTs']);
+  const routerSpy = jasmine.createSpyObj('Router',['']);
   nftSpy.getNFTs.and.returnValue(of({"docs":['teste','datad'],"data":()=>{}}));
   beforeEach(async () => {
     component = await TestBed.configureTestingModule({
       declarations: [ NftBrowseResultsComponent ],
-      providers:[{provide:NftManagerService,useValue:nftSpy}]
+      providers:[{provide:NftManagerService,useValue:nftSpy},{provide:Router,useValue:routerSpy}]
     })
     .compileComponents();
   });
@@ -23,7 +25,7 @@ describe('NftBrowseResultsComponent', () => {
   });
 
   it('should create', () => {
-    component = new NftBrowseResultsComponent(nftSpy);
+    component = new NftBrowseResultsComponent(nftSpy,routerSpy);
     expect(component).toBeTruthy();
   });
 });

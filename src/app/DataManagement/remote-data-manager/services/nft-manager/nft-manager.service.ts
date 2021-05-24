@@ -10,7 +10,7 @@ export class NftManagerService {
 
   nftsArray:any = [];
   nftProduct:any
-
+  
 
   getNFTProduct(){
     if(this.nftProduct){

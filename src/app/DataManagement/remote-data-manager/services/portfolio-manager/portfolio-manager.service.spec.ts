@@ -15,7 +15,6 @@ describe('PortfolioManagerService', () => {
   });
 
   it('should be created', () => {
-    console.log("portfolio is ",service);
     expect(service).toBeTruthy();
   });
 });

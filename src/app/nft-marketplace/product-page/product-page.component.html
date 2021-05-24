@@ -1,3 +1,23 @@
-<div>
-{{nft.name}}
+<div id="product-page">
+  <div id="product" class="box-shadow" >
+    <div id="product-image-container" >
+      <img id="product-image" src="{{nft.img}}"/>
+    </div> 
+
+    <div id="product-details">
+      <h2>{{nft.name}}</h2>
+      <h4>NFT Address</h4>
+      <p>{{nft.address}}</p>
+      <h4>NFT ID</h4>
+      <p>{{nft.id}}</p>
+      <h4>NFT Network</h4>
+      <p>{{nft.network}}</p>
+      <p class="long-text">{{nft.desc}}</p>
+
+      <div id="button-container">
+        <button id="buy-button" class="product-button">Buy Now</button>
+        <button id="bid-button" class="product-button">BID</button>
+      </div>
+    </div>
+  </div>
 </div>
