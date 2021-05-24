@@ -20,6 +20,7 @@
 
 #header-logo{
   height:100%;
+  margin-left:2vw;
 }
 
 
@@ -43,10 +44,6 @@
   background-color: #011734;
 }
 
-#user-icon{
-  margin-right:2vw;
-  float:right;
-}
 
 .icon {
   margin-top:5px;
@@ -54,11 +51,14 @@
   color:#011734;
   max-width: 10vw;
   max-height: 10vw;
-  width:20px;
-  height:20px;
+  width:40px;
+  height:40px;
   display:block;
 }
 
+#user-icon{
+  margin-right:2vw;
+}
 
 #middle-container{
   display:flex;

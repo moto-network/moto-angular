@@ -129,6 +129,12 @@
   flex-direction: row;
   align-items: center;
   justify-content: space-around;
-  background-color:#F0EEBD;
+  background-color:#46c3d1;
   margin-bottom:5px;
+  cursor: pointer;
+  color:white;
+  border-radius: 8px;
+  letter-spacing: 2.5px;
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease 0s;
 }

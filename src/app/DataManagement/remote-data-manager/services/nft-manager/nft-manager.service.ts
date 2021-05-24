@@ -9,13 +9,11 @@ export class NftManagerService {
   constructor(private _db:AngularFirestore) { }
 
   nftsArray:any = [];
-  nftProduct:any
+  nftProduct:any  | null;
   
 
   getNFTProduct(){
-    if(this.nftProduct){
-      return this.nftProduct;
-    }
+    return this.nftProduct;
   }
   
 
