@@ -5,13 +5,13 @@ import {ContractsService} from '../BlockchainServices/contracts.service';
 @Injectable({
   providedIn: 'root'
 })
-export class ManageNFTService {
+export class ManageNFTService {//merge this wit the other NFTManager or wahtever it's called
 
   currentFee:number | null = null;
 
   constructor(private walletService:WalletService, 
     private contracts:ContractsService) {
-     this.initializeNFTFee();
+//     this.initializeNFTFee();
    }
 
    
@@ -28,6 +28,7 @@ export class ManageNFTService {
    createNFT(nft:any){
      if(this.validNFT(nft)){
        const signature = this.walletService.signForNFT(nft);
+       console.log("ths is the signature ",signature);
 //         this.contracts.mintNFT(nft,signature);
      }
      else{

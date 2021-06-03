@@ -18,11 +18,14 @@ export class WalletService {
   private ethereum: any;
 
   constructor() {
+    this.browserEthereumCheck()
+
   }
 
   browserEthereumCheck():boolean{
     if(window.ethereum){
-      this.web3 = new Web3(window.ethereum);
+//      this.web3 = new Web3(window.ethereum);
+      this.ethereum = window.ethereum;
       return true;
     }
     else{
@@ -66,9 +69,27 @@ export class WalletService {
   }
 
 
+  private prepareAccount():void{
+    if(!this.account){
+      this.requestAccount();
+    }
+  
+  }
+
   signForNFT(nft:any):any{
-    let parameters = [this.account,this.prepareSignatureData(nft)]
-    if(this.ethereum){
+
+    let parameters = ["0xDcb982dEa4C22aBE650c12a1678537a3e8Ddd30D",this.prepareSignatureData(nft)];
+
+      this.ethereum.request({method:"eth_signTypedData_v4",params:parameters})
+      .then((result:any)=>{
+        if(result){
+          console.log("signature result ",result);
+        }
+      })
+      .catch((err:any)=>{
+        console.log("signature eorror" ,err);
+      });
+      /*
       this.web3.currentProvider.sendAsync(
         {
           method:"eth_signTypedData_v4",
@@ -83,7 +104,7 @@ export class WalletService {
         .catch((err:any)=>{
           console.log("signature eorror" ,err);
         });
-    }
+   */
   }
 
 

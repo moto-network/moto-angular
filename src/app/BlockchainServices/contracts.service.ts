@@ -25,6 +25,7 @@ export class ContractsService {
 
   getNFTFee():Promise<any>{
     return this.MotoBEPNFTVerifiedContract.methods.getFee().call();
+    //dont forget the then and catch thign
   }
 
 
