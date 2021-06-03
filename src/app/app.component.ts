@@ -42,7 +42,7 @@ export class AppComponent {
     this._auth.afAuth.authState.subscribe((user)=>{
       this.changeActiveUserState();
     });
-    this._walletService.account.subscribe((value)=>{
+    this._walletService.accountSubject.subscribe((value)=>{
       this.address = value;
       if(value){
         this.notificationMessage = "MetaMask Connected";

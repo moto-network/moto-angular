@@ -15,7 +15,7 @@ const routes: Routes = [{path:"", component:HomeComponent},
 {path:"thank-you", component:ThankYouComponent},
 {path:"user_dashboard",loadChildren:()=>import('./user-dashboard/user-dashboard.module').then(m=>m.UserDashboardModule),canActivate:[AuthGuard]},
 {path:"account",component:AccountComponent,canActivate:[AuthGuard]},
-{path:"nft_marketplace",loadChildren:()=>import('./nft-marketplace/nft-marketplace.module').then(m=>m.NftMarketplaceModule)},
+{path:"nft-marketplace",loadChildren:()=>import('./nft-marketplace/nft-marketplace.module').then(m=>m.NftMarketplaceModule)},
 {path:"on-ramp",component:OnRampComponent}];
 
 @NgModule({

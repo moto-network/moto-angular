@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { CreateNftService } from './create-nft.service';
+import { ManageNFTService } from './manage-nft.service';
 
 describe('CreateNftService', () => {
-  let service: CreateNftService;
+  let service: ManageNFTService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(CreateNftService);
+    service = TestBed.inject(ManageNFTService);
   });
 
   it('should be created', () => {
