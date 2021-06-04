@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 
-import { PortfolioManagerService } from '../DataManagement/remote-data-manager/services/portfolio-manager/portfolio-manager.service';
+import { PortfolioManagerService } from '../Services/portfolio-manager.service';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import { Observable } from 'rxjs';
 

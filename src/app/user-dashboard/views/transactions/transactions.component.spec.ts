@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import {TransactionsService} from '../../../DataManagement/remote-data-manager/services/transactions/transactions.service';
+import {TransactionsService} from '../../../Services/transactions.service';
 import { TransactionsComponent } from './transactions.component';
 
 describe('TransactionsComponent', () => {

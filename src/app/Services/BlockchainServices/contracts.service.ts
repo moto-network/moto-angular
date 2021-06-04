@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import Web3 from "web3";
 import WalletConnectProvider from "@walletconnect/web3-provider";
-import * as config from "../../../app.config.json";
+import * as config from "../../../../app.config.json";
 import { WalletService } from './wallet.service';
-const motoVerifiedNFT = require('../../assets/contracts/BEPMotoNFT.json');
+const motoVerifiedNFT = require('../BlockchainServices/contracts/BEPMotoNFT.json');
 
 enum Contracts{
   BSC_MOTO_NFTsimple = "0x1A205CD19dBaDd8db1F6BECFA3b85c3d2a8B7ead",

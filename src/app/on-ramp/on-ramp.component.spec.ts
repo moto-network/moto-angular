@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import {WalletService} from "../BlockchainServices/wallet.service";
-import {BitcoinService} from '../BlockchainServices/bitcoin.service';
+import {WalletService} from "../Services/BlockchainServices/wallet.service";
+import {BitcoinService} from '../Services/BlockchainServices/bitcoin.service';
 import { OnRampComponent } from './on-ramp.component';
 import {of } from 'rxjs';
 describe('OnRampComponent', () => {

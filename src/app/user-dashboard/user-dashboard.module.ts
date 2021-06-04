@@ -11,7 +11,7 @@ import { UserDashboardComponent } from './user-dashboard.component';
 import {ChartComponent} from './views/chart/chart.component';
 import {AssetConverterService} from './asset-converter.service';
 import { TransactionsComponent } from './views/transactions/transactions.component';
-import {RemoteDataManagerModule} from '../DataManagement/remote-data-manager/remote-data-manager.module';
+
 
 @NgModule({
   declarations: [
@@ -29,8 +29,7 @@ import {RemoteDataManagerModule} from '../DataManagement/remote-data-manager/rem
     FontAwesomeModule,
     AngularFirestoreModule,
     ChartModule,
-    HttpClientModule,
-    RemoteDataManagerModule
+    HttpClientModule
   ],
   providers: [AssetConverterService]
 })

@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { NftManagerService } from '../../../DataManagement/remote-data-manager/services/nft-manager/nft-manager.service';
+import { NFTManagerService } from '../../../Services/MarketServices/nft-manager.service';
 import {of} from 'rxjs';
 import { NftBrowseResultsComponent } from './nft-browse-results.component';
 import { Router } from '@angular/router';
@@ -13,7 +13,7 @@ describe('NftBrowseResultsComponent', () => {
   beforeEach(async () => {
     component = await TestBed.configureTestingModule({
       declarations: [ NftBrowseResultsComponent ],
-      providers:[{provide:NftManagerService,useValue:nftSpy},{provide:Router,useValue:routerSpy}]
+      providers:[{provide:NFTManagerService,useValue:nftSpy},{provide:Router,useValue:routerSpy}]
     })
     .compileComponents();
   });

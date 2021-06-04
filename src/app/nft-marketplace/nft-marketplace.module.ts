@@ -4,12 +4,12 @@ import { BrowsePageComponent } from './browse-page/browse-page.component';
 import { NFTMarketplaceRoutingModule } from './marketplace-routing.module';
 import { NftBrowseResultsComponent } from './views/nft-browse-results/nft-browse-results.component';
 import { ProductPageComponent } from './product-page/product-page.component';
-import { NftManagerService } from '../DataManagement/remote-data-manager/services/nft-manager/nft-manager.service';
+import { NFTManagerService } from '../Services/MarketServices/nft-manager.service';
 import { ManageNFTComponent } from './manage-nft/manage-nft.component';
 
 @NgModule({
   declarations: [BrowsePageComponent, NftBrowseResultsComponent, ProductPageComponent, ManageNFTComponent],
-  providers:[NftManagerService],
+  providers:[NFTManagerService],
   imports: [
     CommonModule,
     NFTMarketplaceRoutingModule

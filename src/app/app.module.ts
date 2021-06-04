@@ -11,9 +11,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { HomeComponent } from './home/home.component';
-import {AuthenticationService } from './authentication.service';
+import {AuthenticationService } from './Services/authentication.service';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
-import {RemoteDataManagerModule} from "./DataManagement/remote-data-manager/remote-data-manager.module";
 import { SignUpComponent } from './sign-up/sign-up.component';
 import { ThankYouComponent } from './thank-you/thank-you.component';
 import { faProjectDiagram } from '@fortawesome/free-solid-svg-icons';
@@ -44,7 +43,6 @@ import { HttpClientModule } from '@angular/common/http';
     FormsModule,
     ReactiveFormsModule,
     FontAwesomeModule,
-    RemoteDataManagerModule,
     DialogModule,
     BrowserAnimationsModule,
     NoopAnimationsModule,

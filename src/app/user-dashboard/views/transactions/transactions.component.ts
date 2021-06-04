@@ -1,6 +1,6 @@
 
 import { Component, OnInit , Input} from '@angular/core';
-import {TransactionsService} from '../../../DataManagement/remote-data-manager/services/transactions/transactions.service';
+import {TransactionsService} from '../../../Services/transactions.service';
 
 
 @Component({

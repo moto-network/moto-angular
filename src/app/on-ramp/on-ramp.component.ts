@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ValidatorFn, Validators, AbstractControl } from '@angular/forms';
-import {WalletService} from "../BlockchainServices/wallet.service";
-import {BitcoinService} from '../BlockchainServices/bitcoin.service';
+import {WalletService} from "../Services/BlockchainServices/wallet.service";
+import {BitcoinService} from '../Services/BlockchainServices/bitcoin.service';
 import { ThemeService } from 'ng2-charts';
 @Component({
   selector: 'app-on-ramp',

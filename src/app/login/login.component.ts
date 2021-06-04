@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup , FormControl} from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthenticationService } from '../authentication.service';
-import { WalletService } from '../BlockchainServices/wallet.service';
+import { AuthenticationService } from '../Services/authentication.service';
+import { WalletService } from '../Services/BlockchainServices/wallet.service';
 
 //import { FormControl } from "@angular/core";
 

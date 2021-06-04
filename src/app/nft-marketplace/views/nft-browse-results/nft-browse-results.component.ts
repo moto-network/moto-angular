@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import {NftManagerService} from '../../../DataManagement/remote-data-manager/services/nft-manager/nft-manager.service';
+import {NFTManagerService} from '../../../Services/MarketServices/nft-manager.service';
 @Component({
   selector: 'app-nft-browse-results',
   templateUrl: './nft-browse-results.component.html',
@@ -40,9 +40,9 @@ export class NftBrowseResultsComponent implements OnInit {
     "price": "312",
     "name": "GlitchArt01"
   }];
-  constructor(private _nfts:NftManagerService,private _router:Router) {
+  constructor(private _nftManager:NFTManagerService,private _router:Router) {
     //this.nftsArray = this.dummyArray; 
-    _nfts.getNFTs().subscribe((results)=>{
+    _nftManager.getMarketplaceNFTs().subscribe((results)=>{
       if(results){
         
        this.nftsArray = results;
@@ -61,7 +61,7 @@ export class NftBrowseResultsComponent implements OnInit {
   }
 
   openProductPage(nft:any):void{
-    this._nfts.setNFTProduct(nft);
+    this._nftManager.setNFTProductForView(nft);
     this._router.navigate(['nft_marketplace','product-page']);
   }
 }

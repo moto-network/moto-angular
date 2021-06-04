@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { NftManagerService } from 'src/app/DataManagement/remote-data-manager/services/nft-manager/nft-manager.service';
+import { NFTManagerService } from '../../Services/MarketServices/nft-manager.service';
 
 @Component({
   selector: 'product-page',
@@ -21,12 +21,12 @@ export class ProductPageComponent implements OnInit {
     "desc":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis nulla risus, dignissim vitae sollicitudin id, suscipit eu est. Curabitur sem diam, ornare id est imperdiet, interdum finibus erat. Suspendisse potenti. Vestibulum vitae malesuada eros, a lacinia odio. Pellentesque dignissim varius ultricies. Maecenas vitae ornare magna, vel malesuada neque. Mauris finibus nisl et est tincidunt vestibulum in quis tellus. In scelerisque lectus pretium elit molestie suscipit. Fusce ut sodales sapien."
   };
   
-  constructor(private _nftManager:NftManagerService) { 
+  constructor(private _nftManager:NFTManagerService) { 
     //TODO: this.nft is null on reload, need to go back and click again
   }
 
   ngOnInit(): void {
-   const remoteNFT = this._nftManager.getNFTProduct();
+   const remoteNFT = this._nftManager.getNFTProductForView();
     // const remoteNFT = this.dummyData;
     if(remoteNFT){
       this.nft = remoteNFT;

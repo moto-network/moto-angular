@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AuthenticationService } from '../authentication.service';
-import { WalletService } from '../BlockchainServices/wallet.service';
+import { WalletService } from '../Services/BlockchainServices/wallet.service';
 import { AccountComponent } from './account.component';
 
 describe('AccountComponent', () => {

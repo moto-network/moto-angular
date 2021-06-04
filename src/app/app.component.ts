@@ -2,8 +2,8 @@ import { AnimationQueryMetadata } from '@angular/animations';
 import { Component, HostListener, Input } from '@angular/core';
 import { faBell, faUserCircle,faHome, faSignInAlt , faUserPlus} from '@fortawesome/free-solid-svg-icons';
 import { Observable } from 'rxjs';
-import { AuthenticationService } from './authentication.service';
-import { WalletService } from './BlockchainServices/wallet.service';
+import { AuthenticationService } from './Services/authentication.service';
+import { WalletService } from './Services/BlockchainServices/wallet.service';
 
 declare var anime: any;
 

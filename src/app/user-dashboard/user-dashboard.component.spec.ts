@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { PortfolioManagerService } from '../DataManagement/remote-data-manager/services/portfolio-manager/portfolio-manager.service';
+import { PortfolioManagerService } from '../Services/portfolio-manager.service';
 import { UserDashboardComponent } from './user-dashboard.component';
 import {of} from 'rxjs';
 import { AngularFireAuth } from '@angular/fire/auth';

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { WalletService } from 'src/app/BlockchainServices/wallet.service';
-import { AddToMarketService } from 'src/app/MarketServices/add-to-market.service';
+import { WalletService } from 'src/app/Services/BlockchainServices/wallet.service';
+import { AddToMarketService } from 'src/app/Services/MarketServices/add-to-market.service';
 import WalletConnectSDK from 'walletconnect';
 
 @Component({

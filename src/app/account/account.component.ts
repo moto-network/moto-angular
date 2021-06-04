@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthenticationService } from '../authentication.service';
-import { WalletService } from '../BlockchainServices/wallet.service';
+import { AuthenticationService } from '../Services/authentication.service';
+import { WalletService } from '../Services/BlockchainServices/wallet.service';
 import {DialogModule} from 'primeng/dialog';
 
 

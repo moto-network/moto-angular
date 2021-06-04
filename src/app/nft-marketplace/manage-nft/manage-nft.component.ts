@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ManageNFTService } from 'src/app/MarketServices/manage-nft.service';
+import { NFTManagerService } from '../../Services/MarketServices/nft-manager.service';
 
 @Component({
   selector: 'manage-nft',
@@ -8,7 +8,7 @@ import { ManageNFTService } from 'src/app/MarketServices/manage-nft.service';
 })
 export class ManageNFTComponent implements OnInit {
 
-  constructor(private nftManager:ManageNFTService) { 
+  constructor(private nftManager:NFTManagerService) { 
 
   }
   

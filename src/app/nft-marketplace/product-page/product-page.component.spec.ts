@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { BehaviorSubject } from 'rxjs';
-import { NftManagerService } from 'src/app/DataManagement/remote-data-manager/services/nft-manager/nft-manager.service';
+import { NFTManagerService } from '../../Services/MarketServices/nft-manager.service';
 import { NFTMarketplaceRoutingModule } from '../marketplace-routing.module';
 
 import { ProductPageComponent } from './product-page.component';
@@ -27,7 +27,7 @@ describe('ProductPageComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [ ProductPageComponent ],
-      providers:[{provide:NftManagerService,useValue:MockManager}
+      providers:[{provide:NFTManagerService,useValue:MockManager}
       ]
     }).compileComponents();
 
