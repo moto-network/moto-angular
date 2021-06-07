@@ -4,7 +4,7 @@ import WalletConnectProvider from "@walletconnect/web3-provider";
 import * as config from "../../../../app.config.json";
 import { WalletService } from './wallet.service';
 const motoVerifiedNFT = require('../BlockchainServices/contracts/BEPMotoNFT.json');
-
+const utils = require('ethereumjs-util');
 enum Contracts{
   BSC_MOTO_NFTsimple = "0x1A205CD19dBaDd8db1F6BECFA3b85c3d2a8B7ead",
   BSC_TEST_VERIFIED_NFT = "0x7D1d26e8FC29C84aF88C71744178A0f314394173"
@@ -14,7 +14,7 @@ enum Contracts{
   providedIn: 'root'
 })
 export class ContractsService {
-  web3 = new Web3(config.network.ganache);
+  web3 = new Web3(config.network.bsc_test);
   MotoBEPNFTVerifiedContract = new this.web3.eth.Contract(motoVerifiedNFT.abi,Contracts.BSC_TEST_VERIFIED_NFT);
 
   constructor(private walletService:WalletService) {
@@ -29,25 +29,34 @@ export class ContractsService {
   }
 
 
-  mintNFT(nft:any,sig:any){
-    /*
-    if(this.walletService.account){
-      this.walletService.
+  mintNFT(nft:any,signature:string):Promise<any>{
+    let transactionPromise:Promise<any>=new Promise((resolve,reject)=>{});
+    console.log("signature before split ",signature);
+    let sig = this.splitSignature(signature);
+    console.log("mintNFT sig is ",sig);
+    const transactionData = this.MotoBEPNFTVerifiedContract.methods.userMint(nft.name, nft.chainId,
+      nft.beneficiary,nft.contentHash,nft.tokenId,sig.r,sig.s,sig.v).encodeABI();
+    const transactionValueString = this.web3.utils.toWei('2','ether');
+    const transactionParameters = {
+      gasPrice:(200000).toString(16),
+      to:Contracts.BSC_TEST_VERIFIED_NFT,
+      value:this.web3.utils.numberToHex(transactionValueString),
+      from:this.walletService.account,
+      data:transactionData,
+      chaindId:(97).toString(16),
     }
-    */
-    this.MotoBEPNFTVerifiedContract.methods.userMint(nft.name, nft.chainId,
-      nft.beneficiary,nft.contentHash,nft.tokenId,sig.r,sig.s,sig.v)
-    .send({from:"0xDcb982dEa4C22aBE650c12a1678537a3e8Ddd30D",gas:200000})
-    .then((result:any)=>{
-      console.log("result is ",result);
-    })
-    .catch((error:any)=>{
-      console.log("you done goofed",error);
-    });
+    return this.walletService.sendTransaction(transactionParameters);
   }
 
-
-  
+  splitSignature(signature:string):any{
+    let chopppedString = signature.split('x')[1];
+    let r = Buffer.from(chopppedString.substring(0, 64), 'hex').toString('hex');
+    let s = Buffer.from(chopppedString.substring(64, 128), 'hex').toString('hex');
+    let v = Buffer.from((parseInt(chopppedString.substring(128, 130)) + 27).toString(),'hex').toString('hex');
+    console.table({"r":r,"s":s,"v":v});
+    return {"r":"0x"+r,"s":"0x"+s,"v":v}
+    
+  }
 
 }
 

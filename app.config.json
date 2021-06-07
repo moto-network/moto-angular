@@ -1,5 +1,6 @@
 {
     "network":{
-        "ganache":"HTTP://127.0.0.1:7545"
+        "ganache":"HTTP://127.0.0.1:7545",
+        "bsc_test":"https://data-seed-prebsc-1-s1.binance.org:8545/"
     }
 }

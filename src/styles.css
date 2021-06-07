@@ -1,5 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
 @import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@200;700&family=Lato:wght@100;300;900&display=swap');
+:root{
+  --moto-teal:#46c3d1;
+  --moto-blue:#011734;
+}
 html, body { 
   height: 100%; 
   width:100vw;

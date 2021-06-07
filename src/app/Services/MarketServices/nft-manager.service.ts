@@ -3,6 +3,8 @@ import { WalletService } from '../BlockchainServices/wallet.service';
 import {ContractsService} from '../BlockchainServices/contracts.service';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
+import { sign } from 'crypto';
+import { CryptoService } from '../crypto.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +16,7 @@ export class NFTManagerService {//merge this wit the other NFTManager or wahteve
   nftProduct:any  | null;
 
   constructor(private walletService:WalletService, 
-    private contracts:ContractsService, private _db:AngularFirestore) {
+    private contracts:ContractsService, private _db:AngularFirestore, crypto:CryptoService) {
 //     this.initializeNFTFee();
    }
 
@@ -29,20 +31,33 @@ export class NFTManagerService {//merge this wit the other NFTManager or wahteve
    }
 
 
-   createNFT(nft:any){
-     if(this.validNFT(nft)){
-       const signature = this.walletService.signForNFT(nft);
-       console.log("ths is the signature ",signature);
-//         this.contracts.mintNFT(nft,signature);
-     }
-     else{
-       //do something
-     }
+   createNFT(nft:any):Promise<any>{
+
+    return new Promise((resolve,reject)=>{
+      if(this.validNFT(nft)){
+        let signature:Promise<any>;
+        signature = this.walletService.signForNFT(nft);
+        signature
+        .then((result:string)=>{
+          resolve(this.contracts.mintNFT(nft,result));     
+        })
+        .catch((err)=>{
+          new Error("createNFT error here ");
+          console.log("the error is ",err);
+        });
+      }
+    });
    }
+
+
    validNFT(nft:any){
     return true;//change this to false
    }
 
+   /*uploadNFT(nft,file){
+
+   }
+*/
 
    getNFTProductForView(){
     return this.nftProduct;

@@ -3,6 +3,11 @@ import Web3 from "web3";
 //import WalletConnectProvider from "@walletconnect/web3-provider";
 import { Subject } from 'rxjs';
 import { fakeAsync } from '@angular/core/testing';
+import { resolve } from 'node:path';
+import { rejects } from 'node:assert';
+import { instanceOf } from 'prop-types';
+import { access } from 'node:fs';
+import { AccountComponent } from 'src/app/account/account.component';
 const WAValidator = require('crypto-wallet-address-validator');
   
 declare let window: any;
@@ -13,7 +18,7 @@ declare let window: any;
 export class WalletService {
   private web3: any;
   private provider: any;
-  public accountSubject: Subject<string | null> = new Subject<string | null>();
+  public accountSubject: Subject<string | null > = new Subject<string | null >();
   public account:any | null = null;
   private ethereum: any;
 
@@ -33,23 +38,44 @@ export class WalletService {
     }
   }
 
-
-  requestAccount():boolean{
-    if(this.metaMaskCheck()){
-
-      this.ethereum.request({ method: 'eth_requestAccounts' })
-      .then((accountsArray:string[])=>{
-        if(accountsArray){
-          this.account = accountsArray[0];
-          this.accountSubject.next(accountsArray[0]);
-        }
-      });
-
+  
+  accountReady():boolean{
+    if(this.account){
       return true;
-    }  
+    }
     else{
       return false;
     }
+  }
+
+
+  requestAccount():void {
+    if(!this.ethereum){
+
+    }
+
+    else{
+      this.ethereum.request({ method: 'eth_requestAccounts' })
+      .then((accounts:string[])=>{
+        this.account = accounts[0];
+        this.accountSubject.next(this.account);
+        this.ethereum.eth.accounts.wallet.add(this.account);
+      })
+      .catch((err:any)=>{
+        return new Promise((resolve,reject)=>{
+          
+        });
+      });
+    }
+  }
+
+
+  sendTransaction(transaction:any):Promise<any>{
+    console.table(transaction);
+    return this.ethereum.request({
+      method: 'eth_sendTransaction',
+      params: [transaction],
+    });
   }
 
 
@@ -69,42 +95,36 @@ export class WalletService {
   }
 
 
-  private prepareAccount():void{
-    if(!this.account){
-      this.requestAccount();
+  async signForNFT(nft:any):Promise<any>{
+    if(this.account){
+      return new Promise((resolve,reject)=>{
+        console.log("this.account ",this.account);
+        resolve(this.executeSignature(this.account,nft));
+      });
     }
-  
+    else{
+      return new Promise((resolve,reject)=>{
+        reject(new Error("tseting"));
+      });
+    }
   }
 
-  signForNFT(nft:any):any{
 
-    let parameters = ["0xDcb982dEa4C22aBE650c12a1678537a3e8Ddd30D",this.prepareSignatureData(nft)];
-
-      this.ethereum.request({method:"eth_signTypedData_v4",params:parameters})
-      .then((result:any)=>{
-        if(result){
-          console.log("signature result ",result);
-        }
-      })
-      .catch((err:any)=>{
-        console.log("signature eorror" ,err);
-      });
-      /*
-      this.web3.currentProvider.sendAsync(
-        {
-          method:"eth_signTypedData_v4",
-          params:parameters,
-          from:this.account
-        })
-        .then((result:any)=>{
-          if(result){
-            console.log("signature result ",result);
-          }
-        })
-        .catch((err:any)=>{
-          console.log("signature eorror" ,err);
-        });
-   */
+  private executeSignature(account:string,nft:any):Promise<any>{
+    let parameters = [account,this.prepareSignatureData(nft)];
+    return this.ethereum.request({method:"eth_signTypedData_v4",params:parameters})
+    .then((result:any)=>{
+      if(result){
+        return result;
+      }
+      else{
+        return new Error("no signature");
+      }
+    })
+    .catch((err:any)=>{
+      return new Error("signature error");
+    });
+  
   }
 
 

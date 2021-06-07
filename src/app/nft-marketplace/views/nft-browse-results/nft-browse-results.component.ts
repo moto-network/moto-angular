@@ -62,6 +62,6 @@ export class NftBrowseResultsComponent implements OnInit {
 
   openProductPage(nft:any):void{
     this._nftManager.setNFTProductForView(nft);
-    this._router.navigate(['nft_marketplace','product-page']);
+    this._router.navigate(['nft-marketplace','product-page']);
   }
 }

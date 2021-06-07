@@ -5512,7 +5512,7 @@
     "rlp" "^2.0.0"
     "safe-buffer" "^5.1.1"
 
-"ethereumjs-util@^6.0.0":
+"ethereumjs-util@^6.0.0", "ethereumjs-util@^6.2.1":
   "integrity" "sha512-W2Ktez4L01Vexijrm5EB6w7dg4n/TgpoYU4avuT5T3Vmnw/eCRtiBrJfQYS/DCSvDIOLn2k57GcHdeBcgVxAqw=="
   "resolved" "https://registry.npmjs.org/ethereumjs-util/-/ethereumjs-util-6.2.1.tgz"
   "version" "6.2.1"
@@ -7585,6 +7585,14 @@
   dependencies:
     "node-addon-api" "^2.0.0"
     "node-gyp-build" "^4.2.0"
+
+"keccak256@^1.0.2":
+  "integrity" "sha512-f2EncSgmHmmQOkgxZ+/f2VaWTNkFL6f39VIrpoX+p8cEXJVyyCs/3h9GNz/ViHgwchxvv7oG5mjT2Tk4ZqInag=="
+  "resolved" "https://registry.npmjs.org/keccak256/-/keccak256-1.0.2.tgz"
+  "version" "1.0.2"
+  dependencies:
+    "bn.js" "^4.11.8"
+    "keccak" "^3.0.1"
 
 "keyv@^3.0.0":
   "integrity" "sha512-9ykJ/46SN/9KPM/sichzQ7OvXyGDYKGTaDlKMGCAlg2UK8KRy4jb0d8sFc+0Tt0YYnThq8X2RZgCg74RPxgcVA=="
