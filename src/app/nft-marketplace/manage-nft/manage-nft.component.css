@@ -11,7 +11,8 @@
   flex-direction: column;
   width:95vw;
   max-width:1000px;
-  min-height:70vh;
+  min-height:40vh;
+
   background: white;
   border-radius: 8px;
   box-shadow:

@@ -9,6 +9,7 @@ import { instanceOf } from 'prop-types';
 import { access } from 'node:fs';
 import { AccountComponent } from 'src/app/account/account.component';
 const WAValidator = require('crypto-wallet-address-validator');
+const secondaryValidator = require("wallet-address-validator");
   
 declare let window: any;
 
@@ -104,7 +105,7 @@ export class WalletService {
     }
     else{
       return new Promise((resolve,reject)=>{
-        reject(new Error("tseting"));
+        reject(new Error("NoAccountFound"));
       });
     }
   }
@@ -158,8 +159,11 @@ export class WalletService {
   }
 
 
-  isValidAddress(address:string, network:string):boolean{ 
+  isValidBTCaddress(address:string, network:string):boolean{ 
     return WAValidator.validate(address, network);
   }
 
+  isValidAddress(address:string, network:string):boolean{
+    return secondaryValidator.validate(address, network);
+  }
 }

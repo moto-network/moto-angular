@@ -1,0 +1,17 @@
+#nft-results{
+  display:grid;
+
+  justify-content: center;
+  align-items: center;
+  width:100%;
+}
+
+h2{
+  font-weight:400;
+}
+
+h3{
+  font-weight:600;
+  align-self: center;
+  color:var(--moto-teal);
+}

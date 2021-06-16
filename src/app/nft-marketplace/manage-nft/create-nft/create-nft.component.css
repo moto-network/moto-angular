@@ -1,0 +1,64 @@
+
+#create-nft{
+  display:flex;
+  flex-direction: column;
+  height:auto;
+  width:50vw;
+  justify-content: space-evenly;
+  padding:80px; 
+}
+
+h1{
+  font-weight:400;
+}
+h3{
+  font-weight:400;
+}
+#title-content{
+  text-align: center;
+}
+
+.text-inputs{
+  background-color: ghostwhite;
+  height:45px;
+  width:60%;
+  border:none;
+  border-radius: 8px;
+}
+
+#browse-button{
+  background-color: none;
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease 0s;
+  cursor: pointer;
+  outline: none;
+}
+
+.mint-nft-button{
+  align-self: flex-end;
+  width:100px;
+  padding:20px;
+  border-radius: 8px;
+  border:none;
+  background-color: whitesmoke;
+  color:darkgrey;
+  font-weight:500;
+  font-size: 1.2rem;
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease 0s;
+  outline: none;
+  pointer-events: none;
+}
+
+.minting-ready{
+  background-color: #2EE59D;
+  box-shadow: 0px 15px 20px rgba(46, 229, 157, 0.4);
+  color: #fff;
+  transform: translateY(-7px);
+  cursor: pointer;
+  pointer-events: all;
+}
+
+.error{
+  color:red;
+}

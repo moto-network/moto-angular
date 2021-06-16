@@ -11,8 +11,9 @@ html, body {
   background: radial-gradient(circle, rgba(236,246,247,1) 11%, rgba(255,255,255,1) 100%);*/
   background-image: url("./assets/background/webb.png");
   background-repeat: repeat;
-}
-body { 
   margin:0; 
   font-family: "Lato", sans-serif;
+
 }
+
+  

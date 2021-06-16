@@ -1,3 +1,25 @@
-<div>
-  
+<div id="create-nft">
+  <div id="title-content">
+    <h1 class="title">
+      Create a new NFT here
+    </h1>
+
+    <h3 class="error" *ngIf="errorMessage">{{errorMessage}}</h3>
+
+  </div>
+ 
+  <form id="createNFT" [formGroup]="createNFTform">
+    <h3>NFT Name</h3>
+    <input class="text-inputs" type="text" placeholder=" name" formControlName="name" (change)="validateName();checkForm()" />
+    <h3>beneficiary</h3>
+    <input class="text-inputs" type="text" placeholder=" address" formControlName="beneficiary" 
+    (change)="validateAddress();checkForm()" required/>
+    <h3>Input file</h3>
+    
+  </form>
+  <label for="mint-nft-button" class="custom-file-upload">
+    <input id="browse-button" type="file" (change)="handleFile($event);checkForm()" required/> 
+    Upload File
+</label>
+  <button class="mint-nft-button" [ngClass]="{'minting-ready':formValid}" (click)="createNFT()">Mint</button>
 </div>

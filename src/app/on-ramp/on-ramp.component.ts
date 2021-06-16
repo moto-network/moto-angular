@@ -61,7 +61,7 @@ export class OnRampComponent implements OnInit {
   public validateBTCAddress(): boolean{
     let address:string = this.onRampForm.get('btcAddress')?.value;
     if(address){
-      let validAddress = this._walletService.isValidAddress(address,"BTC");
+      let validAddress = this._walletService.isValidBTCaddress(address,"BTC");
       if(validAddress){
         this.invalidAddress = false;
         return true;

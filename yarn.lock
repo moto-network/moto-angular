@@ -12210,6 +12210,14 @@
   "resolved" "https://registry.npmjs.org/void-elements/-/void-elements-2.0.1.tgz"
   "version" "2.0.1"
 
+"wallet-address-validator@^0.2.4":
+  "integrity" "sha512-3fp0pVdhaCA6UoPK3CQFx9Y+ckQgFlCa9rOQ7DZr2Uzlh0kYKs3NaSwIDn4FSceDsi1g6W28EWDrlr9Pr3mI3Q=="
+  "resolved" "https://registry.npmjs.org/wallet-address-validator/-/wallet-address-validator-0.2.4.tgz"
+  "version" "0.2.4"
+  dependencies:
+    "base-x" "^3.0.4"
+    "jssha" "2.3.1"
+
 "walletconnect@^1.4.1":
   "integrity" "sha512-MfEWvVtjOZztVb6RJzlcgkk2STvYPL8BI8pGF0AYgIUqZSJq5RWgwF85pbBKYkySkFqjA8e+/JYbsVtKqzZXtg=="
   "resolved" "https://registry.npmjs.org/walletconnect/-/walletconnect-1.4.1.tgz"
