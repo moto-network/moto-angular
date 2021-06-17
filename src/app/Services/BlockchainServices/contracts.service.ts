@@ -15,7 +15,8 @@ enum Contracts{
 })
 export class ContractsService {
   web3 = new Web3(config.network.bsc_test);
-  MotoBEPNFTVerifiedContract = new this.web3.eth.Contract(motoVerifiedNFT.abi,Contracts.BSC_TEST_VERIFIED_NFT);
+  MotoBEPNFTVerifiedContract = new this.web3.eth
+  .Contract(motoVerifiedNFT.abi,Contracts.BSC_TEST_VERIFIED_NFT);
 
   constructor(private walletService:WalletService) {
 
@@ -34,18 +35,38 @@ export class ContractsService {
     console.log("signature before split ",signature);
     let sig = this.splitSignature(signature);
     console.log("mintNFT sig is ",sig);
-    const transactionData = this.MotoBEPNFTVerifiedContract.methods.userMint(nft.name, nft.chainId,
-      nft.beneficiary,nft.contentHash,nft.tokenId,sig.r,sig.s,sig.v).encodeABI();
-    const transactionValueString = this.web3.utils.toWei('2','ether');
-    const transactionParameters = {
-      gasPrice:(200000).toString(16),
-      to:Contracts.BSC_TEST_VERIFIED_NFT,
-      value:this.web3.utils.numberToHex(transactionValueString),
-      from:this.walletService.account,
-      data:transactionData,
-      chaindId:(97).toString(16),
-    }
-    return this.walletService.sendTransaction(transactionParameters);
+    const transactionData = this.MotoBEPNFTVerifiedContract.methods
+    .userMint(nft.name, nft.chainId,nft.beneficiary,nft.contentHash,nft.tokenId,sig.r,sig.s,sig.v).encodeABI();
+    
+    return new Promise((resolve, reject) => {
+      this.getNFTFee()
+        .then((nftFee: string) => {//can probably chain the .then statements instead of nesting
+          this.web3.eth.getGasPrice()
+          .then((gas:string)=>{
+            const transactionValueString = this.web3.utils.toWei(nftFee, 'ether');
+            const transactionParameters = {
+              gasPrice: gas,
+              to: Contracts.BSC_TEST_VERIFIED_NFT,
+              value: this.web3.utils.numberToHex(transactionValueString),
+              from: this.walletService.account,
+              data: transactionData,
+              chaindId: (97).toString(16),
+            }
+            this.walletService.sendTransaction(transactionParameters)
+              .then((transactionHash: string) => {
+                resolve(transactionHash);
+              })
+              .catch((err) => {
+                reject(new Error(err));
+              });
+          })
+          .catch((err)=>{
+            reject(new Error(err));
+          });
+          
+        })
+    });
+    //this.walletService.sendTransaction(transactionParameters);
   }
 
   splitSignature(signature:string):any{

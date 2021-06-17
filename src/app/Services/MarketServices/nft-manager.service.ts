@@ -17,7 +17,8 @@ export class NFTManagerService {//merge this wit the other NFTManager or wahteve
   lastSuccessfulTransaction = "";
 
   constructor(private walletService:WalletService, 
-    private contracts:ContractsService, private _db:AngularFirestore, crypto:CryptoService) {
+    private contracts:ContractsService, private _db:AngularFirestore, 
+    crypto:CryptoService) {
 //     this.initializeNFTFee();
    }
 
@@ -43,11 +44,12 @@ export class NFTManagerService {//merge this wit the other NFTManager or wahteve
           this.contracts.mintNFT(nft,signature)
           .then((transactionHash)=>{
             this.lastSuccessfulTransaction = transactionHash;
+            resolve(this.lastSuccessfulTransaction);
           })
           .catch((err)=>{
             reject(new Error("ContractError"));
           });
-          resolve(this.lastSuccessfulTransaction);     
+              
         })
         .catch((err)=>{//signaturePromise catch
          reject(new Error("NoAccountFound"));
