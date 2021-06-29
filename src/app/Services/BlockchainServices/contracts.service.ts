@@ -7,7 +7,7 @@ const motoVerifiedNFT = require('../BlockchainServices/contracts/BEPMotoNFT.json
 const utils = require('ethereumjs-util');
 enum Contracts{
   BSC_MOTO_NFTsimple = "0x1A205CD19dBaDd8db1F6BECFA3b85c3d2a8B7ead",
-  BSC_TEST_VERIFIED_NFT = "0x7D1d26e8FC29C84aF88C71744178A0f314394173"
+  BSC_TEST_VERIFIED_NFT = "0x6fA54eAAE6E86A3D8DdB95533BBE988EAd8eACdc"
 }
 
 @Injectable({

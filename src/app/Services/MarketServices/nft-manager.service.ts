@@ -5,7 +5,8 @@ import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/fire
 import { Observable } from 'rxjs';
 import { sign } from 'crypto';
 import { CryptoService } from '../crypto.service';
-
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { map } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root'
 })
@@ -15,10 +16,11 @@ export class NFTManagerService {//merge this wit the other NFTManager or wahteve
   nftsArray:any = [];
   nftProduct:any  | null;
   lastSuccessfulTransaction = "";
+  recordNFTurl: string = "http://localhost:5001/motonetwork/us-central1/recordNFT";
 
   constructor(private walletService:WalletService, 
     private contracts:ContractsService, private _db:AngularFirestore, 
-    crypto:CryptoService) {
+    crypto:CryptoService, private http:HttpClient) {
 //     this.initializeNFTFee();
    }
 
@@ -64,10 +66,16 @@ export class NFTManagerService {//merge this wit the other NFTManager or wahteve
     return true;//change this to false
    }
 
-   /*uploadNFT(nft,file){
-
-   }
-*/
+   
+  recordNFT(tokenId: string) {
+    let httpOptions = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+    };
+    this.http.post(this.recordNFTurl, { "tokenId": tokenId,"network": this.walletService.networkVersion}, httpOptions)
+      .pipe(map(data => { })).subscribe(result => {
+        console.log(result);
+      });
+  }
 
    getNFTProductForView(){
     return this.nftProduct;

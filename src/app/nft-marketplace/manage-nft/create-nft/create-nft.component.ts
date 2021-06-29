@@ -15,10 +15,10 @@ import { NFTManagerService } from 'src/app/Services/MarketServices\
 })
 export class CreateNFTComponent implements OnInit {
   errorMessage:null | string = null;
-  validAddress:boolean = true;
-  formValid:boolean = true;
-  validName:boolean = true;
-  haveFile:boolean = true;
+  validAddress:boolean = false;
+  formValid:boolean = false;
+  validName:boolean = false;
+  haveFile:boolean = false;
   account:string | null= null;
   createNFTform:FormGroup = new FormGroup({
     name: new FormControl(''),
@@ -42,17 +42,28 @@ export class CreateNFTComponent implements OnInit {
   }
 
   public initializeAccount():void{
-    this._walletService.requestAccount();
+    this._walletService.requestAccount()
+      .then((account) => {
+        if (account) {
+          this.checkForm();
+        }
+      })
+      .catch((err) => {
+        alert(err);
+       });
   }
 //0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7
   public createNFT(){
     console.log("NFT object is: ",this.nft);
-   
+    console.log("network id is ", this._walletService.networkVersion);
     this.nftManager.createNFT(this.nft)//add a please wait thing
     .then((result:any)=>{
       console.log("transction data is ", result);
-
-      this.router.navigate(['nft-marketplace','manage-nft','nft-results']);
+      if (result) {
+        
+        this.router.navigate(['nft-marketplace', 'manage-nft', 'nft-results']);
+      }
+      
 
     })
     .catch((err:any)=>{

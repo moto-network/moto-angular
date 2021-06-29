@@ -22,7 +22,7 @@ export class WalletService {
   public accountSubject: Subject<string | null > = new Subject<string | null >();
   public account:any | null = null;
   private ethereum: any;
-
+  public networkVersion: any | null;
   constructor() {
     this.browserEthereumCheck()
 
@@ -50,24 +50,26 @@ export class WalletService {
   }
 
 
-  requestAccount():void {
-    if(!this.ethereum){
-
-    }
-
-    else{
-      this.ethereum.request({ method: 'eth_requestAccounts' })
-      .then((accounts:string[])=>{
-        this.account = accounts[0];
-        this.accountSubject.next(this.account);
-        this.ethereum.eth.accounts.wallet.add(this.account);
-      })
-      .catch((err:any)=>{
-        return new Promise((resolve,reject)=>{
-          
-        });
+  requestAccount(): Promise<any> {
+   
+    if (!this.ethereum) {
+      return new Promise((resolve, reject) => {
+        reject(new Error("no ethereum"));
       });
     }
+    return new Promise((resolve, reject) => {
+      this.ethereum.request({ method: 'eth_requestAccounts' })
+        .then((accounts: string[]) => {
+          this.account = accounts[0];
+          this.accountSubject.next(this.account);
+          this.networkVersion = this.ethereum.networkVersion;
+          //this.ethereum.eth.accounts.wallet.add(this.account);
+          resolve(accounts[0]);
+        })
+        .catch((err: any) => {
+          reject(new Error(err));
+        });
+    });
   }
 
 
