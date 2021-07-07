@@ -1,4 +1,29 @@
 <div id="nft-results">
-<h2>Transaction Hash of your new NFT:</h2>
-<h3>{{transactionHash}}</h3>
+<h2>NFT Transaction Info:</h2>
+<h3>Transaction Hash</h3>
+<p><a href="{{transactionUrl}}">0x94d36fcb647f7d9c0cf47c84a96e789b357e3e02e69b9820d472c155782a43e8</a></p>
+
+  <h3>NFT Contract Address:</h3>
+  <a href="{{getUrl('address',nft!.tokenId,true)}}">0x94d36fcb647f7d9c0cf47c84a96e78</a>
+
+<h3>Name</h3>
+<p>
+     what it do
+</p>
+<h3>Beneficiary</h3> 
+<p>
+     <a href="{{getUrl('address',nft!.tokenId,false)}}">0x94d36fcb647f7d9c0cf47c84a96e78</a>
+  </p>
+  <h3>Chain ID</h3>
+  <p>
+     0x45
+  </p>
+  <h3>Token ID</h3>
+    <p>
+      <a href="{{getUrl('token',nft!.tokenId,false)}}"> 0x94d36fcb647f7d9c0cf47c84a96e78</a>
+    </p>
+  <h3>NFT Fingerprint </h3>
+<p>
+    0x94d36fcb647f7d9c0cf47c84a96e78
+</p>
 </div>

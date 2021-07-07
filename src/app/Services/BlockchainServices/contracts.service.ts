@@ -1,82 +1,69 @@
 import { Injectable } from '@angular/core';
 import Web3 from "web3";
 import WalletConnectProvider from "@walletconnect/web3-provider";
-import * as config from "../../../../app.config.json";
+import { getProvider, Contract, getContract } from "src/app.config"
 import { WalletService } from './wallet.service';
-const motoVerifiedNFT = require('../BlockchainServices/contracts/BEPMotoNFT.json');
-const utils = require('ethereumjs-util');
-enum Contracts{
-  BSC_MOTO_NFTsimple = "0x1A205CD19dBaDd8db1F6BECFA3b85c3d2a8B7ead",
-  BSC_TEST_VERIFIED_NFT = "0x6fA54eAAE6E86A3D8DdB95533BBE988EAd8eACdc"
-}
+import { NFT } from 'src/declaration';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ContractsService {
-  web3 = new Web3(config.network.bsc_test);
-  MotoBEPNFTVerifiedContract = new this.web3.eth
-  .Contract(motoVerifiedNFT.abi,Contracts.BSC_TEST_VERIFIED_NFT);
-
-  constructor(private walletService:WalletService) {
-
+  networkId: number | null = 56;
+  constructor(private _walletService:WalletService) {
+    _walletService.networkVersion.subscribe((networkId) => {
+      this.networkId = networkId;
+    });
    }
 
-  
-
-  getNFTFee():Promise<any>{
-    return this.MotoBEPNFTVerifiedContract.methods.getFee().call();
-    //dont forget the then and catch thign
+  getNFTFee(): Promise<any>{
+    let network = this.networkId ? this.networkId : 56;
+    let web3 = this.buildWeb3();
+    console.log("get nft fee network is ", network);
+    const nftContract: Contract = getContract(this._walletService.chainId, "nft");
+    const web3Contract = new web3.eth.Contract(nftContract.abi,nftContract.address);
+    return web3Contract.methods.getCreationFee().call();
   }
 
-
-  mintNFT(nft:any,signature:string):Promise<any>{
-    let transactionPromise:Promise<any>=new Promise((resolve,reject)=>{});
-    console.log("signature before split ",signature);
-    let sig = this.splitSignature(signature);
-    console.log("mintNFT sig is ",sig);
-    const transactionData = this.MotoBEPNFTVerifiedContract.methods
-    .userMint(nft.name, nft.chainId,nft.beneficiary,nft.contentHash,nft.tokenId,sig.r,sig.s,sig.v).encodeABI();
+  mintNFT(nft: NFT): Promise<any>{
+    console.log("network info is",getProvider(nft.chainId));
+    let web3 = this.buildWeb3();
+    const nftContract: Contract = getContract(this._walletService.chainId, "nft");
+    const web3Contract = new web3.eth.Contract(nftContract.abi, nftContract.address);
+    const transactionData = web3Contract.methods
+      .userMint(nft.name, nft.chainId, nft.beneficiary,
+        nft.contentHash, nft.tokenId).encodeABI();
     
     return new Promise((resolve, reject) => {
       this.getNFTFee()
         .then((nftFee: string) => {//can probably chain the .then statements instead of nesting
-          this.web3.eth.getGasPrice()
-          .then((gas:string)=>{
-            const transactionValueString = this.web3.utils.toWei(nftFee, 'ether');
-            const transactionParameters = {
-              gasPrice: gas,
-              to: Contracts.BSC_TEST_VERIFIED_NFT,
-              value: this.web3.utils.numberToHex(transactionValueString),
-              from: this.walletService.account,
-              data: transactionData,
-              chaindId: (97).toString(16),
-            }
-            this.walletService.sendTransaction(transactionParameters)
-              .then((transactionHash: string) => {
-                resolve(transactionHash);
-              })
-              .catch((err) => {
-                reject(new Error(err));
-              });
-          })
-          .catch((err)=>{
-            reject(new Error(err));
-          });
-          
+          web3.eth.getGasPrice()
+            .then((gas: string) => {
+              const transactionValueString = web3.utils.toWei(nftFee, 'ether');
+              const transactionParameters = {
+                gasPrice: web3.utils.numberToHex(gas),
+                to: nftContract.address,
+                value: web3.utils.numberToHex(transactionValueString),
+                from: this._walletService.account,
+                data: transactionData,
+                chainId: "0x"+(nft.chainId).toString(16)
+              }
+              this._walletService.sendTransaction(transactionParameters)
+                .then((transactionHash: string) => {
+                  resolve(transactionHash);
+                });
+            });    
         })
+      .catch ((err) => {
+        console.log("get nft fee: ", err);
+        reject(new Error("nft contract connection error"));
+      })
     });
-    //this.walletService.sendTransaction(transactionParameters);
+    
   }
 
-  splitSignature(signature:string):any{
-    let chopppedString = signature.split('x')[1];
-    let r = Buffer.from(chopppedString.substring(0, 64), 'hex').toString('hex');
-    let s = Buffer.from(chopppedString.substring(64, 128), 'hex').toString('hex');
-    let v = Buffer.from((parseInt(chopppedString.substring(128, 130)) + 27).toString(),'hex').toString('hex');
-    console.table({"r":r,"s":s,"v":v});
-    return {"r":"0x"+r,"s":"0x"+s,"v":v}
-    
+  buildWeb3(): Web3 {
+    return new Web3(getProvider(this._walletService.chainId));
   }
 
 }

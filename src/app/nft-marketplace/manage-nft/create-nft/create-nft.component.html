@@ -15,11 +15,16 @@
 
   </div>
  
-  <form id="createNFT" [formGroup]="createNFTform">
+  <form id="createNFT" [formGroup]="nftForm">
     <h3>NFT Name</h3>
     <input class="text-inputs" type="text" placeholder=" name" 
     formControlName="name" (change)="validateName();checkForm()" />
-    <h3>beneficiary</h3>
+    <h3>Network</h3>
+    <select formControlName="chainId" id="chainId" (change)="checkForm()">
+      <option value="56" selected>(BSC) (Mainnet) Binance SmartChain  </option>
+      <option value="97">(BSC-TestNet) (TestNet) Binance SmartChain </option>
+    </select>
+    <h3>Beneficiary</h3>
     <input class="text-inputs" type="text" placeholder=" address" 
     formControlName="beneficiary" 
     (change)="validateAddress();checkForm()" required/>
@@ -30,7 +35,10 @@
     <input id="browse-button" type="file" 
     (change)="handleFile($event);checkForm()" required/> 
     Upload File
-</label>
-  <button class="mint-nft-button" [ngClass]="{'minting-ready':formValid}" 
-  (click)="prepareInput();createNFT()">Mint</button>
+  </label>
+<br>
+<div style="display:flex;flex: row;justify-content: flex-end; padding-right:20px;">
+<button class="mint-nft-button" [ngClass]="{'minting-ready':formValid}" (click)="prepareInput()">Mint</button>
+</div>
+  
 </div>
