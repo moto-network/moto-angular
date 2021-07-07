@@ -15,6 +15,7 @@ import { getProvider } from "src/app.config";
 export class NFTManagerService {//merge this wit the other NFTManager or wahtever it's called
   nft: NFT | null = null;
   currentFee: number | null = null;
+  currentNetwork: number | null = null;
   nftsArray: any = [];
   nftProduct: any | null;
   lastSuccessfulTransaction = "";
@@ -23,7 +24,9 @@ export class NFTManagerService {//merge this wit the other NFTManager or wahteve
   constructor(private walletService: WalletService,
     private contracts: ContractsService, private _db: AngularFirestore,
     crypto: CryptoService, private http: HttpClient) {
-    //     this.initializeNFTFee();
+    walletService.networkVersion.subscribe((network) => {
+      this.currentNetwork = network;
+    });
   }
 
 
@@ -43,6 +46,8 @@ export class NFTManagerService {//merge this wit the other NFTManager or wahteve
       if (this._validNFT() && this.nft) {
         this.contracts.mintNFT(this.nft)
           .then((transactionHash) => {
+            localStorage.setItem('nft', JSON.stringify(this.nft));
+            this.recordNFT();
             this.lastSuccessfulTransaction = transactionHash;
             resolve(this.lastSuccessfulTransaction);
           })
@@ -78,20 +83,13 @@ export class NFTManagerService {//merge this wit the other NFTManager or wahteve
     }
   }
 
-
-
-
   recordNFT() {
     let httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
         "Access-Control-Allow-Origin":"http://motonetwork.io"
         })};
-    this.http.post(this.recordNFTurl,
-      {
-      "tokenId": this.nft?.tokenId,
-      "network": this.nft?.chainId, "chainId": this.nft?.chainId
-    }, httpOptions)
+    this.http.post(this.recordNFTurl, { "nft": this.nft }, httpOptions)
       .subscribe(result => {
         console.log(result);
       });

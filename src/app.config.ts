@@ -58,7 +58,7 @@ const testnet_parameters:Network = {
 const mainnet_parameters:Network = {
   provider: "https://bsc-dataseed.binance.org/",
   contracts: mainnetContracts,
-  explorerBaseUrl: "https://testnet.bscscan.com/tx/"
+  explorerBaseUrl: "https://testnet.bscscan.com/"
 };
 
 const networkCollection:NetworkCollection = {

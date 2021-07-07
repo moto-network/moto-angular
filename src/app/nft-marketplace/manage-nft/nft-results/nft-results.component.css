@@ -3,17 +3,18 @@
   flex-direction: column;
   width:100%;
   padding-left:5%;
-  height:100%;
+  height:auto;
+
 }
 
 h2{
-  font-weight:400;
+  font-weight:bold;
 }
 
 h3{
   font-weight:600;
   margin-bottom:10px;
-  padding:0;
+  padding:0px;
   color:var(--moto-teal);
 }
 
@@ -23,6 +24,7 @@ h3{
 
 p{
   width:86%;
+  margin-bottom:10px;
   font-size: 1.3rem;
   overflow : hidden;
   text-overflow: ellipsis;

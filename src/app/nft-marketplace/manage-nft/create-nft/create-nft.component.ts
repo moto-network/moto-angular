@@ -36,6 +36,8 @@ export class CreateNFTComponent implements OnInit {
     private nftManager:NFTManagerService, private router:Router, 
     private fileManager: FileManagerService) {
     this.nftManager.initNFTData();
+    this.account = this._walletService.account;
+    this.chainId = this._walletService.chainId;
      }
 
   ngOnInit(): void {
@@ -62,7 +64,6 @@ export class CreateNFTComponent implements OnInit {
   }
 //0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7
   public mint() {
-  
     this.nftManager.mintNFT()//add a please wait thing
     .then((result:any)=>{
       console.log("transction data is ", result);
@@ -77,10 +78,11 @@ export class CreateNFTComponent implements OnInit {
     .catch((err:any)=>{
       console.log(err);
       if (err.code == -32603) {
-        alert("You are on switch to proper chain");
+        alert("You need to switch to proper chain");
       
       }
     });
+    
   }
 
 

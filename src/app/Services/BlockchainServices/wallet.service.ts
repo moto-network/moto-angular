@@ -23,6 +23,7 @@ export class WalletService {
   constructor() {
     this.browserEthereumCheck();
     this.networkVersion.subscribe((networkVersion) => {
+      console.log("network version from wallet ",networkVersion);
       this.chainId = networkVersion ? networkVersion : 56;
     });
   }

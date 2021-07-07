@@ -22,6 +22,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import { OnRampComponent } from './on-ramp/on-ramp.component';
 import { HttpClientModule } from '@angular/common/http';
+import { NotFoundComponent } from './not-found/not-found.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -31,6 +32,7 @@ import { HttpClientModule } from '@angular/common/http';
     ThankYouComponent,
     AccountComponent,
     OnRampComponent,
+    NotFoundComponent,
   ],
   imports: [
     ButtonModule,

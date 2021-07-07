@@ -30,11 +30,16 @@ export class NftResultsComponent implements OnInit {
 
   constructor(private nftManager: NFTManagerService) {
     this.transactionHash = this.nftManager.lastSuccessfulTransaction;
-    /*if (this.nftManager.nft) {
+    if (this.nftManager.nft) {
       this.nft = this.nftManager.nft;
       this.transactionUrl = this.prepareTransactionUrl();
       this.contract = getContract(this.nftManager.nft.chainId, "nft");
-    }*/
+    }
+    else if (!this.nftManager.nft) {
+      if (localStorage.getItem('nft')) {
+        this.nft = JSON.parse(localStorage.getItem('nft')!);
+      }
+    }
   }
 
   ngOnInit(): void {
@@ -54,13 +59,12 @@ export class NftResultsComponent implements OnInit {
   public getUrl(type:string, variable:string,contract:boolean): string {
     let addressUrl: string = "";
     if (this.nft) {
-      addressUrl = getExplorer(this.nft.chainId)
-        + "/" + type + "/";
+      addressUrl = getExplorer(this.nft.chainId)+ type + "/";
       if (type == "address") {
         addressUrl =  addressUrl + (contract ? this.contract?.address : variable);
       }
       else if (type == "token") {
-        addressUrl = addressUrl + "?a=" + variable;
+        addressUrl = addressUrl+ this.contract?.address + "?a=" + variable;
       }
     }
     return addressUrl;
