@@ -38,6 +38,7 @@ export class CreateNFTComponent implements OnInit {
     this.nftManager.initNFTData();
     this.account = this._walletService.account;
     this.chainId = this._walletService.chainId;
+
      }
 
   ngOnInit(): void {

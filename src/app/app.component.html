@@ -18,9 +18,10 @@
   </div>
 
     
-  <div id="right-container">
+  <div id="right-container" >
       <div id="address-container">
-       <a> Account: <span id="address">{{address}}</span></a>
+        <p *ngIf="address"> Your Account</p>
+       <p>  <span id="address">{{address}}</span></p>
       </div>
      
       <a id="user-icon" routerLink='/account'>

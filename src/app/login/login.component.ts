@@ -20,7 +20,7 @@ export class LoginComponent implements OnInit {
   constructor(private _authentication: AuthenticationService, private _walletService:WalletService, private _router:Router) { 
     
   }
-
+  account = this._walletService.account;
   signIn(){
      const email: string = this.loginForm.get("email")?.value;
      const password: string = this.loginForm.get("password")?.value;
@@ -30,8 +30,17 @@ export class LoginComponent implements OnInit {
   
   openMetaMask():void{
     if(this._walletService.metaMaskCheck()){
-      this._walletService.requestAccount();
-      this._router.navigate(['nft_marketplace'])
+      this._walletService.requestAccount()
+        .then((account) => {
+          if (account) {
+            this._router.navigate(['nft-marketplace']);
+          }
+         })
+        .catch((err) => {
+
+         })
+      
+      
     }
   }
 

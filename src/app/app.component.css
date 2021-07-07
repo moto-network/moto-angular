@@ -76,21 +76,27 @@
 #right-container{
   display:flex;
   flex-direction: row;
-  justify-content:flex-end;
+  justify-content: center;
+  align-items: center;
   gap:8vw;
 
 }
 
 #address-container{
-  width:20vw;
+  width:23vw;
   white-space: nowrap;
-  font-size:18px;
+  
   font-weight:bolder;
-  overflow:hidden;
   text-overflow: ellipsis;
   background-color: #FFFFFF;
-  visibility:hidden;
+  visibility:d;
 
+}
+#address-container >p {
+  font-size:0.8rem;
+  
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 #address{
