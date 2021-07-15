@@ -8,24 +8,12 @@ import { NFT } from "src/declaration";
   styleUrls: ['./nft-results.component.css']
 })
 export class NftResultsComponent implements OnInit {
-  contentHash = "0xca40733fe2a0b4a688b5634147b4da3551aba25fa0292af5212f6fe35ed8ce4a";
-  name = "aasdfasdf";
-  beneficiary = "0xDcb982dEa4C22aBE650c12a1678537a3e8Ddd30D";
-  chainId = 97;
-  tokenId = "6";
-
-
+  
   transactionHash: string;
   transactionUrl: string = "";
   addressUrl: string = ""
   tokenUrl: string = "";
-  nft: NFT | null = {
-    "name": this.name,
-    "contentHash": this.contentHash,
-    "beneficiary": this.beneficiary,
-    "chainId": this.chainId,
-    "tokenId": this.tokenId,
-  };
+  nft: NFT | null = null;
   contract: Contract | null = null;
 
   constructor(private nftManager: NFTManagerService) {

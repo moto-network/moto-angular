@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import Web3 from "web3";
-//import WalletConnectProvider from "@walletconnect/web3-provider";
+import WalletConnectProvider from "@walletconnect/web3-provider";
 import { Subject } from 'rxjs';
+import { getProvider } from 'src/app.config';
 const config = require("../../../app.config");
 const WAValidator = require('crypto-wallet-address-validator');
 const secondaryValidator = require("wallet-address-validator");
@@ -19,13 +20,21 @@ export class WalletService {
   private ethereum: any;
   public networkVersion: Subject<number | null> = new Subject<number | null>();
   public chainId: number = 56;
+  private providerWalletConnect: any = new WalletConnectProvider({
+    rpc: {
+      97: getProvider(97),
+      56: getProvider(56),
+
+    },
+  });
 
   constructor() {
     this.browserEthereumCheck();
     this.networkVersion.subscribe((networkVersion) => {
-      console.log("network version from wallet ",networkVersion);
+      console.log("network version from wallet ", networkVersion);
       this.chainId = networkVersion ? networkVersion : 56;
     });
+
   }
 
   browserEthereumCheck(): boolean {
@@ -43,6 +52,9 @@ export class WalletService {
     }
   }
 
+  walletConnect(): void{
+    
+   }
 
   accountReady(): boolean {
     if (this.account) {

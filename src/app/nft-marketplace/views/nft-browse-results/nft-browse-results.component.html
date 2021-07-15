@@ -4,15 +4,15 @@
   <div class="nft-card" *ngFor="let nft of nftsArray"(click)="openProductPage(nft)">
    
     <div id="image-container">
-      <img class="nft-img" src={{nft.img}} />
+      <img class="nft-img" src={{nft.smImg}} />
     </div>
      
      <div id="info-container">
       <p><span class="preview-card-titles">Name:    </span>{{nft.name}}</p>
-      <p class="text"><span class="preview-card-titles">contract address:</span> {{nft.address}}</p>
-      <p class="text"><span class="preview-card-titles">NFT ID: </span>{{nft.id}}</p>
-      <p class="long-text">{{nft.desc}}</p>
-      <p class="price">{{nft.price}} moto</p>
+      <p class="text"><span class="preview-card-titles">contract address:</span> {{nft.contractAddress}}</p>
+      <p class="text"><span class="preview-card-titles">NFT ID: </span>{{nft.tokenId}}</p>
+      <p class="text"><span class="preview-card-titles">Creator </span>{{nft.creator}}</p>
+      <p class="price" *ngIf="nft.price">{{nft.price}} moto</p>
     </div>
     
   </div>

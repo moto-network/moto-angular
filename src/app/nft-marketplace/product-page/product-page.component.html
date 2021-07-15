@@ -1,22 +1,29 @@
 <div id="product-page">
-  <div id="product" class="box-shadow" >
-    <div id="product-image-container" >
-      <img id="product-image" src="{{nft.img}}"/>
-    </div> 
+  <div id="product" class="box-shadow">
+    <div id="product-image-container" class="content-containers">
+      <img id="product-image" src="{{nft?.medImg}}" />
+    </div>
 
-    <div id="product-details">
-      <h2>{{nft.name}}</h2>
+    <div id="product-details" class="content-containers">
+      <h2>{{nft?.name}}</h2>
       <h4>NFT Address</h4>
-      <p>{{nft.address}}</p>
+      <p>{{nft?.contractAddress}}</p>
       <h4>NFT ID</h4>
-      <p>{{nft.id}}</p>
+      <p>{{nft?.tokenId}}</p>
       <h4>NFT Network</h4>
-      <p>{{nft.network}}</p>
-      <p class="long-text">{{nft.desc}}</p>
-      <div id="price-container">
+      <p>{{nft?.chainId}}</p>
+      <h4>Fingerprint</h4>
+      <p>{{nft?.contentHash}}</p>
+      <h4>Owner</h4>
+      <p>{{nft?.beneficiary}}</p>
+      <h4>Creator</h4>
+      <p>{{nft?.creator}}</p>
+      <h4 *ngIf='nft.pHash'>Copyright ID</h4>
+      <p *ngIf='nft.pHash'>{{nft?.pHash}}</p>
+      <div id="price-container" *ngIf="nft.price">
         <h2>{{nft.price}} {{nft.price_currency}}</h2>
       </div>
-      <div id="button-container">
+      <div id="button-container" *ngIf="nft?.price">
         <button id="buy-button" class="product-button">Buy Now</button>
         <button id="bid-button" class="product-button">BID</button>
       </div>

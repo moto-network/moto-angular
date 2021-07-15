@@ -1,44 +1,60 @@
+import { HttpParams } from '@angular/common/http';
 import { Component, Input, OnInit } from '@angular/core';
-import { NFTManagerService } from '../../Services/MarketServices/nft-manager.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
+import { NFTManagerService } from '../../Services/MarketServices/nft-manager.service';
+import { Location } from "@angular/common";
 @Component({
   selector: 'product-page',
   templateUrl: './product-page.component.html',
   styleUrls: ['./product-page.component.css']
 })
 export class ProductPageComponent implements OnInit {
-  nft:any;
-  
-  dummyData = {
-    "on_sale": true,
-    "id": "0x162FD",
-    "img": "https://motonetwork00.s3-us-west-1.amazonaws.com/b6aVYzdnpto.jpg",
-    "address": "0x495f947276749Ce646f68AC8c248420045cb7b5e",
-    "network":"BSC",
-    "price": "312",
-    "price_currency":"MOTO",
-    "name": "GlitchArt01",
-    "desc":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis nulla risus, dignissim vitae sollicitudin id, suscipit eu est. Curabitur sem diam, ornare id est imperdiet, interdum finibus erat. Suspendisse potenti. Vestibulum vitae malesuada eros, a lacinia odio. Pellentesque dignissim varius ultricies. Maecenas vitae ornare magna, vel malesuada neque. Mauris finibus nisl et est tincidunt vestibulum in quis tellus. In scelerisque lectus pretium elit molestie suscipit. Fusce ut sodales sapien."
+  nft: any = {
+    name: "NOTHING TO SHOW",
+    creator: "0x0000000000000000000000000000000000000000",
+    tokenId: "0x000000000000000000000000000000000000000000000000000000",
+    chainId: 0,
+    beneficiary: "0x0000000000000000000000000000000000000000",
+    contentHash: "0x000000000000000000000000000000000000000000000000000000000000000",
+    pHash:"00000000000000000000000"
   };
-  
-  constructor(private _nftManager:NFTManagerService) { 
+  tokenId: string | null = null;
+  constructor(private readonly location: Location,private _nftManager: NFTManagerService, private readonly _route: ActivatedRoute,
+  private _router:Router) {
     //TODO: this.nft is null on reload, need to go back and click again
+    if (_nftManager.nft) {
+     this.nft = _nftManager.nft;
+      this.location.replaceState(this._router.url.toString() + "?tokenId="+this.nft.tokenId);
+    }
+    
+    
   }
 
   ngOnInit(): void {
-   const remoteNFT = this._nftManager.getNFTProductForView();
-    // const remoteNFT = this.dummyData;
-    if(remoteNFT){
-      this.nft = remoteNFT;
-      localStorage.setItem("nft_product",this.nft);
-    }
-    else if(!remoteNFT){
-      console.log("nothing there");
-      this.nft = localStorage.setItem("nft_product",this.nft);
-    }
-    else{
-      //go back
-    }
+    this._route.queryParams.subscribe((params) => {
+      this.tokenId = params["tokenId"];
+      if (this.tokenId) {
+        this._nftManager.getNFTbyId(this.tokenId)
+          .subscribe((snapshots) => {
+            console.log("resullt", snapshots);
+            this.nft = snapshots.docs[0].data();
+           });
+      }
+     
+    });
+    //http://localhost:4200/nft-marketplace/nft
+    
+  }
+
+  private addNavigation(tokenId:string) {
+    const params = new HttpParams();
+    params.append("tokenId", tokenId);
+    this.location.go(this._router.url.split("?")[0], params.toString());
+  }
+
+  ngOnChange(): void {
+    
   }
 
 }

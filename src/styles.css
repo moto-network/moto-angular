@@ -1,5 +1,28 @@
 /* You can add global styles to this file, and also import other style files */
-@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@200;700&family=Lato:wght@100;300;900&display=swap');
+@font-face {
+  font-family: 'Lato';
+  src: url("./assets/Lato/Lato-Regular.ttf");
+}
+@font-face {
+  font-family: 'Lato-Light';
+  src: url("./assets/Lato/Lato-Light.ttf");
+}
+
+@font-face {
+  font-family: "Lato-Black";
+  src: url("./assets/Lato/Lato-Black.ttf");
+}
+
+@font-face {
+  font-family: "Lato-Thin";
+  src: url("./assets/Lato/Lato-Thin.ttf");
+}
+
+@font-face {
+  font-family: 'Lato-Bold';
+  src: url("./assets/Lato/Lato-Bold.ttf");
+}
+
 :root{
   --moto-teal:#46c3d1;
   --moto-blue:#011734;

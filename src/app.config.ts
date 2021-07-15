@@ -77,3 +77,9 @@ export function getContract(chainId: number, name: string): Contract {
 export function getExplorer(chainId: number): string {
   return networkCollection[chainId].explorerBaseUrl;
 }
+
+
+//export const UPLOAD_URL: string = "http://localhost:5001/motonetwork/us-central1/uploadNFT";
+export const UPLOAD_URL: string = "https://us-central1-motonetwork.cloudfunctions.net/uploadNFT";
+  //uploadNFTurl: string = "http://localhost:5001/motonetwork/us-central1/uploadNFT";
+
