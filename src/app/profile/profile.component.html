@@ -1,0 +1,63 @@
+<div id="profile">
+
+  <div id="profile-header">
+    <div id="title-bar">
+      <p id="hero-address">
+      {{address}}
+      </p>
+    </div>
+
+    <!--<button id="commission-button">Request commission</button>-->
+    <div id="profile-header-menu">
+      <button id="commission-button">Request commission</button>
+    </div>
+
+  </div>
+
+  <div id="profile-info" class="box-shadow">
+    <div id="support">
+      <!--only if creator-->
+
+      <button id="support-button">
+        <fa-icon [icon]="support"></fa-icon>
+      </button>
+      <button id="send-diamond-button">
+        <fa-icon [icon]="diamond"></fa-icon>
+      </button>
+      <button id="send-crown-button">
+        <fa-icon [icon]="crown"></fa-icon>
+      </button>
+      <button id="send-heart-button">
+        <fa-icon [icon]="heart"></fa-icon>
+      </button>
+    </div>
+
+    <div id="all-awards">
+      <div class="award-subcontainer">
+        <fa-icon [icon]="diamond" id="diamond"></fa-icon>
+        <p class="award-number">300</p>
+      </div>
+      <div class="award-subcontainer">
+        <fa-icon [icon]="crown" id="crown"></fa-icon>
+        <p class="award-number">300</p>
+      </div>
+      <div class="award-subcontainer">
+        <fa-icon [icon]="heart" id="heart"></fa-icon>
+        <p class="award-number">300</p>
+      </div>
+    </div>
+
+  </div>
+  <div id="gallery-container" class="box-shadow">
+    <h2 class="title">gallery</h2>
+    <div id="gallery">
+
+      <div class='nft' *ngFor="let tokenId of ProfileNFTs">
+        <img class="nft-img" (click)="goToNFT(nftCollection[tokenId])"src={{nftCollection[tokenId].smImg}}>
+      </div>
+      
+    </div>
+  </div>
+
+
+</div>

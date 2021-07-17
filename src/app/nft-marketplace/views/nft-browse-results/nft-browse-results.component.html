@@ -1,19 +1,23 @@
-<div *ngIf="nftsArray.length==0" class="loader"></div>
+<div class="spinner" *ngIf="loading">
+  <div class="dot1"></div>
+  <div class="dot2"></div>
+</div>
 <div id="nft-results">
 
-  <div class="nft-card" *ngFor="let nft of nftsArray"(click)="openProductPage(nft)">
+  <div class="nft-card" *ngFor="let tokenId of RemoteData" >
    
     <div id="image-container">
-      <img class="nft-img" src={{nft.smImg}} />
+    <img class="nft-img" src={{nftCollection[tokenId].smImg}} />
     </div>
-     
+
      <div id="info-container">
-      <p><span class="preview-card-titles">Name:    </span>{{nft.name}}</p>
-      <p class="text"><span class="preview-card-titles">contract address:</span> {{nft.contractAddress}}</p>
-      <p class="text"><span class="preview-card-titles">NFT ID: </span>{{nft.tokenId}}</p>
-      <p class="text"><span class="preview-card-titles">Creator </span>{{nft.creator}}</p>
-      <p class="price" *ngIf="nft.price">{{nft.price}} moto</p>
+   <p><span class="preview-card-titles">Name:    </span>{{nftCollection[tokenId].name}}</p>
+      <p class="text"><span class="preview-card-titles">contract address:</span> {{nftCollection[tokenId].contractAddress}}</p>
+      <p class="text"><span class="preview-card-titles">NFT ID: </span>{{nftCollection[tokenId].tokenId}}</p>
+      <p class="text"><span class="preview-card-titles">Creator </span>{{nftCollection[tokenId].creator}}</p>
+      <!--<p class="price" *ngIf="nftCollection[tokenId].price">{{nft.price}} moto</p>-->
     </div>
     
   </div>
+
 </div>

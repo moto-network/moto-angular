@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { DBNFT, NFTCollection } from 'src/declaration';
 import {NFTManagerService} from '../../../Services/MarketServices/nft-manager.service';
 @Component({
   selector: 'app-nft-browse-results',
@@ -7,12 +8,34 @@ import {NFTManagerService} from '../../../Services/MarketServices/nft-manager.se
   styleUrls: ['./nft-browse-results.component.css']
 })
 export class NftBrowseResultsComponent implements OnInit {
-  nftsArray:any = [];
- 
+  loading:boolean = true;
+  nftCollection: NFTCollection = {};
+  
+  nftArray: DBNFT[] = [];
   constructor(private _nftManager:NFTManagerService,private _router:Router) {
     //this.nftsArray = this.dummyArray; 
-    _nftManager.getNFTs();
-    this.nftsArray = _nftManager.nftsArray;
+
+    
+    //console.log("smImg", nftCollection[nft].smImg);
+    /*this._nftManager.getNFTCollection()
+      .subscribe((collection: NFTCollection) => {
+        this.nftCollection = collection;
+        
+      });*/
+    if (Object.keys(this._nftManager.nftCollection).length == 0) {
+      this._nftManager.getNFTCollection()
+        .subscribe((collection: NFTCollection) => {
+          this.nftCollection = collection;
+          console.log(this.nftCollection);
+        });
+    }
+    else {
+      this.nftCollection = this._nftManager.nftCollection;
+    }
+    
+    /**
+     * @todo see if you can filter data without making calls
+     */
     
   }
 
@@ -21,7 +44,13 @@ export class NftBrowseResultsComponent implements OnInit {
   }
 
   ngDoCheck(){
-    
+    if (this.nftCollection) {
+      this.loading = false;
+    }
+  }
+
+  get RemoteData() {
+    return Object.keys(this.nftCollection);
   }
 
   openProductPage(nft: any): void{

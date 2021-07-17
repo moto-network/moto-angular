@@ -6,14 +6,18 @@ import { NftBrowseResultsComponent } from './views/nft-browse-results/nft-browse
 import { ProductPageComponent } from './product-page/product-page.component';
 import { NFTManagerService } from '../Services/MarketServices/nft-manager.service';
 import { HttpClientModule } from '@angular/common/http';
-
+import { SellDialogComponent } from './sell-dialog/sell-dialog.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { ReactiveFormsModule } from "@angular/forms";
 @NgModule({
-  declarations: [BrowsePageComponent, NftBrowseResultsComponent, ProductPageComponent],
+  declarations: [BrowsePageComponent, NftBrowseResultsComponent, ProductPageComponent, SellDialogComponent],
   providers:[NFTManagerService],
   imports: [
+    ReactiveFormsModule,
     CommonModule,
     NFTMarketplaceRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    MatDialogModule
   ]
 })
 export class NftMarketplaceModule { }

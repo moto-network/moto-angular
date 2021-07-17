@@ -23,6 +23,7 @@ import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import { OnRampComponent } from './on-ramp/on-ramp.component';
 import { HttpClientModule } from '@angular/common/http';
 import { NotFoundComponent } from './not-found/not-found.component';
+import { ProfileComponent } from './profile/profile.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -33,6 +34,7 @@ import { NotFoundComponent } from './not-found/not-found.component';
     AccountComponent,
     OnRampComponent,
     NotFoundComponent,
+    ProfileComponent,
   ],
   imports: [
     ButtonModule,

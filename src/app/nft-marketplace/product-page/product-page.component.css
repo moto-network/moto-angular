@@ -83,3 +83,16 @@ color:var(--moto-teal);
   background-color: #FC670D;
   color:white;
 }
+
+#sell-button{
+  background-color: #2EE59D;
+  box-shadow: 0px 15px 20px rgba(46, 229, 157, 0.4);
+  color: #fff;
+  transform: translateY(-7px);
+  cursor: pointer;
+  pointer-events: all;
+  padding:12px 20px;
+  border-radius: 8px;
+  border:none;
+  margin-top:8px;
+}

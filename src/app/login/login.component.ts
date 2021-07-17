@@ -44,6 +44,10 @@ export class LoginComponent implements OnInit {
     }
   }
 
+  openWalletConnect(): void {
+    //this._walletService.walletConnect();
+  }
+
   ngOnInit(): void {
   }
 

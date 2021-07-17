@@ -23,9 +23,12 @@
       <div id="price-container" *ngIf="nft.price">
         <h2>{{nft.price}} {{nft.price_currency}}</h2>
       </div>
-      <div id="button-container" *ngIf="nft?.price">
-        <button id="buy-button" class="product-button">Buy Now</button>
-        <button id="bid-button" class="product-button">BID</button>
+      <div id="manage-product">
+        
+      </div>
+      <div id="button-container" >
+        <button id="sell-button" *ngIf="owner" (click)="sellNFT()">sell this</button>
+        <button id="buy-button" class="product-button" *ngIf="nft?.price&&!owner">Buy Now</button>
       </div>
     </div>
   </div>

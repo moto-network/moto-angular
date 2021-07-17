@@ -3,9 +3,13 @@
     <div class="form">
       <img id="moto-logo" src="../../assets/ICON-PNG.png">
 
-      <div id="meta-mask-go" (click)="openMetaMask()" *ngIf="!account">
+      <div class="connect-button" (click)="openMetaMask()" *ngIf="!account">
         <img id="metamask-logo" src="../../assets/metamask-fox.svg">
         <h2>MetaMask</h2>
+      </div>
+      <div class="connect-button" (click)="openWalletConnect()" *ngIf="!account">
+        
+        <h2>Wallet Connect</h2>
       </div>
       <div id="already" *ngIf="account">
         <h2>Logged In</h2>

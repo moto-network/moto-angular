@@ -28,7 +28,7 @@ const storageJson = require("./StorageManagementV1.json");
 const storageContractTestnet: Contract = {
   name: "storage",
   address: "",
-  abi: storageJson.abi
+  abi: storageJson.abip
 };
 
 const nftTestnet: Contract = {

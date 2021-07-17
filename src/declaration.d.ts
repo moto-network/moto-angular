@@ -9,3 +9,11 @@ export interface NFT {
   pHash?: string;
 }
 
+export interface DBNFT extends NFT {
+  smImg: string;
+  medImg: string;
+}
+
+export type NFTCollection = {
+  [tokenId: string]: DBNFT;
+}
