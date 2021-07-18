@@ -30,10 +30,10 @@
 html, body { 
   height: 100%; 
   width:100vw;
-  /*background: rgb(236,246,247);
-  background: radial-gradient(circle, rgba(236,246,247,1) 11%, rgba(255,255,255,1) 100%);*/
-  background-image: url("./assets/background/webb.png");
-  background-repeat: repeat;
+  background: rgb(236,246,247);
+  background: radial-gradient(circle, rgba(236,246,247,1) 11%, rgba(255,255,255,1) 100%);
+  /*background-image: url("./assets/moto-logo.png");
+  background-repeat: repeat;*/
   margin:0; 
   font-family: "Lato", sans-serif;
 

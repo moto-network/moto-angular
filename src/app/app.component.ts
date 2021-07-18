@@ -1,6 +1,6 @@
 import { AnimationQueryMetadata } from '@angular/animations';
 import { Component, HostListener, Input } from '@angular/core';
-import { faBell, faUserCircle,faHome, faSignInAlt , faUserPlus} from '@fortawesome/free-solid-svg-icons';
+import { faBell, faUserCircle,faHome, faSignInAlt , faUserPlus, faUserAstronaut} from '@fortawesome/free-solid-svg-icons';
 import { Observable } from 'rxjs';
 import { AuthenticationService } from './Services/authentication.service';
 import { WalletService } from './Services/BlockchainServices/wallet.service';
@@ -15,6 +15,7 @@ declare var anime: any;
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
+  user = faUserAstronaut;
   title = 'motonetwork';
   bellIcon = faBell;
   homeIcon = faHome;
@@ -42,9 +43,9 @@ export class AppComponent {
     this._auth.afAuth.authState.subscribe((user)=>{
       this.changeActiveUserState();
     });
-    this._walletService.accountSubject.subscribe((value)=>{
-      this.address = value;
-      if(value){
+    this._walletService.accountSubject.subscribe((remoteAddress)=>{
+      this.address = remoteAddress;
+      if(remoteAddress){
         this.notificationMessage = "MetaMask Connected";
 
         if(this.notificationBar){

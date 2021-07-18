@@ -1,36 +1,14 @@
 <div id="header">
-  <div id="logo-container">
+
     <img  routerLink='/' id="header-logo" src="../../../assets/moto-logo2.png" width="80px" height="60px">
-  </div>
+ 
 
-    
+  
 
-  <div id="middle-container">
-      <a  routerLink='/nft-marketplace'>
-        <img  class="icon" src="../assets/marketplace.png" />
-      </a>
-      <a  routerLink='/on-ramp'>
-        <img  class="icon" src="../assets/exchange.png" />
-      </a>
-      <a  *ngIf="nullUserBool" routerLink='/user_dashboard'>
-       <img class="icon" src="../assets/wallet-filled-money-tool.png"/>
-      </a>
-  </div>
 
-    
-  <div id="right-container" >
-      <div id="address-container">
-        <p *ngIf="address"> Your Account</p>
-       <p>  <span id="address">{{address}}</span></p>
-      </div>
-     
-      <a id="user-icon" routerLink='/account'>
-        <img class="icon" src="../assets/user.png"/>
-      </a>
-    
-  </div>   
-
-    
+    <a id="user-icon" routerLink='/account'>
+      <fa-icon [icon]="user" [ngClass]="{'logged-in':address}"></fa-icon>
+    </a>
 
 
 </div>
