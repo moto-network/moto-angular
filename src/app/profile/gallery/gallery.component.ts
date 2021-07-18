@@ -1,5 +1,6 @@
 import { HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { NFTManagerService } from 'src/app/Services/MarketServices/nft-manager.service';
 import { ProfileService } from 'src/app/Services/profile.service';
 import { DBNFT, NFT, NFTCollection } from 'src/declaration';
@@ -13,8 +14,8 @@ export class GalleryComponent implements OnInit {
   nftCollection: NFTCollection = {};
   nftGallery: DBNFT[] = [];
   address: string | null = null;
-  constructor(private _profileManager: ProfileService) {
-    console.log(_profileManager.nftCollection);
+  constructor(private _profileManager: ProfileService, private _router: Router) {
+
   }
 
   ngOnChanges(): void {
@@ -22,20 +23,25 @@ export class GalleryComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this._profileManager.getNFTs()
-      .subscribe((remoteCollection: NFTCollection) => {
-        this.nftCollection = remoteCollection;
-        console.log(this.nftCollection, "inside gallery");
-      });
+    console.log("have profile manager address ? ", this._profileManager.address);
+    if (this._profileManager.hasLocalCollection()) {
+      this.nftCollection = this._profileManager.nftCollection;
+    }
+    else if (this._profileManager.address) {
+      this._profileManager.getNFTs()
+        .subscribe((remoteCollection: NFTCollection) => {
+          this.nftCollection = remoteCollection;
 
+        });
+    }
   }
 
-  
 
 
-  goToNFT(nft: NFT) {
-    
-   
+
+  goToNFT(nft: DBNFT) {
+    this._profileManager.setNFT(nft);
+    this._router.navigate(['profile', 'nft']);
     console.log("click registered");
   }
 

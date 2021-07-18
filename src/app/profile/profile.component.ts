@@ -17,23 +17,25 @@ export class ProfileComponent implements OnInit {
   heart = faHeart;
   gift = faGift;
   support = faHandHoldingHeart;
-//localhost:4200/profile/gallery?address=0xDcb982dEa4C22aBE650c12a1678537a3e8Ddd30D
+//localhost:4200/profile?address=0xDcb982dEa4C22aBE650c12a1678537a3e8Ddd30D
   address: string | null = null;
-
+  isCreator: boolean = true;
 
   constructor(private _profileManager: ProfileService, private _router: Router,
     private readonly location: Location, private readonly _route: ActivatedRoute) {
-
+    this.address = "0xDcb982dEa4C22aBE650c12a1678537a3e8Ddd30D";
   }
 
   ngOnInit(): void {
     //this._router.navigate(['profile', 'gallery'], {replaceUrl:false});
-    
+    if (this._profileManager.address) {
+      this.address = this._profileManager.address;
+    }
+
     this._route.queryParams.subscribe((params) => {
       this.address = params["address"];
       if (this.address) {
         this._profileManager.initProfile(this.address);
-        
       }
     });
     

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { NFTCollection } from 'src/declaration';
+import { DBNFT, NFT, NFTCollection } from 'src/declaration';
 import { NFTManagerService } from './MarketServices/nft-manager.service';
 
 @Injectable({
@@ -10,6 +10,7 @@ export class ProfileService {
   address: string | null = null;
   isCreator: boolean = false;
   nftCollection: NFTCollection = {};
+  nft: DBNFT | null = null;
   collectionObservable: Subject<NFTCollection> = new Subject<NFTCollection>();
   constructor(private _nftManager: NFTManagerService) {
   }
@@ -25,6 +26,21 @@ export class ProfileService {
     return this.collectionObservable;
   }
 
+  setNFT(nft: DBNFT) :void{
+    this.nft = nft;
+  }
+
+  getNFT(): DBNFT| null {
+    if (this.nft) {
+      return this.nft;
+    }
+    return null;
+  }
+
+  hasLocalCollection(): boolean {
+    return Object.keys(this.nftCollection).length > 0;
+  }
+
   private _getNFTs() {
     if (this.address) {
       this._nftManager.getNFTsByAddress(this.address)
@@ -36,5 +52,7 @@ export class ProfileService {
     }
 
   }
+
+
 
 }

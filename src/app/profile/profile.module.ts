@@ -2,16 +2,17 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProfileRoutingModule } from './profile-routing.module';
 import { GalleryComponent } from './gallery/gallery.component';
-import { NftComponent } from './nft/nft.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ProfileNftComponent } from './profile-nft/profile-nft.component';
 
 
 
 @NgModule({
-  declarations: [GalleryComponent, NftComponent, ProfileNftComponent],
+  declarations: [GalleryComponent,  ProfileNftComponent],
   imports: [
     CommonModule,
-    ProfileRoutingModule
+    ProfileRoutingModule,
+    FontAwesomeModule
   ]
 })
 export class ProfileModule { }

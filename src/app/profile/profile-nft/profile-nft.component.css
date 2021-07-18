@@ -1,0 +1,46 @@
+.title{
+font-weight: 300;
+margin-left:20px;
+}
+
+#nft-container{
+  margin:auto;
+  display:flex;
+  flex-direction: row;
+  flex-wrap:wrap;
+  gap:8px;
+  justify-content: space-evenly;
+  width:99%;
+  height:auto;
+}
+
+#top-info{
+  display:flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nft-img{
+  width:100%;
+  height:100%;
+  object-fit: cover;
+  object-position: center center;
+}
+#nft-info{
+  margin-top:10px;
+  font-weight:200;
+  width:75%;
+  margin-left:auto;
+  margin-right:auto;
+}
+
+#back-button{
+  font-size: 1.5rem;
+  margin-right:30px;
+}
+
+p{
+  width:90%;
+  word-wrap: break-word;
+}

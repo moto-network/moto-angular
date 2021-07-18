@@ -1,1 +1,26 @@
-<p>profile-nft works!</p>
+<div id="top-info">
+  <h2 class="title">
+    NFT
+  </h2>
+
+  <fa-icon id="back-button" (click)="backClicked()" [icon]="leftArrow"></fa-icon>
+
+</div>
+<div id="nft-container">
+  <img class="nft-img" src={{nft.medImg}}>
+</div>
+<div id="nft-info">
+  <h2  class="title" >{{nft?.name}}</h2>
+  <h4 class="title" >NFT Address</h4>
+  <p>{{nft?.contractAddress}}</p>
+  <h4 class="title" >NFT ID</h4>
+  <p>{{nft?.tokenId}}</p>
+  <h4 class="title" >NFT Network</h4>
+  <p>{{nft?.chainId}}</p>
+  <h4 class="title" >Fingerprint</h4>
+  <p>{{nft?.contentHash}}</p>
+  <h4 class="title" >Owner</h4>
+  <p>{{nft?.beneficiary}}</p>
+  <h4 class="title" >Creator</h4>
+  <p>{{nft?.creator}}</p>
+</div>
