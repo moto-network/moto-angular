@@ -3,7 +3,7 @@
     <img  routerLink='/' id="header-logo" src="../../../assets/moto-logo2.png" width="80px" height="60px">
  
 
-  
+
 
 
     <a id="user-icon" routerLink='/account'>
@@ -11,6 +11,14 @@
     </a>
 
 
+</div>
+<div id='search' class="box-shadow">
+  <fa-icon class="icons" id="search-icon" [icon]="add"></fa-icon>
+  <form id="search-form" [formGroup]="searchForm">
+    <input id="search-input" type="text" placeholder={{placeholder}} formControlName="name" />
+  </form>
+
+  <fa-icon id="search-icon" [icon]="search"></fa-icon>
 </div>
 <div id="notification-bar" >
   {{notificationMessage}}

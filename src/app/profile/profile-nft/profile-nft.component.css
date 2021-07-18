@@ -38,6 +38,8 @@ margin-left:20px;
 #back-button{
   font-size: 1.5rem;
   margin-right:30px;
+  background:white;
+  border:0;
 }
 
 p{

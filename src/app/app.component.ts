@@ -1,6 +1,10 @@
 import { AnimationQueryMetadata } from '@angular/animations';
 import { Component, HostListener, Input } from '@angular/core';
-import { faBell, faUserCircle,faHome, faSignInAlt , faUserPlus, faUserAstronaut} from '@fortawesome/free-solid-svg-icons';
+import { FormGroup, FormControl } from '@angular/forms';
+import {
+  faBell, faUserCircle, faHome, faSignInAlt,
+  faUserPlus, faUserAstronaut, faSearch, faPlusSquare
+} from '@fortawesome/free-solid-svg-icons';
 import { Observable } from 'rxjs';
 import { AuthenticationService } from './Services/authentication.service';
 import { WalletService } from './Services/BlockchainServices/wallet.service';
@@ -15,6 +19,9 @@ declare var anime: any;
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
+  search = faSearch;
+  add = faPlusSquare;
+  placeholder = "   Address / NFT ID / Fingerprint / Copyright ID";
   user = faUserAstronaut;
   title = 'motonetwork';
   bellIcon = faBell;
@@ -33,7 +40,10 @@ export class AppComponent {
   timeline:any;
   notificationBar:any;
   addressAnimation:any;
-  addressContainer:any;
+  addressContainer: any;
+  searchForm: FormGroup = new FormGroup({
+    search: new FormControl('')
+  });
   constructor(private _auth:AuthenticationService, private _walletService:WalletService) {
       
   } 
