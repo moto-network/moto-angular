@@ -1,0 +1,9 @@
+
+<h2 class="title">gallery</h2>
+<div id="gallery">
+
+  <div class='nft' *ngFor="let tokenId of ProfileNFTs">
+  <img class="nft-img" (click)="goToNFT(nftCollection[tokenId])" src={{nftCollection[tokenId].smImg}}>
+  </div>
+
+</div>

@@ -3,8 +3,8 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { faGem, faCrown, faHeart, faGift, faHandHoldingHeart } from '@fortawesome/free-solid-svg-icons';
 import { DBNFT, NFT, NFTCollection } from 'src/declaration';
-import { NFTManagerService } from '../Services/MarketServices/nft-manager.service';
 import { Location } from "@angular/common";
+import { ProfileService } from '../Services/profile.service';
 
 @Component({
   selector: 'app-profile',
@@ -17,61 +17,38 @@ export class ProfileComponent implements OnInit {
   heart = faHeart;
   gift = faGift;
   support = faHandHoldingHeart;
-  nftCollection: NFTCollection = {};
-  nftGallery: DBNFT[] = [];
-  address:string | null = null;
-  constructor(private _nftManager: NFTManagerService, private _router: Router,
+//localhost:4200/profile/gallery?address=0xDcb982dEa4C22aBE650c12a1678537a3e8Ddd30D
+  address: string | null = null;
+
+
+  constructor(private _profileManager: ProfileService, private _router: Router,
     private readonly location: Location, private readonly _route: ActivatedRoute) {
-    this._nftManager.profile = this.address;
-    this.getNFTs();
+
   }
 
   ngOnInit(): void {
+    //this._router.navigate(['profile', 'gallery'], {replaceUrl:false});
+    
     this._route.queryParams.subscribe((params) => {
       this.address = params["address"];
       if (this.address) {
-        this.getNFTs(this.address);
-      }
-
-    });
-  }
-
-  get ProfileNFTs() {
-    return Object.keys(this.nftCollection);
-  }
-
-  getNFTs(profile?:string) {
-    if (Object.keys(this._nftManager.nftCollection).length == 0) {
-      if (profile) {
-        this._getNFTs(profile);
-      }
-      else if (this._nftManager.profile) {
-        this._getNFTs(this._nftManager.profile);
-      }
-      else {
+        this._profileManager.initProfile(this.address);
         
       }
+    });
+    
+  }
 
+  ngAfterViewInit(): void {
+    if (this.address) {
+      this.location.go(this.createNavigation(this.address));
     }
+    
   }
 
-  private _getNFTs(profile:string) {
-    this._nftManager.getNFTs(profile)
-      .subscribe((remoteCollection: NFTCollection) => {
-        this.nftCollection = remoteCollection;
-
-      });
+  private createNavigation(profile:string):string {
+    const url = this._router.createUrlTree([], { relativeTo: this._route, queryParams: { address: profile } }).toString();
+    return url;
   }
 
-  private addNavigation(profile: string) {
-    const params = new HttpParams();
-    params.append("address", profile);
-    this.location.go(this._router.url.split("?")[0], params.toString());
-  }
-
-  goToNFT(nft: NFT) {
-    this._nftManager.setNFT(nft);
-    this._router.navigate(['nft-marketplace', 'nft']);
-    console.log("click registered");
-  }
 }

@@ -20,7 +20,7 @@ export class NFTManagerService {//merge this wit the other NFTManager or wahteve
   nftProduct: any | null;
   lastSuccessfulTransaction = "";
   collectionObservable: Subject<NFTCollection> = new Subject<NFTCollection>();
-  profile: string | null = null;
+
   constructor(private walletService: WalletService,
     private contracts: ContractsService, crypto: CryptoService,
     private _remote: RemoteDataService) {
@@ -30,6 +30,7 @@ export class NFTManagerService {//merge this wit the other NFTManager or wahteve
     this._getAllNFTs();
   }
 
+ 
 
   initializeNFTcreationFee(): void {
     this.contracts.getNFTFee()
@@ -123,7 +124,7 @@ export class NFTManagerService {//merge this wit the other NFTManager or wahteve
 
   private _getAllNFTs() {
     this._remote.getAllNFTs()
-      .subscribe((querySnapshot) => {
+      .subscribe((querySnapshot:any) => {
 
         querySnapshot.docChanges().forEach((change: DocumentChange<any>) => {
           let nft: DBNFT = change.doc.data();
@@ -141,15 +142,16 @@ export class NFTManagerService {//merge this wit the other NFTManager or wahteve
       });
   }
 
+  getNFTsByAddress(address: string) :Observable<NFTCollection>{
+    return this._getNFTs(address);
+  }
 
-  getNFTs(searchParameter: string):Observable<NFTCollection> {
-    const nftArray: DBNFT[] = [];
+  private _getNFTs(searchParameter: string):Observable<NFTCollection> {
     this._remote.getMultipleNFTS(searchParameter)
-      .subscribe((querySnapshot) => {
+      .subscribe((querySnapshot:any) => {
         querySnapshot.forEach((document: QueryDocumentSnapshot<any>) => {
-          nftArray.push(document.data())
-          const remoteNFT = document.data();
-          this.nftCollection[document.data(remoteNFT.tokenId)] = remoteNFT;
+          const remoteNFT:DBNFT = document.data();
+          this.nftCollection[remoteNFT.tokenId] = remoteNFT;
         });
       });
     this.collectionObservable.next(this.nftCollection);

@@ -26,8 +26,7 @@ export class ProductPageComponent implements OnInit {
   owner: boolean = false;
   constructor(private readonly location: Location, private _nftManager: NFTManagerService,
     private readonly _route: ActivatedRoute, private _router: Router,
-    private readonly _walletService: WalletService,
-  private matDialog:MatDialog) {
+    private readonly _walletService: WalletService) {
     //TODO: this.nft is null on reload, need to go back and click again
     
     if (_nftManager.nft) {
@@ -89,9 +88,7 @@ export class ProductPageComponent implements OnInit {
   }
 
   sellNFT():void {
-    const dialogConfig = new MatDialogConfig();
-    this.matDialog.open(SellDialogComponent, dialogConfig);
-    
+ 
   }
 
 }
