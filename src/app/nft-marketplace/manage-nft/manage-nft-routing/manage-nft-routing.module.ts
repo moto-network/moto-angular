@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { CreateNFTComponent } from '../create-nft/create-nft.component';
+import { CreateNFTComponent } from '../../../create-nft/create-nft.component';
 import { FindNftComponent } from '../find-nft/find-nft.component';
 import { ManageNFTComponent } from '../manage-nft.component';
 import { NftResultsComponent } from '../nft-results/nft-results.component';

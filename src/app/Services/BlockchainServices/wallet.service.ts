@@ -17,18 +17,15 @@ declare let window: any;
 export class WalletService {
   private web3: any;
   private provider: any;
-  public accountSubject: Subject<string | null> = new Subject<string | null>();
+  public accountObservable: Subject<string | null> = new Subject<string | null>();
   public account: any | null = null;
   private ethereum: any;
   public networkVersion: Subject<number | null> = new Subject<number | null>();
   public chainId: number = 56;
   
 
-  private connector = new WalletConnect({
-    bridge: "https://bridge.walletconnect.org",
-    qrcodeModal:QRCodeModal
-  });
- 
+  
+
   constructor() {
     this.browserEthereumCheck();
     this.networkVersion.subscribe((networkVersion) => {
@@ -110,7 +107,7 @@ export class WalletService {
       this.ethereum.request({ method: 'eth_requestAccounts' })
         .then((accounts: string[]) => {
           this.account = accounts[0];
-          this.accountSubject.next(this.account);
+          this.accountObservable.next(this.account);
           this.networkVersion.next(this.ethereum.networkVersion);
           //this.ethereum.eth.accounts.wallet.add(this.account);
           resolve(accounts[0]);

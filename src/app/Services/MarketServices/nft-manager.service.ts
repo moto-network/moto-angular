@@ -27,7 +27,7 @@ export class NFTManagerService {//merge this wit the other NFTManager or wahteve
     walletService.networkVersion.subscribe((network) => {
       this.currentNetwork = network;
     });
-    this._getAllNFTs();
+    
   }
 
  
@@ -46,12 +46,12 @@ export class NFTManagerService {//merge this wit the other NFTManager or wahteve
     return this.collectionObservable;
   }
 
-  mintNFT(): Promise<string> {
+  mintNFT(nft:NFT): Promise<string> {
     return new Promise((resolve, reject) => {
-      if (this._validNFT() && this.nft) {
-        this.contracts.mintNFT(this.nft)
+      if (this._validNFT(nft)) {
+        this.contracts.mintNFT(nft)
           .then((transactionHash) => {
-            localStorage.setItem('nft', JSON.stringify(this.nft));
+            localStorage.setItem('nft', JSON.stringify(nft));
             this.lastSuccessfulTransaction = transactionHash;
             resolve(this.lastSuccessfulTransaction);
           })
@@ -76,11 +76,11 @@ export class NFTManagerService {//merge this wit the other NFTManager or wahteve
   }
 
 
-  private _validNFT(): boolean {
-    if (this.nft) {
+  private _validNFT(nft:NFT): boolean {
+    if (nft) {
       let validAddress: boolean = this.walletService
-        .isValidAddress(this.nft?.beneficiary, "ETH");
-      let validNetwork: boolean = getProvider(this.nft?.chainId) ? true : false;
+        .isValidAddress(nft?.beneficiary, "ETH");
+      let validNetwork: boolean = getProvider(nft?.chainId) ? true : false;
       //add verify tokenId and contentHash
       return validAddress && validNetwork;
     }
@@ -89,10 +89,10 @@ export class NFTManagerService {//merge this wit the other NFTManager or wahteve
     }
   }
 
-  public uploadFile(file: File) {
+  public uploadFile(nft:NFT, file: File) {
     if (file) {
-      if (this.nft) {
-        this._remote.uploadFile(this.nft, file);
+      if (nft) {
+        this._remote.uploadFile(nft, file);
       }
     }
   }
@@ -142,19 +142,26 @@ export class NFTManagerService {//merge this wit the other NFTManager or wahteve
       });
   }
 
-  getNFTsByAddress(address: string) :Observable<NFTCollection>{
-    return this._getNFTs(address);
+  getCreatedNFTs(address: string) :Observable<NFTCollection>{
+    return this._getNFTs("creator",address);
   }
 
-  private _getNFTs(searchParameter: string):Observable<NFTCollection> {
-    this._remote.getMultipleNFTS(searchParameter)
+  getOwnedNFTs(address: string) {
+    
+  }
+
+  private _getNFTs(searchParameter: string,searchValue:string): Observable<NFTCollection> {
+    this._remote.getMultipleNFTS(searchParameter,searchValue)
       .subscribe((querySnapshot:any) => {
         querySnapshot.forEach((document: QueryDocumentSnapshot<any>) => {
-          const remoteNFT:DBNFT = document.data();
+
+          const remoteNFT: DBNFT = document.data();
+          console.log("remote nft is ", remoteNFT);
           this.nftCollection[remoteNFT.tokenId] = remoteNFT;
+          this.collectionObservable.next(this.nftCollection);
         });
       });
-    this.collectionObservable.next(this.nftCollection);
+    
     return this.collectionObservable;
   }
 }

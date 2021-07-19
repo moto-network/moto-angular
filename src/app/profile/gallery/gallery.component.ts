@@ -15,25 +15,17 @@ export class GalleryComponent implements OnInit {
   nftGallery: DBNFT[] = [];
   address: string | null = null;
   constructor(private _profileManager: ProfileService, private _router: Router) {
-
+    
   }
 
   ngOnChanges(): void {
-    console.log(this.nftCollection);
   }
 
   ngOnInit(): void {
-    console.log("have profile manager address ? ", this._profileManager.address);
-    if (this._profileManager.hasLocalCollection()) {
-      this.nftCollection = this._profileManager.nftCollection;
-    }
-    else if (this._profileManager.address) {
-      this._profileManager.getNFTs()
-        .subscribe((remoteCollection: NFTCollection) => {
-          this.nftCollection = remoteCollection;
-
-        });
-    }
+    this._profileManager.getNFTCollection()
+      .subscribe((collection: NFTCollection) => {
+        this.nftCollection = collection;
+      });
   }
 
 

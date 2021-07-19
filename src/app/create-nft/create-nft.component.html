@@ -1,0 +1,50 @@
+<div id="create" class='box-shadow'>
+  <div id="options-bar">
+    <button id="options-button" (click)="options()">
+      <fa-icon [icon]="optionsIcon" id="options-button"></fa-icon>
+    </button>
+  </div>
+  <h3 class="error" *ngIf="errorMessage">{{errorMessage}}</h3>
+  <form id="create-form" [formGroup]="nftForm">
+
+    <h3>what's the name?</h3>
+    <input class="text-inputs" type="text" placeholder="    optional" formControlName="name"/>
+    <div *ngIf="moreOptions">
+      <h3>Network</h3>
+      <select formControlName="chainId" id="chainId" (change)="validForm()">
+        <!--<option value="56" selected>(BSC) (Mainnet) Binance SmartChain  </option>-->
+        <option value="97">(BSC-TestNet) (TestNet) Binance SmartChain </option>
+      </select>
+
+      <h3>Beneficiary</h3>
+      <input class="text-inputs" type="text" placeholder=" address" formControlName="beneficiary"
+        (change)="validForm()" />
+    </div>
+    <div id="upload-bar">
+     
+      <div id="upload-label-icon-container">
+        <h3>upload</h3>
+      <label id="upload-label" for="upload-field" class="custom-file-upload" >
+        <fa-icon [icon]="uploadIcon">
+        </fa-icon>
+      </label>
+      </div>
+      <p id="upload-file-name">{{filename}}</p>
+    </div>
+
+    <input id="upload-field" type="file" required (change)="handleFile($event);validForm()"/>
+  </form>
+
+
+  <br>
+  <div id="bottom-button-row">
+    <button id="init-account-button" *ngIf="!account" (click)="initAccount()">log in first</button>
+    <button id="mint-button">
+      <fa-icon [icon]="mintButton" [ngClass]="{'mint-unlocked':formValidityForUI}" (click)="createNFT()">
+      </fa-icon>
+    </button>
+
+
+  </div>
+
+</div>

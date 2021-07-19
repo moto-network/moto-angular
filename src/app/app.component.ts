@@ -1,6 +1,7 @@
 import { AnimationQueryMetadata } from '@angular/animations';
 import { Component, HostListener, Input } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
+import { Router } from '@angular/router';
 import {
   faBell, faUserCircle, faHome, faSignInAlt,
   faUserPlus, faUserAstronaut, faSearch, faPlusSquare
@@ -11,8 +12,6 @@ import { WalletService } from './Services/BlockchainServices/wallet.service';
 
 declare var anime: any;
 
-
-
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -21,7 +20,7 @@ declare var anime: any;
 export class AppComponent {
   search = faSearch;
   add = faPlusSquare;
-  placeholder = "   Address / NFT ID / Fingerprint / Copyright ID";
+  placeholder = "   Address / NFT ID / Fingerprint / License ID";
   user = faUserAstronaut;
   title = 'motonetwork';
   bellIcon = faBell;
@@ -40,11 +39,12 @@ export class AppComponent {
   timeline:any;
   notificationBar:any;
   addressAnimation:any;
-  addressContainer: any;
+
   searchForm: FormGroup = new FormGroup({
-    search: new FormControl('')
+    searchInput: new FormControl('')
   });
-  constructor(private _auth:AuthenticationService, private _walletService:WalletService) {
+  constructor(private _auth: AuthenticationService, private _walletService: WalletService,
+  private _router:Router) {
       
   } 
 
@@ -53,17 +53,17 @@ export class AppComponent {
     this._auth.afAuth.authState.subscribe((user)=>{
       this.changeActiveUserState();
     });
-    this._walletService.accountSubject.subscribe((remoteAddress)=>{
+    this._walletService.accountObservable.subscribe((remoteAddress)=>{
       this.address = remoteAddress;
       if(remoteAddress){
-        this.notificationMessage = "MetaMask Connected";
+        this.notificationMessage = "Wallet Connected";
 
         if(this.notificationBar){
-          console.log("found  ");
-          this.notificationBar.style.visibility="visible";
+          this.notificationBar.style.visibility = "visible";
+          this.notificationBar.style.display = "block";
           this.animation.play();
         }
-//        this.animation.play();
+       this.animation.play();
         setTimeout(()=>{
 //          this.notificationBarVisible = false;
 
@@ -82,45 +82,15 @@ export class AppComponent {
   }
 
   ngAfterViewInit(): void {
-    this.timeline  = anime.timeline({
-      autoplay:true,
-      duration:3000
-    });
-    this.notificationBar = document.getElementById("notification-bar");
-    this.addressContainer = document.getElementById("address-container");
     this.animation = anime({
-      targets:"#notification-bar",
-      backgroundColor: '#4BB543',
-      translateY:30,
-      autoplay:false,
-      duration:1500,
-      direction:"alternate", 
-      delay:anime.stagger(200)
-  
+      targets: "#user-icon",
+      color: ['gray','#e31b23', '#4BB543', '#FFD700', '#46c3d1'],
+      autoplay: false,
+
+      duration: 4000,
+      easing: 'easeInBounce'
     });
 
-    this.addressAnimation =  anime({
-      targets:"#address-container",
-      easing:"easeInOutQuad",
-      background:"#4BB543",
-      direction:"alternate",
-      translateX:-30,
-      autoplay:false, 
-      duration:700
-    });
-
-
-
-   
-    this.animation.finished.then(()=>{
-      this.notificationBar.style.visibility  = "hidden";
-      this.addressContainer.style.visibility = "visible";
-      this.addressAnimation.play();
-      
-    });
-
-    this.timeline.add(this.animation);
-    
   }
 
   ngAfterViewChecked():void{
@@ -129,6 +99,10 @@ export class AppComponent {
 
   changeActiveUserState():void{
     this.nullUserBool = !this.nullUserBool;
+  }
+
+  goToCreate(): void {
+    this._router.navigate(['create']);
   }
 
 }

@@ -1,28 +1,34 @@
 <div id="header">
 
-    <img  routerLink='/' id="header-logo" src="../../../assets/moto-logo2.png" width="80px" height="60px">
- 
+  <img routerLink='/' id="header-logo" src="../../../assets/moto-logo2.png" width="80px" height="60px">
 
 
 
 
-    <a id="user-icon" routerLink='/account'>
-      <fa-icon [icon]="user" [ngClass]="{'logged-in':address}"></fa-icon>
-    </a>
+
+  <a id="user-icon" routerLink='/account'>
+    <!--[ngClass]="{'logged-in':address}"-->
+    <fa-icon [icon]="user" ></fa-icon>
+  </a>
 
 
 </div>
-<div id='search' class="box-shadow">
-  <fa-icon class="icons" id="search-icon" [icon]="add"></fa-icon>
-  <form id="search-form" [formGroup]="searchForm">
-    <input id="search-input" type="text" placeholder={{placeholder}} formControlName="name" />
-  </form>
 
-  <fa-icon id="search-icon" [icon]="search"></fa-icon>
+<div id='top-bar' class="box-shadow">
+  <div id="top-bar-left">
+    <a class="top-bar-links" (click)="goToCreate()">create</a>
+    <a class="top-bar-links">discover</a>
+    <a class="top-bar-links">exchange</a>
+  </div>
+  <div id="top-bar-right">
+    <form id="search-form" [formGroup]="searchForm">
+      <input id="search-input" type="text" placeholder={{placeholder}} formControlName="searchInput" />
+    </form>
+
+    <fa-icon id="search-icon" [icon]="search"></fa-icon>
+  </div>
 </div>
-<div id="notification-bar" >
-  {{notificationMessage}}
-</div>
+
 <div id="holder">
   <router-outlet>
   </router-outlet>

@@ -46,7 +46,7 @@ export class ProductPageComponent implements OnInit {
       "beneficiary": "0xDcb982dEa4C22aBE650c12a1678537a3e8Ddd30D"
     };
 
-    this._walletService.accountSubject.subscribe((account) => {
+    this._walletService.accountObservable.subscribe((account) => {
       this.account = account;
       this.updateOwner();
     });

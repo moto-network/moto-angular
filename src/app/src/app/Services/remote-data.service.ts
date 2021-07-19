@@ -35,13 +35,14 @@ export class RemoteDataService {
   }
 
 
-  public getMultipleNFTS(searchParameter: string): Observable<any>{
+  public getMultipleNFTS(searchParameter: string, searchValue:string): Observable<any>{
     if (this.isChina) {
       return this._china.getMultipleNFTs(searchParameter);
     }
-    else{
+    else {
+      console.log(searchValue);
     return this._db
-      .collection("NFTs", ref => ref.where(searchParameter, '==', searchParameter))
+      .collection("NFTs", ref => ref.where(searchParameter, '==', searchValue.toLowerCase()))
       .get();
     }
   }
