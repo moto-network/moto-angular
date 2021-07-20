@@ -18,14 +18,16 @@
   <div id="top-bar-left">
     <a class="top-bar-links" (click)="goToPage('create')">create</a>
     <a class="top-bar-links" (click)="goToPage('discover')">discover</a>
-    <a class="top-bar-links">exchange</a>
+    <!--<a class="top-bar-links">exchange</a>-->
   </div>
   <div id="top-bar-right">
     <form id="search-form" [formGroup]="searchForm">
       <input id="search-input" type="text" placeholder={{placeholder}} formControlName="searchInput" />
-    </form>
 
-    <fa-icon id="search-icon" [icon]="search"></fa-icon>
+    </form>
+    <button id="search-button" (click)="search()">
+    <fa-icon id="search-icon" [icon]="searchIcon" ></fa-icon>
+    </button>
   </div>
 </div>
 

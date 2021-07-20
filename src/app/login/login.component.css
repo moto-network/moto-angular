@@ -1,165 +1,35 @@
-
 #login-page{
   display:flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  width:100%;
-  height:100%;
 }
-.login-page {
-  width: 360px;
-  padding: 8% 0 0;
-  margin: auto;
+
+#moto-logo{
+  width:150px;
+  height:auto;
+  align-items: center;
 }
-.form {
-  position: relative;
-  z-index: 1;
-  border-radius:8px;
-  background: #FFFFFF;
-  max-width: 360px;
-  margin: 0 auto 30;
-  padding: 45px;
-  text-align: center;
-  box-shadow:
-  0 2.8px 2.2px rgba(0, 0, 0, 0.02),
-  0 6.7px 5.3px rgba(0, 0, 0, 0.028),
-  0 12.5px 10px rgba(0, 0, 0, 0.035),
-  0 22.3px 17.9px rgba(0, 0, 0, 0.042),
-  0 41.8px 33.4px rgba(0, 0, 0, 0.05),
-  0 100px 80px rgba(0, 0, 0, 0.07)
-;
+
+#meta-mask-go{
+  display:flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap:10px;
+  border-radius: 8px;
+  justify-content: center;
+  width:200px;
+  background-color: rgb(244, 250, 252);
+    cursor:pointer;
+  box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+}
+
+#meta-mask-logo{
+  width:35px;
+  height:auto;
 
 }
 
 #already{
-  color:ghostwhite;
-  height:80px;
-  background-color: var(--moto-blue);
-  display:flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  border-radius:8px;
-  box-shadow:
-  0 2.8px 2.2px rgba(0, 0, 0, 0.02),
-  0 6.7px 5.3px rgba(0, 0, 0, 0.028),
-  0 12.5px 10px rgba(0, 0, 0, 0.035),
-  0 22.3px 17.9px rgba(0, 0, 0, 0.042),
-  0 41.8px 33.4px rgba(0, 0, 0, 0.05),
-  0 100px 80px rgba(0, 0, 0, 0.07)
-;
-}
+  font-size:1.8rem;
 
-.form > img{
-  width:30%;
-  height:30%;
-}
-
-
-.form input {
-  font-family: "Roboto", sans-serif;
-  outline: 0;
-  background: #f2f2f2;
-  width: 100%;
-  border: 0;
-  margin: 0 0 15px;
-  padding: 15px;
-  box-sizing: border-box;
-  font-size: 14px;
-}
-
-
-.form button {
-  font-family: "Roboto", sans-serif;
-  text-transform: uppercase;
-  outline: 0;
-  background: #4c93af;
-  width: 100%;
-  border: 0;
-  padding: 15px;
-  color: #FFFFFF;
-  font-size: 18px;
-  -webkit-transition: all 0.3 ease;
-  transition: all 0.3 ease;
-  cursor: pointer;
-}
-.form button:hover,.form button:active,.form button:focus {
-  background: #43A047;
-}
-.form .message {
-  margin: 15px 0 0;
-  color: #b3b3b3;
-  font-size: 12px;
-}
-.form .message a {
-  color: #4CAF50;
-  text-decoration: none;
-}
-.form .register-form {
-  display: none;
-}
-.container {
-  position: relative;
-  z-index: 1;
-  max-width: 300px;
-  margin: 0 auto;
-}
-.container:before, .container:after {
-  content: "";
-  display: block;
-  clear: both;
-}
-.container .info {
-  margin: 50px auto;
-  text-align: center;
-}
-.container .info h1 {
-  margin: 0 0 15px;
-  padding: 0;
-  font-size: 36px;
-  font-weight: 300;
-  color: #1a1a1a;
-}
-.container .info span {
-  color: #4d4d4d;
-  font-size: 12px;
-}
-.container .info span a {
-  color: #000000;
-  text-decoration: none;
-}
-.container .info span .fa {
-  color: #EF3B3A;
-}
-
-#moto-logo{
-  height:40%;
-  width:40%;
-}
-
-#sign-up-button{
-  background-color: aliceblue;
-  border:2px #4c93af;
-  color:#4c93af;
-}
-
-#metamask-logo{
-  height:40px;
-  width:40px;
-}
-
-.connect-button{
-  display:flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-around;
-  background-color:#46c3d1;
-  margin-bottom:5px;
-  cursor: pointer;
-  color:white;
-  border-radius: 8px;
-  letter-spacing: 2.5px;
-  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease 0s;
 }

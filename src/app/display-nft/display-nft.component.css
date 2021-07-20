@@ -28,21 +28,35 @@ margin-left:20px;
   object-position: center center;
 }
 #nft-info{
+  display:flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
   margin-top:10px;
   font-weight:200;
-  width:75%;
-  margin-left:auto;
-  margin-right:auto;
+  width:100%;
+  height:auto;
 }
 
 #back-button{
   font-size: 1.5rem;
-  margin-right:30px;
+  margin-right:20px;
   background:white;
   border:0;
+}
+
+.nft-info-sub-containers{
+  flex-grow: 1;
+  min-width: 100px;
+}
+
+h3{
+ color:var(--moto-teal);
 }
 
 p{
   width:90%;
   word-wrap: break-word;
+  margin-left:20px;
+
 }

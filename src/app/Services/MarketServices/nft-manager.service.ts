@@ -5,7 +5,7 @@ import { Observable, Subject } from 'rxjs';
 import { CryptoService } from '../crypto.service';
 import { DBNFT, NFT, NFTCollection } from "src/declaration";
 import { getProvider } from "src/app.config";
-import { RemoteDataService } from 'src/app/src/app/Services/remote-data.service';
+import { RemoteDataService } from '../remote-data.service';
 import { DocumentChange, QueryDocumentSnapshot, QuerySnapshot } from '@angular/fire/firestore';
 
 @Injectable({
@@ -106,6 +106,9 @@ export class NFTManagerService {//merge this wit the other NFTManager or wahteve
     return this._remote.getNFT(tokenId);
   }*/
 
+  findNFT(value: string, parameter: string) :Observable<DBNFT | null>{
+    return this._remote.findNFT(value, parameter);
+  } 
 
 
   getCreatedNFTs(address: string): Observable<NFTCollection> {

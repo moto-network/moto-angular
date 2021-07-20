@@ -1,21 +1,13 @@
 <div id="login-page">
-  <div class="login-page" >
-    <div class="form">
-      <img id="moto-logo" src="../../assets/ICON-PNG.png">
+  <img id="moto-logo" src="../../assets/ICON-PNG.png">
 
-      <div class="connect-button" (click)="openMetaMask()" *ngIf="!account">
-        <img id="metamask-logo" src="../../assets/metamask-fox.svg">
-        <h2>MetaMask</h2>
-      </div>
-      <div class="connect-button" (click)="openWalletConnect()" *ngIf="!account">
-        
-        <h2>Wallet Connect</h2>
-      </div>
-      <div id="already" *ngIf="account">
-        <h2>Logged In</h2>
-      </div>
-    </div>
+  <div id="meta-mask-go" class="connect-button" (click)="openMetaMask()" *ngIf="!accountAvailable">
+    <img id="meta-mask-logo" src="../../assets/metamask-fox.svg">
+    <p>metamask</p>
   </div>
-  
-    
+
+  <div id="already">
+    <fa-icon id="loggedInIcon" [icon]="loggedIn"></fa-icon>
+  </div>
+
 </div>

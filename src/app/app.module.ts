@@ -27,6 +27,8 @@ import { ProfileComponent } from './profile/profile.component';
 import { CreateNFTComponent } from './create-nft/create-nft.component';
 import { DiscoverComponent } from './discover/discover.component';
 import { DisplayNFTComponent } from './display-nft/display-nft.component';
+import { SearchService } from './Services/search.service';
+import { ProfileService } from './Services/profile.service';
 @NgModule({
   declarations: [
     AppComponent,
@@ -58,7 +60,7 @@ import { DisplayNFTComponent } from './display-nft/display-nft.component';
     HttpClientModule
   ],
   exports:[FontAwesomeModule],
-  providers: [AuthenticationService],
+  providers: [AuthenticationService,SearchService,ProfileService],
   bootstrap: [AppComponent]
 })
 export class AppModule {

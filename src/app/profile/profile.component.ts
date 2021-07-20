@@ -24,13 +24,14 @@ export class ProfileComponent implements OnInit {
 
   constructor(private _profileManager: ProfileService, private _router: Router,
     private readonly location: Location, private readonly _route: ActivatedRoute) {
-    this.address = "0xDcb982dEa4C22aBE650c12a1678537a3e8Ddd30D";
+    
   }
 
   ngOnInit(): void {
     //this._router.navigate(['profile', 'gallery'], {replaceUrl:false});
     if (this._profileManager.address) {
       this.address = this._profileManager.address;
+      this._profileManager.initProfile(this.address);
     }
 
     this._route.queryParams.subscribe((params) => {

@@ -4,7 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AngularFirestore, QuerySnapshot } from '@angular/fire/firestore';
 import { getProvider, UPLOAD_URL } from "src/app.config";
 import { Observable, Subject } from 'rxjs';
-import { ChinaDataService } from "../"
+import { ChinaDataService } from './china-data.service';
 @Injectable({
   providedIn: 'root'
 })

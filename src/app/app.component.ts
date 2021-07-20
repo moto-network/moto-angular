@@ -1,5 +1,5 @@
 import { AnimationQueryMetadata } from '@angular/animations';
-import { Component, HostListener, Input } from '@angular/core';
+import { Component, ComponentFactoryResolver, HostListener, Input } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import {
@@ -9,6 +9,9 @@ import {
 import { Observable } from 'rxjs';
 import { AuthenticationService } from './Services/authentication.service';
 import { WalletService } from './Services/BlockchainServices/wallet.service';
+import { NFTManagerService } from './Services/MarketServices/nft-manager.service';
+import { ProfileService } from './Services/profile.service';
+import { SearchService } from './Services/search.service';
 
 declare var anime: any;
 
@@ -18,7 +21,7 @@ declare var anime: any;
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  search = faSearch;
+  searchIcon = faSearch;
   add = faPlusSquare;
   placeholder = "   Address / NFT ID / Fingerprint / License ID";
   user = faUserAstronaut;
@@ -39,12 +42,13 @@ export class AppComponent {
   timeline:any;
   notificationBar:any;
   topBarFlash:any;
-
+  searchAnimation: any = null;
   searchForm: FormGroup = new FormGroup({
     searchInput: new FormControl('')
   });
-  constructor(private _auth: AuthenticationService, private _walletService: WalletService,
-  private _router:Router) {
+  constructor(private _auth: AuthenticationService,
+    private _walletService: WalletService,
+    private _router: Router,private _search:SearchService) {
       
   } 
 
@@ -94,6 +98,14 @@ export class AppComponent {
        }
     });
 
+    this.searchAnimation = anime({
+      targets: "#search-icon",
+      color: ['#e31b23', '#4BB543', '#FFD700', '#46c3d1'],
+      duration: 4000,
+      autoplay: false,
+      loop:true
+    })
+
   }
 
   ngAfterViewChecked():void{
@@ -108,6 +120,17 @@ export class AppComponent {
     this._router.navigate([page]);
   }
 
+  /**
+   * order of check
+   * fingerprint
+   * address,
+   * nftid
+   * license
+   */
+  
 
+  search() {
+    
+  }
 
 }

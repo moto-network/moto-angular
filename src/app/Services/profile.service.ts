@@ -48,6 +48,7 @@ export class ProfileService {
   }
 
   private _getRemoteNFTs() {
+    console.log("address is ", this.address);
     if (this.address) {
       console.log("has addreess");
       this._nftManager.getCreatedNFTs(this.address)

@@ -1,17 +1,6 @@
-#profile{
-  display:flex;
-  flex-direction: column;
-
-  width:98vw;
-  max-width:1200px;
-  min-height: 300px;
-  height:auto;
-  margin:auto;
-  margin-top:20px;
-  margin-bottom:30px;
-}
 
 #profile-header{
+  border-radius:8px 8px;
   display:flex;
   flex-direction: column;
   border-radius: 10px 10px;
