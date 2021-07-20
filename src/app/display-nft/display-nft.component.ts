@@ -1,15 +1,15 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { faArrowLeft, faGem} from '@fortawesome/free-solid-svg-icons';
-import { ProfileService } from 'src/app/Services/profile.service';
-import { DBNFT, NFT } from 'src/declaration';
+import { faArrowLeft} from '@fortawesome/free-solid-svg-icons';
+import { NFTManagerService } from 'src/app/Services/MarketServices/nft-manager.service';
+import { DBNFT} from 'src/declaration';
 
 @Component({
   selector: 'app-profile-nft',
-  templateUrl: './profile-nft.component.html',
-  styleUrls: ['./profile-nft.component.css']
+  templateUrl: './display-nft.component.html',
+  styleUrls: ['./display-nft.component.css']
 })
-export class ProfileNftComponent implements OnInit {
+export class DisplayNFTComponent implements OnInit {
   leftArrow:any = faArrowLeft;
   testnft = {
       "chainId": 97,
@@ -36,15 +36,14 @@ export class ProfileNftComponent implements OnInit {
     "medImg": "../../../assets/HD2.jpg",
     "creator": "0x000000000000000000000000000000"
   };
-  constructor(private _profileManager: ProfileService, private _location: Location) {
+  constructor(private _nftManager:NFTManagerService, private _location: Location) {
     
   }
 
   ngOnInit(): void {
-    this.nft = this.testnft;
-    /*if (this._profileManager.nft) {
-      this.nft = this._profileManager.nft;
-    }*/
+    if (this._nftManager.nft) {
+      this.nft = this._nftManager.nft;
+    }
   }
 
   /**

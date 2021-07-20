@@ -23,11 +23,7 @@ export class NftBrowseResultsComponent implements OnInit {
         
       });*/
     if (Object.keys(this._nftManager.nftCollection).length == 0) {
-      this._nftManager.getNFTCollection()
-        .subscribe((collection: NFTCollection) => {
-          this.nftCollection = collection;
-          console.log(this.nftCollection);
-        });
+      
     }
     else {
       this.nftCollection = this._nftManager.nftCollection;

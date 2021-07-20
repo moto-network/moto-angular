@@ -17,16 +17,23 @@ export class ProfileService {
 
   initProfile(address: string) {
     this.address = address;
-    this._getRemoteNFTs();
+    if (!this.hasLocalCollection()) {
+      this._getRemoteNFTs();
+    }
   }
 
-  getNFTCollection():Observable<NFTCollection>{
+  getNFTCollection():NFTCollection {
+    return this.nftCollection;
+  }
+  getNFTCollectionObservable():Observable<NFTCollection>{
     console.log("profile get nft called", this.nftCollection);
+    this._getRemoteNFTs();
     return this.collectionObservable;
   }
 
   setNFT(nft: DBNFT) :void{
     this.nft = nft;
+    this._nftManager.setNFT(nft);
   }
 
   getNFT(): DBNFT| null {
@@ -42,6 +49,7 @@ export class ProfileService {
 
   private _getRemoteNFTs() {
     if (this.address) {
+      console.log("has addreess");
       this._nftManager.getCreatedNFTs(this.address)
         .subscribe((remoteCollection: NFTCollection) => {
           this.nftCollection = remoteCollection;

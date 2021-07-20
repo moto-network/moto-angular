@@ -38,7 +38,7 @@ export class AppComponent {
   animation:any;
   timeline:any;
   notificationBar:any;
-  addressAnimation:any;
+  topBarFlash:any;
 
   searchForm: FormGroup = new FormGroup({
     searchInput: new FormControl('')
@@ -56,18 +56,8 @@ export class AppComponent {
     this._walletService.accountObservable.subscribe((remoteAddress)=>{
       this.address = remoteAddress;
       if(remoteAddress){
-        this.notificationMessage = "Wallet Connected";
-
-        if(this.notificationBar){
-          this.notificationBar.style.visibility = "visible";
-          this.notificationBar.style.display = "block";
-          this.animation.play();
-        }
-       this.animation.play();
-        setTimeout(()=>{
-//          this.notificationBarVisible = false;
-
-        },3200);
+     
+       this.topBarFlash.play();
       }
     });
   }
@@ -82,6 +72,7 @@ export class AppComponent {
   }
 
   ngAfterViewInit(): void {
+
     this.animation = anime({
       targets: "#user-icon",
       color: ['gray','#e31b23', '#4BB543', '#FFD700', '#46c3d1'],
@@ -89,6 +80,18 @@ export class AppComponent {
 
       duration: 4000,
       easing: 'easeInBounce'
+    });
+
+    this.topBarFlash = anime({
+      targets: "#header",
+      translateX: [0,-30,30,0],
+      autoplay: false,
+
+      duration: 1500,
+      easing: 'easeInOutQuad',
+      changeComplete: () => {
+        this.animation.play();
+       }
     });
 
   }
@@ -101,8 +104,10 @@ export class AppComponent {
     this.nullUserBool = !this.nullUserBool;
   }
 
-  goToCreate(): void {
-    this._router.navigate(['create']);
+  goToPage(page:string): void {
+    this._router.navigate([page]);
   }
+
+
 
 }

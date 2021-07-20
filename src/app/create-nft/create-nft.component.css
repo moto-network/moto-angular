@@ -1,5 +1,7 @@
 
-
+#create{
+     padding:20px;
+}
 h1{
   font-weight:200;
 }
@@ -11,18 +13,6 @@ input[type="file"] {
     visibility: hidden;
 }
 
-#create{
-  margin:auto;
-  display:flex;
-  flex-direction: column;
-  height:auto;
-  max-width: 1200px;
-  width:98vw;
-  padding:20px;
-  justify-content: space-around;
-  background-color: white;
-  border-radius:8px;
-}
 
 #title-content{
   text-align: center;

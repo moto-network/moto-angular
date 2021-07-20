@@ -3,12 +3,12 @@ import { CommonModule } from '@angular/common';
 import { ProfileRoutingModule } from './profile-routing.module';
 import { GalleryComponent } from './gallery/gallery.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { ProfileNftComponent } from './profile-nft/profile-nft.component';
+import { DisplayNFTComponent } from '../display-nft/display-nft.component';
 
 
 
 @NgModule({
-  declarations: [GalleryComponent,  ProfileNftComponent],
+  declarations: [GalleryComponent,  DisplayNFTComponent],
   imports: [
     CommonModule,
     ProfileRoutingModule,

@@ -35,6 +35,7 @@ height:100%;
 #header-logo{
   height:100%;
   margin-left:20px;
+  cursor: pointer;
 }
 
 #header-address{
@@ -74,45 +75,6 @@ height:100%;
   color:green;
 }
 
-
-
-#notification-bar{
-  height:40px;
-  width:98vw;
-  max-width: 1200px;
-  border-radius: 8px;
-  background-color: #FFF453;
-  color:white;
-  font-weight:200;
-  font-size:1.5rem;
-  display:flex;
-  flex-direction: column;
-  justify-content: center;
-  align-content: center;
-  text-align: center;
-  visibility: visible;
-  display:block;
-  margin-top:15px;
-  margin-bottom:15px;
-  margin-left:auto;
-  margin-right:auto;
-
-}
-#notification-bar >p{
-  height:auto;
-}
-@keyframes gradient {
-    0% {
-        background-position: 0% 50%;
-    }
-    50% {
-        background-position: 100% 50%;
-    }
-    100% {
-        background-position: 0% 50%;
-    }
-}
-
 #top-bar{
   display:flex;
   flex-direction: row;
@@ -121,13 +83,14 @@ height:100%;
   max-width:1200px;
   height:50px;
   margin:auto;
-  margin-top:10px;
+  margin-top:15px;
   margin-bottom:10px;
   background-color: white;
   border-radius: 8px;
   align-items: center;
 
 }
+
 #top-bar-left{
   width:48%;
 }
@@ -146,6 +109,7 @@ cursor: pointer;
   width:48%;
   height:100%;
 }
+
 #search-form{
   width:90%;
   height:70%;
@@ -165,6 +129,21 @@ cursor: pointer;
 #search-icon{
   color:var(--moto-teal);
   margin-right:25px
+}
+
+#main-content-container{
+  display:flex;
+  flex-direction: column;
+  width:98vw;
+  max-width:1200px;
+  min-height: 300px;
+  height:auto;
+  margin:auto;
+  margin-top:20px;
+  margin-bottom:30px;
+   border-radius:8px;
+   background-color: white;
+
 }
 ::-webkit-input-placeholder {
    color: var(--moto-blue);

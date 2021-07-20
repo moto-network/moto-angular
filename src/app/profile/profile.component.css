@@ -57,7 +57,8 @@
   justify-content: space-evenly;
   height:auto;
   min-height: 80px;
-  width:99%;
+  width:98vw;
+  max-width:1200px;
   background-color: white;
   margin-bottom:20px;
   border-radius: 8px;
@@ -117,6 +118,7 @@ button{
   color:white;
   font-size: 1.3rem;
   background-color: #FFD700;
+  background-size: 50% 50%;
    box-shadow: 0px 5px 8px #ffd900c5;
 
   

@@ -53,6 +53,7 @@ export class ProductPageComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    /*
     this._route.queryParams.subscribe((params) => {
       this.tokenId = params["tokenId"];
       if (this.tokenId) {
@@ -63,7 +64,7 @@ export class ProductPageComponent implements OnInit {
           });
       }
 
-    });
+    });*/
     //http://localhost:4200/nft-marketplace/nft
 
   }

@@ -16,8 +16,8 @@
 
 <div id='top-bar' class="box-shadow">
   <div id="top-bar-left">
-    <a class="top-bar-links" (click)="goToCreate()">create</a>
-    <a class="top-bar-links">discover</a>
+    <a class="top-bar-links" (click)="goToPage('create')">create</a>
+    <a class="top-bar-links" (click)="goToPage('discover')">discover</a>
     <a class="top-bar-links">exchange</a>
   </div>
   <div id="top-bar-right">
@@ -29,9 +29,8 @@
   </div>
 </div>
 
-<div id="holder">
+<div id="main-content-container" class="box-shadow">
   <router-outlet>
   </router-outlet>
 </div>
 
-<!--*ngIf="notificationBarVisible"-->

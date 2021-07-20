@@ -12,7 +12,7 @@ import { DocumentChange, QueryDocumentSnapshot, QuerySnapshot } from '@angular/f
   providedIn: 'root'
 })
 export class NFTManagerService {//merge this wit the other NFTManager or wahtever it's called
-  nft: NFT | null = null;
+  nft: DBNFT | null = null;
   currentFee: number | null = null;
   currentNetwork: number | null = null;
   nftsArray: any = [];
@@ -27,10 +27,8 @@ export class NFTManagerService {//merge this wit the other NFTManager or wahteve
     walletService.networkVersion.subscribe((network) => {
       this.currentNetwork = network;
     });
-    
-  }
 
- 
+  }
 
   initializeNFTcreationFee(): void {
     this.contracts.getNFTFee()
@@ -41,12 +39,16 @@ export class NFTManagerService {//merge this wit the other NFTManager or wahteve
       })
   }
 
-
-  getNFTCollection(): Observable<NFTCollection> {
-    return this.collectionObservable;
+  hasLocalCollection(): boolean {
+    if (Object.keys(this.nftCollection).length > 0) {
+      return true;
+    }
+    else {
+      return false;
+    }
   }
 
-  mintNFT(nft:NFT): Promise<string> {
+  mintNFT(nft: NFT): Promise<string> {
     return new Promise((resolve, reject) => {
       if (this._validNFT(nft)) {
         this.contracts.mintNFT(nft)
@@ -63,38 +65,17 @@ export class NFTManagerService {//merge this wit the other NFTManager or wahteve
 
   }
 
-  initNFTData(): void {
-    this.nft = {
-      name: "",
-      beneficiary: "",
-      chainId: 56,
-      tokenId: "",
-      contentHash: "",
-      creator: "",
-      contractAddress: ""
-    }
-  }
-
-
-  private _validNFT(nft:NFT): boolean {
-    if (nft) {
-      let validAddress: boolean = this.walletService
-        .isValidAddress(nft?.beneficiary, "ETH");
-      let validNetwork: boolean = getProvider(nft?.chainId) ? true : false;
-      //add verify tokenId and contentHash
-      return validAddress && validNetwork;
-    }
-    else {
-      return false;
-    }
-  }
-
-  public uploadFile(nft:NFT, file: File) {
+  public uploadFile(nft: NFT, file: File) {
     if (file) {
       if (nft) {
         this._remote.uploadFile(nft, file);
       }
     }
+  }
+
+  getNFTs(): Observable<NFTCollection> {
+    this._getAllNFTs();//for now...it is small anyways but paginate later
+    return this.collectionObservable;
   }
 
   addToMarket() {
@@ -113,46 +94,52 @@ export class NFTManagerService {//merge this wit the other NFTManager or wahteve
   }
 
 
-  setNFT(nft: NFT) {
-    this.nft = nft;
-    console.log("nftproduct set", this.nft);
+  getNFT(): DBNFT | null {
+    return this.nft;
   }
 
-  getNFTbyId(tokenId: string): Observable<QuerySnapshot<any>> {
+  setNFT(nft: DBNFT) {
+    this.nft = nft;
+  }
+
+  /*getNFTbyId(tokenId: string): Observable<DBNFT> {
     return this._remote.getNFT(tokenId);
+  }*/
+
+
+
+  getCreatedNFTs(address: string): Observable<NFTCollection> {
+    return this._getNFTs("creator", address);
+  }
+
+  getOwnedNFTs(address: string) {
+
+  }
+
+  private _validNFT(nft: NFT): boolean {
+    if (nft) {
+      let validAddress: boolean = this.walletService
+        .isValidAddress(nft?.beneficiary, "ETH");
+      let validNetwork: boolean = getProvider(nft?.chainId) ? true : false;
+      //add verify tokenId and contentHash
+      return validAddress && validNetwork;
+    }
+    else {
+      return false;
+    }
   }
 
   private _getAllNFTs() {
     this._remote.getAllNFTs()
-      .subscribe((querySnapshot:any) => {
-
-        querySnapshot.docChanges().forEach((change: DocumentChange<any>) => {
-          let nft: DBNFT = change.doc.data();
-          this.nftCollection[nft.tokenId] = nft;
-          console.log("docChange");
-          this.collectionObservable.next(this.nftCollection);
-        });
-
-        /*  querySnapshot.forEach((docSnapshot: QueryDocumentSnapshot<any>) => {
-            let nft: DBNFT = docSnapshot.data();
-            this.nftCollection[nft.tokenId] = nft;
-            console.log("forEach");
-          });
-       */
+      .subscribe((nftCollection: NFTCollection) => {
+        this.nftCollection = nftCollection;
+        this.collectionObservable.next(this.nftCollection);
       });
   }
 
-  getCreatedNFTs(address: string) :Observable<NFTCollection>{
-    return this._getNFTs("creator",address);
-  }
-
-  getOwnedNFTs(address: string) {
-    
-  }
-
-  private _getNFTs(searchParameter: string,searchValue:string): Observable<NFTCollection> {
-    this._remote.getMultipleNFTS(searchParameter,searchValue)
-      .subscribe((querySnapshot:any) => {
+  private _getNFTs(searchParameter: string, searchValue: string): Observable<NFTCollection> {
+    this._remote.getMultipleNFTS(searchParameter, searchValue)
+      .subscribe((querySnapshot: any) => {
         querySnapshot.forEach((document: QueryDocumentSnapshot<any>) => {
 
           const remoteNFT: DBNFT = document.data();
@@ -161,7 +148,7 @@ export class NFTManagerService {//merge this wit the other NFTManager or wahteve
           this.collectionObservable.next(this.nftCollection);
         });
       });
-    
+
     return this.collectionObservable;
   }
 }

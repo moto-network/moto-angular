@@ -17,9 +17,10 @@ export class ProfileComponent implements OnInit {
   heart = faHeart;
   gift = faGift;
   support = faHandHoldingHeart;
+  glimmerAnimation: any = null;
 //localhost:4200/profile?address=0xDcb982dEa4C22aBE650c12a1678537a3e8Ddd30D
   address: string | null = null;
-  isCreator: boolean = true;
+  isCreator: boolean = false;
 
   constructor(private _profileManager: ProfileService, private _router: Router,
     private readonly location: Location, private readonly _route: ActivatedRoute) {
@@ -45,7 +46,7 @@ export class ProfileComponent implements OnInit {
     if (this.address) {
       this.location.go(this.createNavigation(this.address));
     }
-    
+  
   }
 
   private createNavigation(profile:string):string {

@@ -24,7 +24,9 @@ import { OnRampComponent } from './on-ramp/on-ramp.component';
 import { HttpClientModule } from '@angular/common/http';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { ProfileComponent } from './profile/profile.component';
-import { CreateNFTComponent } from './create-nft/create-nft.component'; 
+import { CreateNFTComponent } from './create-nft/create-nft.component';
+import { DiscoverComponent } from './discover/discover.component';
+import { DisplayNFTComponent } from './display-nft/display-nft.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -36,7 +38,8 @@ import { CreateNFTComponent } from './create-nft/create-nft.component';
     OnRampComponent,
     NotFoundComponent,
     ProfileComponent,
-    CreateNFTComponent
+    CreateNFTComponent,
+    DiscoverComponent
   ],
   imports: [
     ButtonModule,

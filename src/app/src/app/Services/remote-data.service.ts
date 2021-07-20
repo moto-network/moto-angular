@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { NFT } from "src/declaration";
+import { DBNFT, NFT, NFTCollection } from "src/declaration";
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AngularFirestore, QuerySnapshot } from '@angular/fire/firestore';
 import { getProvider, UPLOAD_URL } from "src/app.config";
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { ChinaDataService } from './china-data.service';
 @Injectable({
   providedIn: 'root'
@@ -25,12 +25,22 @@ export class RemoteDataService {
     );
   }
 
-  public getAllNFTs(): Observable<any> {
+  public getAllNFTs(): Observable<NFTCollection> {
+    const nftCollection: NFTCollection = {};
     if (this.isChina) {
       return this._china.getAllNFTs();
     }
     else {
-      return this._db.collection("NFTs").get();
+      const collectionSubject: Subject<NFTCollection> = new Subject<NFTCollection>();
+      this._db.collection("NFTs").get()
+        .subscribe((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            let nft: DBNFT = doc.data() as DBNFT;
+            nftCollection[nft.tokenId] = nft;
+            collectionSubject.next(nftCollection);
+          });
+        });
+      return collectionSubject;
     }
   }
 
@@ -51,15 +61,23 @@ export class RemoteDataService {
  * @param {string} tokenId 
  * @returns {Observable}
  */
-  public getNFT(tokenId: string):Observable<any> {
+  public getNFT(tokenId: string): Observable<NFT> {
+    //const nft: DBNFT = {};
+    const nftObservable: Subject<NFT> = new Subject<NFT>();
     if (this.isChina) {
       // something that is china friendly;
       return this._china.getNFT(tokenId);
     }
     else {
-      return this._db
+      this._db
         .collection("NFTs", ref => ref.where('tokenId', '==', tokenId))
-        .get();
+        .get()
+        .subscribe((remoteValue) => {
+          //nft = remoteValue.docs[0].data() as DBNFT
+          //nftObservabel.next(nft);
+          console.log("check how the data is from remote to see how to form it");
+        });
+      return nftObservable;
     }
   }
 
