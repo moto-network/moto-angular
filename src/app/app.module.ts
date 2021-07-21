@@ -44,8 +44,7 @@ import { ProfileService } from './Services/profile.service';
     DiscoverComponent
   ],
   imports: [
-    ButtonModule,
-    SidebarModule,
+
     BrowserModule,
     AppRoutingModule,
     AngularFireModule.initializeApp(environment.firebase),
@@ -55,8 +54,6 @@ import { ProfileService } from './Services/profile.service';
     ReactiveFormsModule,
     FontAwesomeModule,
     DialogModule,
-    BrowserAnimationsModule,
-    NoopAnimationsModule,
     HttpClientModule
   ],
   exports:[FontAwesomeModule],

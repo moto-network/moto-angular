@@ -15,7 +15,7 @@ export class NFTManagerService {//merge this wit the other NFTManager or wahteve
   nft: DBNFT | null = null;
   currentFee: number | null = null;
   currentNetwork: number | null = null;
-  nftCollection: NFTCollection = {} as NFTCollection;
+  nftCollection: NFTCollection | null = null;
   lastSuccessfulTransaction = "";
 
   constructor(private walletService: WalletService,
@@ -80,6 +80,7 @@ export class NFTManagerService {//merge this wit the other NFTManager or wahteve
         return nftObservable;
       }
       else {
+        console.log("doing this");
         return this._getAllNFTs();
       }
     }

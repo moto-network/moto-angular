@@ -169,12 +169,14 @@ button{
 }
 
 .title{
-font-weight: 300;
+font-weight: 320;
 margin-left:20px;
+
 }
 
 #profile-sub-container{
-  border-radius: 12px;
+  padding-top:1px;
+  border-radius: 8px;
   background-color: white;
   padding-bottom:10px;
 

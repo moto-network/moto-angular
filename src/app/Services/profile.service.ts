@@ -53,14 +53,10 @@ export class ProfileService {
 
   private _getRemoteNFTs(address: string): Observable<NFTCollection> {
     const collectionObservable: Subject<NFTCollection> = new Subject<NFTCollection>();
-
-
-    console.log("has addreess");
     this._nftManager.getNFTs("creator", address)
       .subscribe((remoteCollection: NFTCollection | null) => {
         if (remoteCollection) {
           this.nftCollection = remoteCollection;
-          console.log("remote found", remoteCollection);
           collectionObservable.next(remoteCollection);
         }
       });

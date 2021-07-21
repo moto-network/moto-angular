@@ -1,11 +1,11 @@
 
 .title{
-font-weight: 300;
-margin-left:20px;
+ 
+  font-weight: 200;
+  margin-left:30px;
+
 }
-#main-content-container{
-  background-color: none;
-}
+
 #gallery{
   margin:auto;
   display:flex;

@@ -15,8 +15,6 @@ export class DiscoverComponent implements OnInit {
   loadingAnimation: any = null;
   constructor(private _nftManager: NFTManagerService,
     private _router: Router) {
-
-
   }
 
   ngOnInit(): void {
@@ -46,7 +44,7 @@ export class DiscoverComponent implements OnInit {
         translateX: [0, -5, 4, 0],
       });
 
-    if (!this.nftCollection) {
+    if (Object.keys(this.nftCollection).length == 0 ) {
       this.loadingAnimation.play();
     }
   }

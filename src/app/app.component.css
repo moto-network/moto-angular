@@ -143,8 +143,8 @@ cursor: pointer;
   margin-bottom:30px;
    border-radius:8px;
   background-color: white;
-
 }
+
 ::-webkit-input-placeholder {
    color: var(--moto-blue);
 }
