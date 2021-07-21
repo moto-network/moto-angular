@@ -43,7 +43,7 @@ export class DisplayNFTComponent implements OnInit {
   ngOnInit(): void {
     this.nft = this.testnft;
     if (this._nftManager.nft) {
-      this.nft = this.testnft;//this._nftManager.nft;
+      this.nft = this._nftManager.nft;
     }
   }
 

@@ -13,7 +13,7 @@ export class RemoteDataService {
   constructor(private http: HttpClient, private _db: AngularFirestore,
   private _china:ChinaDataService) { }
 
-  public findNFT(value: string, parameter: string): Observable<DBNFT | null>{
+  public getNFT(parameter: string, value: string): Observable<DBNFT | null>{
     const nftObservable: Subject<DBNFT | null> = new Subject<DBNFT | null>();
     if (this.isChina) {
       return new Subject<DBNFT>();
@@ -63,41 +63,29 @@ export class RemoteDataService {
   }
 
 
-  public getMultipleNFTS(searchParameter: string, searchValue:string): Observable<any>{
+  public getNFTs(searchParameter: string, searchValue: string): Observable<NFTCollection | null>{
+    const nftCollection: NFTCollection = {};
+    const collectionSubject: Subject<NFTCollection | null> = new Subject<NFTCollection | null>();
     if (this.isChina) {
       return this._china.getMultipleNFTs(searchParameter);
     }
     else {
       console.log(searchValue);
-    return this._db
+    this._db
       .collection("NFTs", ref => ref.where(searchParameter, '==', searchValue.toLowerCase()))
-      .get();
-    }
-  }
-/**
- * will get a single nft. bifurcates depending on region
- * @param {string} tokenId 
- * @returns {Observable}
- */
-  public getNFT(tokenId: string): Observable<NFT> {
-    //const nft: DBNFT = {};
-    const nftObservable: Subject<NFT> = new Subject<NFT>();
-    if (this.isChina) {
-      // something that is china friendly;
-      return this._china.getNFT(tokenId);
-    }
-    else {
-      this._db
-        .collection("NFTs", ref => ref.where('tokenId', '==', tokenId))
-        .get()
-        .subscribe((remoteValue) => {
-          //nft = remoteValue.docs[0].data() as DBNFT
-          //nftObservabel.next(nft);
-          console.log("check how the data is from remote to see how to form it");
+      .get()
+      .subscribe((querySnapshot) => {
+        if (querySnapshot.empty) {
+          collectionSubject.next(null);
+        }
+        querySnapshot.forEach((doc) => {
+          let nft: DBNFT = doc.data() as DBNFT;
+          nftCollection[nft.tokenId] = nft;
+          collectionSubject.next(nftCollection);
         });
-      return nftObservable;
+      });
+      return collectionSubject;
     }
   }
-
 
 }

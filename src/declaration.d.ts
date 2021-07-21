@@ -9,6 +9,13 @@ export interface NFT {
   pHash?: string;
 }
 
+export interface SearchResults {
+  query: string;
+  suggestedRoute?: string;
+  result?: any;
+  empty: boolean;
+}
+
 export interface DBNFT extends NFT {
   smImg: string;
   medImg: string;

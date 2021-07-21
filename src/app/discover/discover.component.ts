@@ -20,21 +20,14 @@ export class DiscoverComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    
-    if (this._nftManager.hasLocalCollection()) {
-       console.log("has location collection");
-       this.nftCollection = this._nftManager.nftCollection;
-     }
-     else {
-       console.log("calling the manager"); 
-       this._nftManager.getNFTs()
-         .subscribe((collection) => {
-           this.nftCollection = collection;
-           this.loadingAnimation.pause();
-           this.loadingAnimation.reset();
-           console.log(this.nftCollection);
-         });
-     }
+    this._nftManager.getNFTs()
+      .subscribe((collection: NFTCollection | null) => {
+        if (collection) {
+          this.loadingAnimation.pause();
+          this.loadingAnimation.reset();
+          this.nftCollection = collection;
+        }
+      });
      setTimeout(() => {
        this.loadingAnimation.pause();
        this.loadingAnimation.reset();
@@ -53,7 +46,7 @@ export class DiscoverComponent implements OnInit {
         translateX: [0, -5, 4, 0],
       });
 
-    if (!this._nftManager.hasLocalCollection()) {
+    if (!this.nftCollection) {
       this.loadingAnimation.play();
     }
   }

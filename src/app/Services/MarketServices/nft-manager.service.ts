@@ -15,11 +15,8 @@ export class NFTManagerService {//merge this wit the other NFTManager or wahteve
   nft: DBNFT | null = null;
   currentFee: number | null = null;
   currentNetwork: number | null = null;
-  nftsArray: any = [];
   nftCollection: NFTCollection = {} as NFTCollection;
-  nftProduct: any | null;
   lastSuccessfulTransaction = "";
-  collectionObservable: Subject<NFTCollection> = new Subject<NFTCollection>();
 
   constructor(private walletService: WalletService,
     private contracts: ContractsService, crypto: CryptoService,
@@ -30,7 +27,7 @@ export class NFTManagerService {//merge this wit the other NFTManager or wahteve
 
   }
 
-  initializeNFTcreationFee(): void {
+  initFee(): void {
     this.contracts.getNFTFee()
       .then((fee: any) => {
         if (fee) {
@@ -39,21 +36,11 @@ export class NFTManagerService {//merge this wit the other NFTManager or wahteve
       })
   }
 
-  hasLocalCollection(): boolean {
-    if (Object.keys(this.nftCollection).length > 0) {
-      return true;
-    }
-    else {
-      return false;
-    }
-  }
-
   mintNFT(nft: NFT): Promise<string> {
     return new Promise((resolve, reject) => {
       if (this._validNFT(nft)) {
         this.contracts.mintNFT(nft)
           .then((transactionHash) => {
-            localStorage.setItem('nft', JSON.stringify(nft));
             this.lastSuccessfulTransaction = transactionHash;
             resolve(this.lastSuccessfulTransaction);
           })
@@ -73,29 +60,30 @@ export class NFTManagerService {//merge this wit the other NFTManager or wahteve
     }
   }
 
-  getNFTs(): Observable<NFTCollection> {
-    this._getAllNFTs();//for now...it is small anyways but paginate later
-    return this.collectionObservable;
+  getNFT(parameter?: string, value?: string): Observable<DBNFT | null> {
+    const nftObservable: Subject<DBNFT | null> = new Subject<DBNFT | null>();
+    if (value && parameter) {
+      return this._remote.getNFT(parameter, value);
+    }
+    nftObservable.next(this.nft);
+    return nftObservable;
   }
 
-  addToMarket() {
-    /**
-     * @todo deploy marketplace contract
-     * @todo add markteplace contract information to app.config
-     * @todo contract service - implement contract calls  call contracts from here
-     * promisese
-     * @
-     */
-  }
+  getNFTs(parameters?: string, value?: string): Observable<NFTCollection | null> {
+    const nftObservable: Subject<NFTCollection> = new Subject<NFTCollection>();
+    if (parameters && value) {
+      return this._getNFTs(parameters, value);
+    }
+    else {
+      if (this.nftCollection) {
+        nftObservable.next(this.nftCollection);
+        return nftObservable;
+      }
+      else {
+        return this._getAllNFTs();
+      }
+    }
 
-
-  getNFTProductForView() {
-    return this.nftProduct;
-  }
-
-
-  getNFT(): DBNFT | null {
-    return this.nft;
   }
 
   setNFT(nft: DBNFT) {
@@ -105,19 +93,6 @@ export class NFTManagerService {//merge this wit the other NFTManager or wahteve
   /*getNFTbyId(tokenId: string): Observable<DBNFT> {
     return this._remote.getNFT(tokenId);
   }*/
-
-  findNFT(value: string, parameter: string) :Observable<DBNFT | null>{
-    return this._remote.findNFT(value, parameter);
-  } 
-
-
-  getCreatedNFTs(address: string): Observable<NFTCollection> {
-    return this._getNFTs("creator", address);
-  }
-
-  getOwnedNFTs(address: string) {
-
-  }
 
   private _validNFT(nft: NFT): boolean {
     if (nft) {
@@ -132,26 +107,17 @@ export class NFTManagerService {//merge this wit the other NFTManager or wahteve
     }
   }
 
-  private _getAllNFTs() {
-    this._remote.getAllNFTs()
-      .subscribe((nftCollection: NFTCollection) => {
-        this.nftCollection = nftCollection;
-        this.collectionObservable.next(this.nftCollection);
-      });
+  private _getAllNFTs(): Observable<NFTCollection> {
+    return this._remote.getAllNFTs();
   }
 
-  private _getNFTs(searchParameter: string, searchValue: string): Observable<NFTCollection> {
-    this._remote.getMultipleNFTS(searchParameter, searchValue)
-      .subscribe((querySnapshot: any) => {
-        querySnapshot.forEach((document: QueryDocumentSnapshot<any>) => {
-
-          const remoteNFT: DBNFT = document.data();
-          console.log("remote nft is ", remoteNFT);
-          this.nftCollection[remoteNFT.tokenId] = remoteNFT;
-          this.collectionObservable.next(this.nftCollection);
-        });
-      });
-
-    return this.collectionObservable;
+  /**
+   * 
+   * @param searchParameter 
+   * @param searchValue 
+   * @returns 
+   */
+  private _getNFTs(searchParameter: string, searchValue: string): Observable<NFTCollection | null> {
+    return this._remote.getNFTs(searchParameter, searchValue);
   }
 }

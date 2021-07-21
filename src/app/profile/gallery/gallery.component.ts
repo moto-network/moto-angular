@@ -1,7 +1,6 @@
 import { HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { NFTManagerService } from 'src/app/Services/MarketServices/nft-manager.service';
 import { ProfileService } from 'src/app/Services/profile.service';
 import { DBNFT, NFT, NFTCollection } from 'src/declaration';
 
@@ -24,35 +23,40 @@ export class GalleryComponent implements OnInit {
   }
 
   ngOnChanges(): void {
-    
+
   }
 
   ngOnInit(): void {
-    if (this._profileManager.hasLocalCollection()) {
-      this.nftCollection = this._profileManager.getNFTCollection();
-      
-    }
-    else {
-      console.log("searching");
-    this._profileManager.getNFTCollectionObservable()
-      .subscribe((collection: NFTCollection) => {
-        this.nftCollection = collection;
-        this.loadingAnimation.pause();
-        this.loadingAnimation.reset();
-        
+    console.log("GalleryComponent: ngOnIt: Called");
+    this._profileManager.getNFTCollection()
+      .subscribe((nftCollection: NFTCollection | null) => {
+        console.log("inside observable", nftCollection);
+
+        if (nftCollection) {
+          this.nftCollection = nftCollection;
+        }
       });
-    }
+    /*this._profileManager.collectionObservable
+      .subscribe((nftCollection: NFTCollection | null) => {
+        console.log("inside observable", nftCollection);
+
+        if (nftCollection) {
+          this.nftCollection = nftCollection;
+        }
+      });*/
+    
+
     setTimeout(() => {
       if (Object.keys(this.nftCollection).length == 0) {
         this.nothingToShow = true;
       }
-      
+
       this.loadingAnimation.pause();
       this.loadingAnimation.reset();
     }, 5000);
   }
 
-  
+
   ngAfterViewInit(): void {
     this.loadingAnimation = anime.timeline({
       loop: true,
@@ -64,9 +68,7 @@ export class GalleryComponent implements OnInit {
         translateX: [0, -10, 10, 0]
       });
 
-    if (!this._profileManager.hasLocalCollection()) {
-      this.loadingAnimation.play();
-    }
+    this.loadingAnimation.play();
   }
 
   goToNFT(nft: DBNFT) {
