@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { WalletService } from '../BlockchainServices/wallet.service';
 import { ContractsService } from '../BlockchainServices/contracts.service';
-import { Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { CryptoService } from '../crypto.service';
 import { DBNFT, NFT, NFTCollection } from "src/declaration";
 import { getProvider } from "src/app.config";
@@ -41,7 +41,9 @@ export class NFTManagerService {//merge this wit the other NFTManager or wahteve
       if (this._validNFT(nft)) {
         this.contracts.mintNFT(nft)
           .then((transactionHash) => {
+            console.log("transaction hash is", transactionHash);
             this.lastSuccessfulTransaction = transactionHash;
+            this.nft = nft;
             resolve(this.lastSuccessfulTransaction);
           })
           .catch((err) => {
@@ -52,7 +54,7 @@ export class NFTManagerService {//merge this wit the other NFTManager or wahteve
 
   }
 
-  public uploadFile(nft: NFT, file: File) {
+  public uploadNFT(nft: NFT, file: File) {
     if (file) {
       if (nft) {
         this._remote.uploadFile(nft, file);
@@ -61,7 +63,7 @@ export class NFTManagerService {//merge this wit the other NFTManager or wahteve
   }
 
   getNFT(parameter?: string, value?: string): Observable<DBNFT | null> {
-    const nftObservable: Subject<DBNFT | null> = new Subject<DBNFT | null>();
+    const nftObservable: BehaviorSubject<DBNFT | null> = new BehaviorSubject<DBNFT | null>(this.nft);
     if (value && parameter) {
       return this._remote.getNFT(parameter, value);
     }

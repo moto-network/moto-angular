@@ -9,14 +9,6 @@ import { FileManagerService } from 'src/app/Services/file-manager.service';
 import { NFTManagerService } from 'src/app/Services/MarketServices\
 /nft-manager.service';
 import { NFT } from 'src/declaration';
-/**
- * simplest condition: 
- *  logged in
- *  proper chain
- *  uploaded file
- * any changes, implement and verify
- * button only unlocks if chain is correct if a proper NFT object is created
- */
 
 @Component({
   selector: 'app-create-nft',
@@ -85,14 +77,30 @@ export class CreateNFTComponent implements OnInit {
       });
   }
 
+  /**
+   * this is called if 
+   * populateNFT(formInput)=> NFT
+   * 
+   */
+  public createNFT(): void {
+    this.nft.name = this.nftForm.get('name')?.value;
+    this.nft.beneficiary = this.nftForm.get('beneficiary')?.value;
+    this.nft.chainId = parseInt(this.nftForm.get('chainId')?.value);
+    this.nft.tokenId = this.generateTokenId();
+    this.nft.creator = this._walletService.account;
+    this.nft.contractAddress = getContract(this.nft.chainId, "nft").address;
+    this.mint(this.nft);
+  }
+
   private mint(nft: NFT) {
     this.nftManager.mintNFT(nft)//add a please wait thing
-      .then((result: any) => {
-        if (result && nft) {
+      .then((transactionHash: string) => {
+        if (transactionHash && nft) {
+          console.log("CreateNFT: transactionHash ", transactionHash);
           if (this.file) {
-            this.nftManager.uploadFile(nft, this.file);
+            this.nftManager.uploadNFT(nft, this.file);
           }
-          this.router.navigate(['nft-marketplace', 'manage-nft', 'nft-results']);
+          this.router.navigate(['nft-results']);
         }
 
 
@@ -133,20 +141,7 @@ export class CreateNFTComponent implements OnInit {
 
   }
 
-  /**
-   * this is called if 
-   * populateNFT(formInput)=> NFT
-   * 
-   */
-  public createNFT(): void {
-    this.nft.name = this.nftForm.get('name')?.value;
-    this.nft.beneficiary = this.nftForm.get('beneficiary')?.value;
-    this.nft.chainId = parseInt(this.nftForm.get('chainId')?.value);
-    this.nft.tokenId = this.generateTokenId();
-    this.nft.creator = this._walletService.account;
-    this.nft.contractAddress = getContract(this.nft.chainId, "nft").address;
-    this.mint(this.nft);
-  }
+  
 
   public options(): void {
     this.moreOptions = !this.moreOptions;

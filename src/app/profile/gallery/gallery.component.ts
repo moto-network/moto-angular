@@ -30,10 +30,11 @@ export class GalleryComponent implements OnInit {
     console.log("GalleryComponent: ngOnIt: Called");
     this._profileManager.getNFTCollection()
       .subscribe((nftCollection: NFTCollection | null) => {
-        console.log("inside observable", nftCollection);
-
         if (nftCollection) {
           this.nftCollection = nftCollection;
+          this.loadingAnimation.pause();
+          this.loadingAnimation.reset();
+          this.nothingToShow = false;
         }
       });
     /*this._profileManager.collectionObservable
@@ -67,18 +68,19 @@ export class GalleryComponent implements OnInit {
         targets: "#profile-sub-container",
         translateX: [0, -10, 10, 0]
       });
-
-    this.loadingAnimation.play();
+    if (Object.keys(this.nftCollection).length == 0) { 
+      this.loadingAnimation.play();
+    }
   }
 
   goToNFT(nft: DBNFT) {
     this._profileManager.setNFT(nft);
     this._router.navigate(['profile', 'nft']);
-    console.log("click registered");
   }
 
   get ProfileNFTs() {
     return Object.keys(this.nftCollection);
   }
+
 
 }

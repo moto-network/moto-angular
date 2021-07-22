@@ -1,3 +1,5 @@
+
+
 export interface NFT {
   name: string;
   beneficiary: string;
@@ -6,7 +8,7 @@ export interface NFT {
   contractAddress: string;
   contentHash: string;
   creator: string;
-  pHash?: string;
+  
 }
 
 export interface SearchResults {
@@ -17,10 +19,14 @@ export interface SearchResults {
 }
 
 export interface DBNFT extends NFT {
-  smImg: string;
-  medImg: string;
+  smImg?: string;
+  medImg?: string;
+  pHash?: string;
 }
 
 export type NFTCollection = {
   [tokenId: string]: DBNFT;
 }
+
+
+

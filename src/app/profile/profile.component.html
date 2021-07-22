@@ -9,7 +9,7 @@
 
     <!--<button id="commission-button">Request commission</button>-->
     <div id="profile-header-menu">
-      <button id="commission-button" *ngIf="isCreator">Request commission</button>
+      <button id="commission-button" *ngIf="isCreator" (click)="comingSoon()">Request commission</button>
     </div>
 
   </div>
@@ -21,16 +21,16 @@
 
 
       <button id="support-button">
-        <fa-icon [icon]="support"></fa-icon>
+        <fa-icon [icon]="support" (click)="comingSoon()"></fa-icon>
       </button>
       <button id="send-diamond-button">
-        <fa-icon [icon]="diamond"></fa-icon>
+        <fa-icon [icon]="diamond" (click)="comingSoon()"></fa-icon>
       </button>
       <button id="send-crown-button">
-        <fa-icon [icon]="crown"></fa-icon>
+        <fa-icon [icon]="crown" (click)="comingSoon()"></fa-icon>
       </button>
       <button id="send-heart-button">
-        <fa-icon [icon]="heart"></fa-icon>
+        <fa-icon [icon]="heart" (click)="comingSoon()"></fa-icon>
       </button>
     </div>
 
@@ -40,11 +40,11 @@
         <p class="award-number">0</p>
       </div>
       <div class="award-subcontainer">
-        <fa-icon [icon]="crown" id="crown"></fa-icon>
+        <fa-icon [icon]="crown" id="crown" ></fa-icon>
         <p class="award-number">0</p>
       </div>
       <div class="award-subcontainer">
-        <fa-icon [icon]="heart" id="heart"></fa-icon>
+        <fa-icon [icon]="heart" id="heart" ></fa-icon>
         <p class="award-number">0</p>
       </div>
     </div>

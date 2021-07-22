@@ -12,12 +12,22 @@ declare var anime: any;
 })
 export class DiscoverComponent implements OnInit {
   nftCollection: NFTCollection = {};
+  scrollPosition: any;
   loadingAnimation: any = null;
+  
   constructor(private _nftManager: NFTManagerService,
     private _router: Router) {
   }
 
   ngOnInit(): void {
+    console.log("sesson data,", this.haveSessionData());
+    if (!this.haveSessionData()) {
+      this.loadNFTs();
+    }
+   
+  }
+
+  loadNFTs() {
     this._nftManager.getNFTs()
       .subscribe((collection: NFTCollection | null) => {
         if (collection) {
@@ -26,12 +36,11 @@ export class DiscoverComponent implements OnInit {
           this.nftCollection = collection;
         }
       });
-     setTimeout(() => {
-       this.loadingAnimation.pause();
-       this.loadingAnimation.reset();
-     }, 5000);
+    setTimeout(() => {
+      this.loadingAnimation.pause();
+      this.loadingAnimation.reset();
+    }, 5000);
   }
-
 
   ngAfterViewInit(): void {
     this.loadingAnimation = anime.timeline({
@@ -47,12 +56,48 @@ export class DiscoverComponent implements OnInit {
     if (Object.keys(this.nftCollection).length == 0 ) {
       this.loadingAnimation.play();
     }
+    
+  }
+
+  ngOnDestroy(): void {
+    this.saveToLocal();
+  }
+
+  private haveSessionData(): boolean {
+    if (this.haveScrollInfo()) {
+      this.nftCollection = JSON.parse(sessionStorage.getItem("moto_network_discover_collection")!);
+      this.scrollPosition = JSON.parse(sessionStorage.getItem("moto_network_discover_scroll_position")!);
+      console.table({
+        "scroll data": this.scrollPosition,
+      });
+      let scrollOptions:ScrollToOptions = {
+        top: this.scrollPosition,
+        behavior:"auto"
+      };
+      document.body.scrollTop = this.scrollPosition;
+      return true;
+    }
+    return false;
+  }
+  private saveToLocal(): void {
+    sessionStorage.setItem("moto_network_discover_collection", JSON.stringify(this.nftCollection));
+    sessionStorage.setItem("moto_network_discover_scroll_position", JSON.stringify(document.body.scrollTop));
+  }
+
+  private haveScrollInfo(): boolean{
+    const scrollInfo = "moto_network_discover_scroll_position";
+    const collectionInfo: string = "moto_network_discover_collection";
+    if (sessionStorage.getItem(scrollInfo) && sessionStorage.getItem(collectionInfo)) {
+      return true;
+    }
+    return false;
   }
 
   display(nft: DBNFT): void {
     this._nftManager.setNFT(nft);
     this._router.navigate(['nft']);
   }
+
   get NFTs() {
     return Object.keys(this.nftCollection);
   }

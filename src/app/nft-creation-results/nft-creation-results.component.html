@@ -1,0 +1,101 @@
+<h2 class="title">
+  creation results
+</h2>
+
+<div class="row">
+  <div class="row-box">
+    <p>
+      you have successful created a NFT representation of your file on
+
+      {{getNetworkName(nft?.chainId)}}
+
+
+      here are your details:
+    </p>
+  </div>
+  <div class="row-box">
+
+  </div>
+</div>
+<div class="row">
+  <div class="row-box">
+    <h3 class="secondary-title">NFT ID</h3>
+    <p class="strong" style="color:#F26457">{{nft?.tokenId}}</p>
+    <p class="short-paragraph">
+      this is your NFT record's unique indentifier on the blockchain network 
+      contract. it is okay to share and is not private. if you lose it we still 
+      have a record.
+    </p>
+  </div>
+</div>
+
+
+<div class="row">
+  <div class="row-box">
+    <h3 class="secondary-title"> transaction hash</h3>
+    <a href="">
+      {{transactionHash}}
+    </a>
+    <p class="short-paragraph">
+      this represents your transaction on the blockchain.
+      click the link to see it on the {{getNetworkName(nft?.chainId)}}
+      explorer.
+    </p>
+  </div>
+</div>
+
+<div class="row">
+  <div class="row-box">
+    <h3 class="secondary-title"> network</h3>
+    <p class="strong">{{getNetworkName(nft?.chainId)}}</p>
+    <p class="short-paragraph">
+      you NFT data is recorded on this decentralized
+       network and our internal servers.
+    </p>
+  </div>
+</div>
+
+<div class="row">
+  <div class="row-box">
+    <h3 class="secondary-title"> contract address</h3>
+    <p class="strong"><a class="link" href="">{{nft?.contractAddress}}</a></p>
+    <p class="short-paragraph">
+      contracts are special programs
+      that define rules and structures.
+      your NFT exists at this address on the
+      {{getNetworkName(nft?.chainId)}}.
+    </p>
+  </div>
+</div>
+
+<div class="row">
+  <div class="row-box">
+    <h3 class="secondary-title">fingerprint</h3>
+    <p class="strong"><a class="link" href="">{{nft?.contentHash}}</a></p>
+    <p class="short-paragraph">
+      every file has a unique identifier 
+      based on the inherent data of the file itself.
+    </p>
+  </div>
+</div>
+
+<div class="row">
+  <div class="row-box">
+    <h3 class="secondary-title">creator</h3>
+    <p class="strong"><a class="link" href="">{{nft?.creator}}</a></p>
+    <p class="short-paragraph">
+      this is the address of the NFT record creator.
+    </p>
+  </div>
+</div>
+
+<div class="row">
+  <div class="row-box">
+    <h3 class="secondary-title">beneficiary</h3>
+    <p class="strong"><a class="link" href="">{{nft?.beneficiary}}</a></p>
+    <p class="short-paragraph">
+      this is the owner that was set during the creation process.
+    </p>
+  </div>
+</div>
+

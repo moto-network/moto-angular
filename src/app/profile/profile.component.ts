@@ -32,7 +32,6 @@ export class ProfileComponent implements OnInit {
     this._route.queryParams.subscribe((params) => {
       this.address = params["address"];
       if (this.address) {
-        console.log("got address", this.address);
         this._profileManager.initProfile(this.address);
       }
     });
@@ -49,6 +48,10 @@ export class ProfileComponent implements OnInit {
   private createNavigation(profile:string):string {
     const url = this._router.createUrlTree([], { relativeTo: this._route, queryParams: { address: profile } }).toString();
     return url;
+  }
+
+  comingSoon() {
+    alert("coming soon.");
   }
 
 }

@@ -1,26 +1,7 @@
 .title{
-  font-weight:200;
+  font-weight:300;
 }
-#home {
-  display:flex;
-  flex-direction: column;
-  background-color: white;
-  width:98vw;
-  max-width:1200px;
-  min-height: 300px;
-  height:auto;
-  margin:auto;
-  margin-top:10px;
-  margin-bottom:30px;
-  border-radius:8px;
 
-}
-#home-logo{
-  width:100px;
-  height:auto;
-  margin-left:15px;
-  margin-top:15px;
-}
 .home-content{
   display:flex;
   flex-direction: row;
@@ -28,13 +9,50 @@
   flex-wrap:wrap;
   width:99%;
   height:auto;
+  min-height: 30px;
+}
+
+.title-row{
+width:100%;
+display:flex;
+flex-direction: row;
+justify-content: center;
+}
+
+.home-text{
+  font-weight:200;
+ line-height: 2.4ch;
+}
+
+.small-content-container{
+  width:350px;
+}
+
+.content-boxes{
+
+  font-weight:200;
+  min-width:400px;
+  min-height:400px;
+  width: 48%;
+  
+}
+
+.moto-title{
+  color:var(--moto-teal);
+}
+
+#home-logo{
+  width:100px;
+  height:auto;
+  margin-left:25px;
+  margin-top:25px;
 }
 
 #left-hero-container{
   display:flex;
   flex-direction: column;
   justify-content: center;
-  min-height:400px;
+  min-height:500px;
   width:48%;
   padding:5px;
   align-items: center;
@@ -55,14 +73,6 @@
   align-items: center;
 }
 
-.content-boxes{
-
-  font-weight:200;
-  min-width:400px;
-  min-height:400px;
-  width: 48%;
-
-}
 
 #img-container{
 border-radius: 50%;
@@ -78,3 +88,4 @@ border-radius: 50%;
 
 
 }
+

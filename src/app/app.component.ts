@@ -123,6 +123,7 @@ export class AppComponent {
   search() {
     const value: string = this.searchForm.get("searchInput")?.value;
     const paramLength: number = value.length;
+    this.searchForm.controls['searchInput'].setValue("");
     this.playSearchAnimation();
     this._searchManager.search(value)
       .subscribe((results: SearchResults) => {
@@ -162,5 +163,11 @@ export class AppComponent {
     }
   }
 
+  keyDownFunction(event:any) {
+    if (event.keyCode === 13) {
+      this.search();
+
+    }
+  }
 
 }

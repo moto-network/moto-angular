@@ -26,15 +26,17 @@ margin-bottom:10px;
 .nft{
   min-width: 150px;
   min-height:150px;
-  max-width:500px;
+  max-width:400px;
   display:flex;
   flex-direction: column;
   cursor:pointer;
   padding:8px;
+  object-fit: fill;
   background-color: white;
   border-radius: 8px;
   padding-bottom:8px;
-  box-shadow: rgb(204, 219, 232) 3px 3px 6px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
+box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+/*rgba(70, 195, 209, 0.2)*/
 }
 .nft-image-container{
   width:100%;

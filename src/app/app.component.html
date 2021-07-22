@@ -22,7 +22,7 @@
   </div>
   <div id="top-bar-right">
     <form id="search-form" [formGroup]="searchForm">
-      <input id="search-input" type="text" placeholder={{placeholder}} formControlName="searchInput" />
+      <input id="search-input" (keydown)="keyDownFunction($event)" type="text" placeholder={{placeholder}} formControlName="searchInput" />
 
     </form>
     <button id="search-button" (click)="search()">
