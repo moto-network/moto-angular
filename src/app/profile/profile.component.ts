@@ -2,7 +2,7 @@ import { HttpParams } from '@angular/common/http';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { faGem, faCrown, faHeart, faGift, faHandHoldingHeart } from '@fortawesome/free-solid-svg-icons';
-import { DBNFT, NFT, NFTCollection } from 'src/declaration';
+import { DBNFT, NFT, NFTCollection, SessionData } from 'src/declaration';
 import { Location } from "@angular/common";
 import { ProfileService } from '../Services/profile.service';
 
@@ -21,7 +21,9 @@ export class ProfileComponent implements OnInit {
 //localhost:4200/profile?address=0xDcb982dEa4C22aBE650c12a1678537a3e8Ddd30D
   address: string | null = null;
   isCreator: boolean = true;
-
+  scrollTag: string = "";
+  nftCollectionTag: string = "";
+  session: SessionData | null = null;
   constructor(private _profileManager: ProfileService, private _router: Router,
     private readonly location: Location, private readonly _route: ActivatedRoute) {
     
@@ -44,6 +46,12 @@ export class ProfileComponent implements OnInit {
     }
   
   }
+
+  ngOnDestroy(): void {
+    
+  }
+
+  
 
   private createNavigation(profile:string):string {
     const url = this._router.createUrlTree([], { relativeTo: this._route, queryParams: { address: profile } }).toString();

@@ -2,6 +2,17 @@
 font-weight: 300;
 margin-left:20px;
 }
+a{
+pointer-events: none;
+text-decoration: none;
+color:black;
+}
+
+.clickable{
+  pointer-events: all;
+  text-decoration: underline;
+  color:var(--moto-teal);
+}
 
 #nft-container{
   margin:auto;

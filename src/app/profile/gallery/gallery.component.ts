@@ -1,8 +1,10 @@
-import { HttpParams } from '@angular/common/http';
+
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+
 import { ProfileService } from 'src/app/Services/profile.service';
-import { DBNFT, NFT, NFTCollection } from 'src/declaration';
+import { SessionManagerService } from 'src/app/Services/session-manager.service';
+import { DBNFT, LocalSession, NFT, NFTCollection, SessionData } from 'src/declaration';
 
 declare var anime: any;
 
@@ -18,7 +20,9 @@ export class GalleryComponent implements OnInit {
   address: string | null = null;
   loadingAnimation: any = null;
   nothingToShow: boolean = false;
-  constructor(private _profileManager: ProfileService, private _router: Router) {
+
+  constructor(private _profileManager: ProfileService, private _router: Router,
+  private _sessionManager:SessionManagerService) {
     
   }
 
@@ -27,7 +31,35 @@ export class GalleryComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log("GalleryComponent: ngOnIt: Called");
+    let sessionData = this._sessionManager.get("moto_profile_nftCollection");
+    if (!sessionData) {
+      this.remoteLoad();
+      setTimeout(() => {
+        if (Object.keys(this.nftCollection).length == 0) {
+          this.nothingToShow = true;
+        }
+        this.loadingAnimation.pause();
+        this.loadingAnimation.reset();
+      }, 5000);
+    }
+    else {
+      this.localLoad(sessionData);
+    }
+  }
+
+  private localLoad(nftCollection:NFTCollection) :void{
+    console.log("lcoaal calleld");
+    this.nftCollection = nftCollection;
+    if (this._sessionManager.get("moto_profile_scrollTop")) {
+      document.body.scrollTop = this._sessionManager.get("moto_profile_scrollTop");
+      this.nftCollection = this._sessionManager.get("moto_profile_nftCollection");
+    }
+    
+    
+  }
+
+  private remoteLoad() {
+    console.log("remote called");
     this._profileManager.getNFTCollection()
       .subscribe((nftCollection: NFTCollection | null) => {
         if (nftCollection) {
@@ -37,26 +69,7 @@ export class GalleryComponent implements OnInit {
           this.nothingToShow = false;
         }
       });
-    /*this._profileManager.collectionObservable
-      .subscribe((nftCollection: NFTCollection | null) => {
-        console.log("inside observable", nftCollection);
-
-        if (nftCollection) {
-          this.nftCollection = nftCollection;
-        }
-      });*/
-    
-
-    setTimeout(() => {
-      if (Object.keys(this.nftCollection).length == 0) {
-        this.nothingToShow = true;
-      }
-
-      this.loadingAnimation.pause();
-      this.loadingAnimation.reset();
-    }, 5000);
   }
-
 
   ngAfterViewInit(): void {
     this.loadingAnimation = anime.timeline({
@@ -73,7 +86,13 @@ export class GalleryComponent implements OnInit {
     }
   }
 
+  ngOnDestroy(): void {
+    
+  }
+
   goToNFT(nft: DBNFT) {
+    this._sessionManager.set("moto_profile_nftCollection", this.nftCollection);
+    this._sessionManager.set("moto_profile_scrollTop", document.body.scrollTop);
     this._profileManager.setNFT(nft);
     this._router.navigate(['profile', 'nft']);
   }
@@ -81,6 +100,5 @@ export class GalleryComponent implements OnInit {
   get ProfileNFTs() {
     return Object.keys(this.nftCollection);
   }
-
 
 }

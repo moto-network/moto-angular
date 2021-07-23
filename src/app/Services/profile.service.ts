@@ -35,6 +35,7 @@ export class ProfileService {
 
   setNFT(nft: DBNFT): void {
     this.nft = nft;
+    this._nftManager.setNFT(nft);
   }
 
   setNFTCollection(collection: NFTCollection){

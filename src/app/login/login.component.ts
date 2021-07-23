@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { AuthenticationService } from '../Services/authentication.service';
 import { WalletService } from '../Services/BlockchainServices/wallet.service';
 import { faThumbsUp } from "@fortawesome/free-solid-svg-icons";
+import { ProfileService } from '../Services/profile.service';
 //import { FormControl } from "@angular/core";
 declare var anime: any;
 @Component({
@@ -18,7 +19,9 @@ export class LoginComponent implements OnInit {
     email: new FormControl(''),
     password: new FormControl('')
   });
-  constructor(private _authentication: AuthenticationService, private _walletService: WalletService, private _router: Router) {
+  constructor(private _authentication: AuthenticationService,
+    private _walletService: WalletService,
+    private _router: Router, private _profile:ProfileService) {
 
   }
   account: string | null = null;
@@ -33,6 +36,8 @@ export class LoginComponent implements OnInit {
             if (this.loggedInIcon) {
               this.loggedInIcon.style.display = "block";
             }
+            this._profile.initProfile(account);
+            this._router.navigate(['profile']);
           }
         })
         .catch((err) => {

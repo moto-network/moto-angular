@@ -100,7 +100,7 @@ export class WalletService {
 
     if (!this.ethereum) {
       return new Promise((resolve, reject) => {
-        reject(new Error("no ethereum"));
+        reject(new Error("you will need to use a provider such as metamask to use this site"));
       });
     }
     return new Promise((resolve, reject) => {

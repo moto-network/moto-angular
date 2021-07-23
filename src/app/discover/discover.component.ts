@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { DBNFT, NFTCollection } from 'src/declaration';
 import { NFTManagerService } from '../Services/MarketServices/nft-manager.service';
+import { SessionManagerService } from '../Services/session-manager.service';
 
 declare var anime: any;
 
@@ -14,7 +15,7 @@ export class DiscoverComponent implements OnInit {
   nftCollection: NFTCollection = {};
   scrollPosition: any;
   loadingAnimation: any = null;
-  
+  session_id = "moto_discover";
   constructor(private _nftManager: NFTManagerService,
     private _router: Router) {
   }
@@ -61,6 +62,7 @@ export class DiscoverComponent implements OnInit {
 
   ngOnDestroy(): void {
     this.saveToLocal();
+    
   }
 
   private haveSessionData(): boolean {

@@ -3,34 +3,34 @@
     NFT
   </h2>
   <button id="back-button" (click)="backClicked()">
-  <fa-icon  [icon]="leftArrow"></fa-icon>
-</button>
+    <fa-icon [icon]="leftArrow"></fa-icon>
+  </button>
 </div>
 <div id="nft-container">
   <img class="nft-img" src={{nft.medImg}}>
 </div>
 <h2 class="title">{{nft?.name}}</h2>
 <div id="nft-info">
-  
+
   <div class="nft-info-sub-containers">
-<h3 class="title">creator</h3>
-<p>{{nft?.creator}}</p>
-<h3 class="title">last known owner</h3>
-<p>{{nft?.beneficiary}}</p>
-<h3 class="title">fingerprint</h3>
-<p>{{nft?.contentHash}}</p>
+    <h3 class="title">creator</h3>
+    <p><a [ngClass]="{'clickable':nftAvailable()}" (click)="goToProfile(nft?.creator)">{{nft?.creator}}</a></p>
+    <h3 class="title">last known owner</h3>
+    <p><a [ngClass]="{'clickable':nftAvailable()}" (click)="goToProfile(nft?.beneficiary)">{{nft?.beneficiary}}</a></p>
+    <h3 class="title">fingerprint</h3>
+    <p>{{nft?.contentHash}}</p>
   </div>
-  
+
   <div class="nft-info-sub-containers">
-<h3 class="title">NFT address</h3>
-<p>{{nft?.contractAddress}}</p>
-<h3 class="title">NFT ID</h3>
-<p>{{nft?.tokenId}}</p>
-<h3 class="title">network</h3>
-<p>{{nft?.chainId}}</p>
+    <h3 class="title">NFT address</h3>
+    <p>{{nft?.contractAddress}}</p>
+    <h3 class="title">NFT ID</h3>
+    <p>{{nft?.tokenId}}</p>
+    <h3 class="title">network</h3>
+    <p>{{nft?.chainId}}</p>
   </div>
-  
- 
-  
-  
+
+
+
+
 </div>

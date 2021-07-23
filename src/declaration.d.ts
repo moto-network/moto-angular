@@ -28,5 +28,13 @@ export type NFTCollection = {
   [tokenId: string]: DBNFT;
 }
 
+export type LocalSession = {
+  owner: string;
+  data?: SessionData;
+}
+
+export type SessionData = {
+  [dataId: string]: any;
+}
 
 

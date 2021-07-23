@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import { Router } from '@angular/router';
 import {faSearch,faPlusSquare } from "@fortawesome/free-solid-svg-icons";
 @Component({
   selector: 'app-home',
@@ -9,10 +10,14 @@ import {faSearch,faPlusSquare } from "@fortawesome/free-solid-svg-icons";
 export class HomeComponent implements OnInit {
  
  
-  constructor() { }
+  constructor(
+    private _router:Router
+  ) { }
 
   ngOnInit(): void {
   }
 
-  
+  goToCreate() {
+    this._router.navigate(['create']);
+  }
 }
