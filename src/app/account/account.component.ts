@@ -11,15 +11,22 @@ import {DialogModule} from 'primeng/dialog';
 })
 
 export class AccountComponent implements OnInit {
-  metaMaskStatus: boolean;
   displayError: boolean = false;
-  currentAccount:string="";
+  account:string | null="";
   constructor(private _auth:AuthenticationService, private _walletService:WalletService) {
-    this.metaMaskStatus = _walletService.metaMaskCheck();
+  
   }
 
-  requestAccount():void{
-    this._walletService.requestAccount();
+  hasBrowserProvider(): boolean {
+    return this._walletService.hasBrowserProvider();
+  }
+
+  initBrowserInterface(): void {
+    this._walletService.initWallet();
+  }
+
+  getAccount():void{
+    this._walletService.initWallet()
   }
 
   openMetaMask():void{

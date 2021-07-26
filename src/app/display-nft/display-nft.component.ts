@@ -2,7 +2,7 @@ import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { faArrowLeft} from '@fortawesome/free-solid-svg-icons';
-import { NFTManagerService } from 'src/app/Services/MarketServices/nft-manager.service';
+import { NFTManagerService } from '../Services/nft-manager.service';
 import { DBNFT} from 'src/declaration';
 import { ProfileService } from '../Services/profile.service';
 

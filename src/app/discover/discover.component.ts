@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { DBNFT, NFTCollection } from 'src/declaration';
-import { NFTManagerService } from '../Services/MarketServices/nft-manager.service';
+import { NFTManagerService } from '../Services/nft-manager.service';
 import { SessionManagerService } from '../Services/session-manager.service';
-
+const gridGallery = require("../../assets/js/grid-gallery.min.js");
 declare var anime: any;
 
 @Component({
@@ -25,7 +25,6 @@ export class DiscoverComponent implements OnInit {
     if (!this.haveSessionData()) {
       this.loadNFTs();
     }
-   
   }
 
   loadNFTs() {
@@ -57,6 +56,8 @@ export class DiscoverComponent implements OnInit {
     if (Object.keys(this.nftCollection).length == 0 ) {
       this.loadingAnimation.play();
     }
+
+  
     
   }
 

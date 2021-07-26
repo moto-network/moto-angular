@@ -11,29 +11,30 @@
     <input class="text-inputs" type="text" placeholder="    optional" formControlName="name" />
     <div *ngIf="moreOptions">
       <h3>Network</h3>
-      <select formControlName="chainId" id="chainId" (change)="validForm()">
+      <select formControlName="chainId" id="chainId" (change)="isValidForm()">
         <!--<option value="56" selected>(BSC) (Mainnet) Binance SmartChain  </option>-->
         <option value="97">(BSC-TestNet) (TestNet) Binance SmartChain </option>
+        <option value="1337">Ganache </option>
       </select>
 
       <h3>Beneficiary</h3>
       <input class="text-inputs" type="text" placeholder=" address" formControlName="beneficiary"
-        (change)="validForm()" />
+        (change)="isValidForm()" />
     </div>
     <div id="upload-bar">
 
-      <div id="upload-label-icon-container">
+      <div id="upload-label-and-icon-container">
 
         <label id="upload-label" for="upload-field" class="custom-file-upload">
-          <h3>upload</h3>
-          <fa-icon [icon]="uploadIcon">
-          </fa-icon>
+          <h3 id="upload-title">upload</h3>
+          
         </label>
+      
       </div>
       <p id="upload-file-name">{{filename}}</p>
     </div>
 
-    <input id="upload-field" type="file" required (change)="handleFile($event);validForm()" />
+    <input id="upload-field" type="file" required (change)="handleFile($event);isValidForm()" />
   </form>
 
 

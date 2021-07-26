@@ -10,6 +10,7 @@ import { CreateNFTComponent } from './create-nft/create-nft.component';
 import { DiscoverComponent } from './discover/discover.component';
 import { DisplayNFTComponent } from './display-nft/display-nft.component';
 import { NftCreationResultsComponent } from './nft-creation-results/nft-creation-results.component';
+import { ManageNftComponent } from './manage-nft/manage-nft.component';
 const routes: Routes = [{ path: "", component: HomeComponent },
 { path: "login", component: LoginComponent },
 { path: "signup", component: SignUpComponent },
@@ -18,7 +19,8 @@ const routes: Routes = [{ path: "", component: HomeComponent },
 { path: "discover", component: DiscoverComponent },
 { path: "nft", component: DisplayNFTComponent },
 { path: "on-ramp", component: OnRampComponent },
-{ path: "nft-results", component: NftCreationResultsComponent },
+  { path: "nft-results", component: NftCreationResultsComponent },
+  {path:"manage-nft",component:ManageNftComponent},
 { path: "profile", loadChildren: () => import('./profile/profile.module').then(m => m.ProfileModule) }
 ];
 

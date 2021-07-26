@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { NFTManagerService } from './manage-nft.service';
+import { NFTManagerService } from "./nft-manager.service"
 
 describe('CreateNftService', () => {
   let service: NFTManagerService;

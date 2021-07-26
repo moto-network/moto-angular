@@ -26,10 +26,11 @@ import { NotFoundComponent } from './not-found/not-found.component';
 import { ProfileComponent } from './profile/profile.component';
 import { CreateNFTComponent } from './create-nft/create-nft.component';
 import { DiscoverComponent } from './discover/discover.component';
-import { DisplayNFTComponent } from './display-nft/display-nft.component';
+
 import { SearchService } from './Services/search.service';
 import { ProfileService } from './Services/profile.service';
 import { NftCreationResultsComponent } from './nft-creation-results/nft-creation-results.component';
+import { ManageNftComponent } from './manage-nft/manage-nft.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -43,7 +44,8 @@ import { NftCreationResultsComponent } from './nft-creation-results/nft-creation
     ProfileComponent,
     CreateNFTComponent,
     DiscoverComponent,
-    NftCreationResultsComponent
+    NftCreationResultsComponent,
+    ManageNftComponent,
   ],
   imports: [
 

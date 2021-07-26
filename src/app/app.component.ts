@@ -1,5 +1,4 @@
-import { AnimationQueryMetadata } from '@angular/animations';
-import { Component, ComponentFactoryResolver, HostListener, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import {
@@ -9,7 +8,7 @@ import {
 import { Observable } from 'rxjs';
 import { AuthenticationService } from './Services/authentication.service';
 import { WalletService } from './Services/BlockchainServices/wallet.service';
-import { NFTManagerService } from './Services/MarketServices/nft-manager.service';
+import { NFTManagerService } from './Services/nft-manager.service';
 import { ProfileService } from './Services/profile.service';
 import { SearchService } from './Services/search.service';
 import { SearchResults } from "src/declaration";

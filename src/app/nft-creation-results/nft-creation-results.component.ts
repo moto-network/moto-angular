@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NFT } from 'src/declaration';
-import { NFTManagerService } from '../Services/MarketServices/nft-manager.service';
+import { NFTManagerService } from '../Services/nft-manager.service';
 import { faThumbsUp } from '@fortawesome/free-solid-svg-icons';
 declare var anime: any;
 @Component({

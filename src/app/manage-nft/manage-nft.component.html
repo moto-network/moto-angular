@@ -1,0 +1,41 @@
+<div class="content-row">
+  <div class="content-box" id='image-box'>
+    <div id="image-container">
+      <img src="{{imgToShow()}}" />
+    </div>
+  </div>
+
+  <div class="content-box">
+
+    <div id="nft-info-box">
+      <div id="nft-details"></div>
+      <div id="price-bar">
+        <h2 class="title">{{nft.name}}</h2>
+        <div id="price-container">
+          <h2 id="price" *ngIf="nft.price">{{nft.price}}</h2>
+          <p id="currency">{{nft.currency}}</p>
+        </div>
+      </div>
+
+      <p class="thin-text">this NFT is on:</p>
+      <p>{{getNetwork(nft.chainId)}}</p>
+
+      <p class="thin-text">creator</p>
+      <p>{{nft.creator}}</p>
+      <a (click)="goToNFT()">more info.</a>
+    </div>
+    <p id="error-message" *ngIf="error">{{errorMessage}}</p>
+    <div class="button-set" *ngIf="isBuyer()">
+      <button id="buy-button" class="moto-button">buy</button>
+    </div>
+    <div class="button-set" *ngIf="isSeller()">
+      <button class="moto-button" id="sell-button">
+        sell
+      </button>
+      <button class="moto-button" id="give-button">
+        give
+      </button>
+    </div>
+
+  </div>
+</div>

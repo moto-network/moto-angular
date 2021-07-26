@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { DBNFT, NFT, NFTCollection } from 'src/declaration';
-import { NFTManagerService } from './MarketServices/nft-manager.service';
+import { NFTManagerService } from './nft-manager.service';
 
 @Injectable({
   providedIn: 'root'

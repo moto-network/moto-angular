@@ -1,18 +1,12 @@
+<h2 class="title">
+  discover
+</h2>
 
-  <h2 class="title">
-    discover
-  </h2>
-  <div id="gallery">
-
-    <div class='nfts-container' *ngFor="let tokenId of NFTs">
-      <div class="nft">
-        <div class="nft-image-container">
-          <img class="nft-img" (click)="display(nftCollection[tokenId])" src={{nftCollection[tokenId].smImg}}>
-        </div>
-        <div class="nft-info">
-          {{nftCollection[tokenId].name}}
-        </div>
-      </div>
-    </div>
+<!--<div id="gallery" *ngFor="let tokenId of NFTs">-->
+<!--<div id="gallery" class="gg-container">-->
+<div id="gallery" class="gg-container" >
+  <div class="gg-box" >
+    <img class="nft-img" *ngFor="let tokenId of NFTs" src="{{nftCollection[tokenId].smImg}}">
 
   </div>
+</div>

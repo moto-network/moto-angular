@@ -5,7 +5,9 @@ import { AuthenticationService } from '../Services/authentication.service';
 import { WalletService } from '../Services/BlockchainServices/wallet.service';
 import { faThumbsUp } from "@fortawesome/free-solid-svg-icons";
 import { ProfileService } from '../Services/profile.service';
-//import { FormControl } from "@angular/core";
+import { LookupAddress } from 'node:dns';
+import { Location } from '@angular/common';
+
 declare var anime: any;
 @Component({
   selector: 'app-login',
@@ -21,31 +23,20 @@ export class LoginComponent implements OnInit {
   });
   constructor(private _authentication: AuthenticationService,
     private _walletService: WalletService,
-    private _router: Router, private _profile:ProfileService) {
+    private _router: Router, private _profile: ProfileService,
+    private _location:Location) {
 
   }
   account: string | null = null;
   animation: any = null;
   accountAvailable:boolean = false;
   openMetaMask(): void {
-    if (this._walletService.metaMaskCheck()) {
-      this._walletService.requestAccount()
-        .then((account) => {
-          if (account) {
-            this.accountAvailable = true;
-            if (this.loggedInIcon) {
-              this.loggedInIcon.style.display = "block";
-            }
-            this._profile.initProfile(account);
-            this._router.navigate(['profile']);
-          }
-        })
-        .catch((err) => {
-
-        })
-
-
-    }
+    this._walletService.initWallet()
+      .subscribe((account: string | null) => {
+        if (account) {
+          this._location.back();
+        }
+       });
   }
 
   openWalletConnect(): void {

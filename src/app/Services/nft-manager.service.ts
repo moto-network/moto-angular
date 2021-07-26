@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { WalletService } from '../BlockchainServices/wallet.service';
-import { ContractsService } from '../BlockchainServices/contracts.service';
+import { WalletService } from './BlockchainServices/wallet.service';
+import { ContractsService } from './BlockchainServices/contracts.service';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { CryptoService } from '../crypto.service';
+import { CryptoService } from './crypto.service';
 import { DBNFT, NFT, NFTCollection } from "src/declaration";
 import { getProvider } from "src/app.config";
-import { RemoteDataService } from '../remote-data.service';
+import { RemoteDataService } from './remote-data.service';
 import { DocumentChange, QueryDocumentSnapshot, QuerySnapshot } from '@angular/fire/firestore';
 
 @Injectable({
@@ -18,28 +18,33 @@ export class NFTManagerService {//merge this wit the other NFTManager or wahteve
   nftCollection: NFTCollection | null = null;
   lastSuccessfulTransaction = "";
 
-  constructor(private walletService: WalletService,
-    private contracts: ContractsService, crypto: CryptoService,
+  constructor(private _walletService: WalletService,
+    private _contracts: ContractsService, crypto: CryptoService,
     private _remote: RemoteDataService) {
-    walletService.networkVersion.subscribe((network) => {
+    _walletService.networkObservable.subscribe((network) => {
       this.currentNetwork = network;
     });
 
   }
 
   initFee(): void {
-    this.contracts.getNFTFee()
-      .then((fee: any) => {
-        if (fee) {
-          this.currentFee = fee;
-        }
-      })
+    if (this.currentNetwork) {
+      this._contracts.getNFTFee(this.currentNetwork)
+        .then((fee: any) => {
+          if (fee) {
+            this.currentFee = fee;
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+    } 
   }
 
   mintNFT(nft: NFT): Promise<string> {
     return new Promise((resolve, reject) => {
       if (this._validNFT(nft)) {
-        this.contracts.mintNFT(nft)
+        this._contracts.mintNFT(nft)
           .then((transactionHash) => {
             console.log("transaction hash is", transactionHash);
             this.lastSuccessfulTransaction = transactionHash;
@@ -89,6 +94,10 @@ export class NFTManagerService {//merge this wit the other NFTManager or wahteve
 
   }
 
+  getOwner(nft: NFT) :Promise<string | null>{
+    return this._contracts.getOwner(nft);
+  }
+
   setNFT(nft: DBNFT) {
     this.nft = nft;
   }
@@ -99,7 +108,7 @@ export class NFTManagerService {//merge this wit the other NFTManager or wahteve
 
   private _validNFT(nft: NFT): boolean {
     if (nft) {
-      let validAddress: boolean = this.walletService
+      let validAddress: boolean = this._walletService
         .isValidAddress(nft?.beneficiary, "ETH");
       let validNetwork: boolean = getProvider(nft?.chainId) ? true : false;
       //add verify tokenId and contentHash

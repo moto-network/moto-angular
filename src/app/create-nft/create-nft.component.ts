@@ -2,12 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { faArrowAltCircleRight, faCaretSquareUp, faCog } from "@fortawesome/free-solid-svg-icons";
-import { getContract, getProvider } from 'src/app.config';
+import { getContract, getContractAddress, getProvider } from 'src/app.config';
 import { WalletService } from 'src/app/Services/BlockchainServices\
 /wallet.service';
 import { FileManagerService } from 'src/app/Services/file-manager.service';
-import { NFTManagerService } from 'src/app/Services/MarketServices\
-/nft-manager.service';
+import { NFTManagerService } from '../Services/nft-manager.service';
 import { NFT } from 'src/declaration';
 
 @Component({
@@ -33,7 +32,7 @@ export class CreateNFTComponent implements OnInit {
   nftForm: FormGroup = new FormGroup({
     name: new FormControl(''),
     beneficiary: new FormControl('', Validators.required),
-    chainId: new FormControl('56', Validators.required),
+    chainId: new FormControl('', Validators.required),
     file: new FormControl('', Validators.required)
   });
 
@@ -52,11 +51,13 @@ export class CreateNFTComponent implements OnInit {
       this.account = account;
       this.nftForm.controls['beneficiary'].setValue(account);
     });
-    this._walletService.networkVersion.subscribe((currentNetwork) => {
+    this._walletService.networkObservable.subscribe((currentNetwork) => {
       this.chainId = currentNetwork;
       if (currentNetwork) {
+      
         if (getProvider(currentNetwork)) {
-          this.nftForm.controls['chainId'].setValue(currentNetwork);
+          this.nftForm.controls['chainId'].setValue(currentNetwork.toString());
+          this.isValidForm();
         }
       }
     });
@@ -66,15 +67,14 @@ export class CreateNFTComponent implements OnInit {
    * for the UI button if there is no account
    */
   public initAccount(): void {
-    this._walletService.requestAccount()
-      .then((account) => {
+    this._walletService.getAccount()
+      .subscribe((account: string | null) => {
         if (account) {
-          this.validForm();
+          this.account = account;
+          this.isValidForm();
         }
-      })
-      .catch((err) => {
-        alert(err);
       });
+    this.isValidForm();
   }
 
   /**
@@ -88,7 +88,7 @@ export class CreateNFTComponent implements OnInit {
     this.nft.chainId = parseInt(this.nftForm.get('chainId')?.value);
     this.nft.tokenId = this.generateTokenId();
     this.nft.creator = this._walletService.account;
-    this.nft.contractAddress = getContract(this.nft.chainId, "nft").address;
+    this.nft.contractAddress = getContractAddress(this.nft.chainId, "nft");
     this.mint(this.nft);
   }
 
@@ -102,8 +102,6 @@ export class CreateNFTComponent implements OnInit {
           }
           this.router.navigate(['nft-results']);
         }
-
-
       })
       .catch((err: any) => {
         console.log(err);
@@ -121,7 +119,6 @@ export class CreateNFTComponent implements OnInit {
    * @returns {void}
    */
   public handleFile(event: Event) {
-    console.log('handle fille called');
     const target = event.target as HTMLInputElement;
     if (target.files) {
       this.file = target.files[0];
@@ -140,8 +137,6 @@ export class CreateNFTComponent implements OnInit {
     }
 
   }
-
-  
 
   public options(): void {
     this.moreOptions = !this.moreOptions;
@@ -177,9 +172,10 @@ export class CreateNFTComponent implements OnInit {
       return false;
     }
   }
-  public validForm(): boolean {
+
+  public isValidForm(): boolean {
     if (this.validAddress() && this.validFile()
-      && this._walletService.accountReady() && this.validChain()) {
+      && this.account && this.validChain()) {
       this.formValidityForUI = true;
       return true;
     }
@@ -189,24 +185,24 @@ export class CreateNFTComponent implements OnInit {
     }
   }
 
-
   private validFile(): boolean {
     return this.haveFile;
   }
+
   /**
    * walletChain == formChain
    * @returns {boolean}
    */
-  private validChain(): boolean {
-    let formChainId = parseInt(this.nftForm.get('chainId')?.value);
+  private validChain(): boolean { 
+    let formChainId: number = parseInt(this.nftForm.get('chainId')?.value);
     if (this.nft) {
       if (this.chainId == formChainId) {
+        console.log("is truee");
         return true;
       }
       else {
         return false;
       }
-
     }
     else {
       return false;

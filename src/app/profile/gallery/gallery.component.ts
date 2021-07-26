@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 
 import { ProfileService } from 'src/app/Services/profile.service';
 import { SessionManagerService } from 'src/app/Services/session-manager.service';
-import { DBNFT, LocalSession, NFT, NFTCollection, SessionData } from 'src/declaration';
+import { DBNFT, NFTCollection } from 'src/declaration';
 
 declare var anime: any;
 
@@ -67,6 +67,7 @@ export class GalleryComponent implements OnInit {
           this.loadingAnimation.pause();
           this.loadingAnimation.reset();
           this.nothingToShow = false;
+        
         }
       });
   }

@@ -5,10 +5,8 @@
       <p>demo data</p>
     </div>
   </div>
-  <div *ngIf="metaMaskStatus" id="meta-mask-id" div>
-    MetaMask Active
-  </div>
-  <button (click)="requestAccount()">Request Account</button>
+  
+  <button *ngIf="hasBrowserProvider()" (click)="initBrowserInterface()">Request Account</button>
   
 </div>
 
@@ -25,5 +23,6 @@
     </p>
     <button class="confirm" (click)="displayError=!displayError">okay.</button>
   </div>
+<!--if there is not brrowser interface calll walletconnect orr something-->
 </div>
 

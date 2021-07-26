@@ -22,6 +22,9 @@ export interface DBNFT extends NFT {
   smImg?: string;
   medImg?: string;
   pHash?: string;
+  onSale?: boolean;
+  price?: string;
+  currency?: string;
 }
 
 export type NFTCollection = {

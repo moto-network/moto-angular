@@ -1,148 +1,67 @@
 import { Injectable } from '@angular/core';
 import Web3 from "web3";
 import WalletConnectProvider from "@walletconnect/web3-provider";
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { getProvider } from 'src/app.config';
 const config = require("../../../app.config");
 const WAValidator = require('crypto-wallet-address-validator');
 const secondaryValidator = require("wallet-address-validator");
 
-import WalletConnect from "@walletconnect/client";
-import QRCodeModal from "@walletconnect/qrcode-modal";
 declare let window: any;
 
 @Injectable({
   providedIn: 'root'
 })
 export class WalletService {
-  private web3: any;
-  private provider: any;
-  public accountObservable: Subject<string | null> = new Subject<string | null>();
-  public account: any | null = null;
-  private ethereum: any;
-  public networkVersion: Subject<number | null> = new Subject<number | null>();
-  public chainId: number = 56;
-  
 
-  
+  public accountObservable: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
+  public account: any | null = null;
+  private browserInterface: any;
+  public networkObservable: BehaviorSubject<number | null> = new BehaviorSubject<number | null>(null);
+  public chainId: number | null = null;
 
   constructor() {
-    this.browserEthereumCheck();
-    this.networkVersion.subscribe((networkVersion) => {
-      console.log("network version from wallet ", networkVersion);
-      this.chainId = networkVersion ? networkVersion : 56;
-      console.log("this.chainId", this.chainId);
-    });
-
   }
 
-  browserEthereumCheck(): boolean {
-    if (window.ethereum) {
-      //      this.web3 = new Web3(window.ethereum);
-      this.ethereum = window.ethereum;
-
-      this.ethereum.on('chainChanged', (chainId: any) => {
-        this.networkVersion.next(parseInt(chainId, 16));
-      });
-      return true;
-    }
-    else {
-      return false;
-    }
+  initWallet(): Observable<string | null>{
+    this._getWalletInterface();
+    return this.accountObservable;
   }
 
-  /*walletConnect(): void{
-    if (!this.connector.connected) {
-      // create new session
-      this.connector.createSession();
-    }
-    this.connector.on("connect", (err, payload) => {
-      if (err) {
-        console.log("err", err);
-      }
-      
-    });
-
-    const tx = {
-      from: "0xbc28Ea04101F03aA7a94C1379bc3AB32E65e62d3", // Required
-      to: "0x89D24A7b4cCB1b6fAA2625Fe562bDd9A23260359", // Required (for non contract deployments)
-      data: "0x", // Required
-      gasPrice: "0x02540be400", // Optional
-      gas: "0x9c40", // Optional
-      value: "0x00", // Optional
-      nonce: "0x0114", // Optional
-    };
-
-    // Sign transaction
-    this.connector
-      .signTransaction(tx)
-      .then((result) => {
-        // Returns signed transaction
-        console.log(result);
-      })
-      .catch((error) => {
-        // Error returned when rejected
-        console.error(error);
-      });
-   }
-*/
-  accountReady(): boolean {
-    if (this.account) {
-      return true;
-    }
-    else {
-      return false;
-    }
+  hasBrowserProvider(): boolean {
+    return (window.ethereum) ? true : false;
   }
 
-
-  requestAccount(): Promise<any> {
-
-    if (!this.ethereum) {
-      return new Promise((resolve, reject) => {
-        reject(new Error("you will need to use a provider such as metamask to use this site"));
-      });
+  getAccount(): Observable<string | null> {
+    if (!this.account) {
+      this.initWallet();
     }
-    return new Promise((resolve, reject) => {
-      this.ethereum.request({ method: 'eth_requestAccounts' })
-        .then((accounts: string[]) => {
-          this.account = accounts[0];
-          this.accountObservable.next(this.account);
-          this.networkVersion.next(this.ethereum.networkVersion);
-          //this.ethereum.eth.accounts.wallet.add(this.account);
-          resolve(accounts[0]);
-        })
-        .catch((err: any) => {
-          reject(new Error(err));
-        });
-    });
+    return this.accountObservable;
   }
 
+  getNetwork(): Observable<number | null> {
+    return this.networkObservable;
+  }
 
   sendTransaction(transaction: any): Promise<any> {
     console.table(transaction);
-    return this.ethereum.request({
+    return this.browserInterface.request({
       method: 'eth_sendTransaction',
       params: [transaction],
     });
   }
 
-
-  metaMaskCheck(): boolean {
-    if (this.browserEthereumCheck()) {
-      if (window.ethereum.isMetaMask) {
-        this.ethereum = window.ethereum;
-        return true;
-      }
-      else {
-        return false;
-      }
-    }
-    else {
-      return false;
-    }
+  convertToDecimalPrice(amount: string, currency: string) {
+    //to do
   }
 
+  isValidBTCaddress(address: string, network: string): boolean {
+    return WAValidator.validate(address, network);
+  }
+
+  isValidAddress(address: string, network: string): boolean {
+    return secondaryValidator.validate(address, network);
+  }
 
   async signForNFT(nft: any): Promise<any> {
     if (this.account) {
@@ -159,10 +78,32 @@ export class WalletService {
     }
   }
 
+  private _getWalletInterface() {
+    if (window.ethereum) {
+      this.browserInterface = window.ethereum;
+      this._requestBrowserAccount();
+      this.browserInterface.on('chainChanged', (chainId: any) => {
+        console.log("network id ", parseInt(chainId, 16));
+        this.networkObservable.next(parseInt(chainId, 16));
+      });
+    }
+  }
+
+  private _requestBrowserAccount(): void {
+    this.browserInterface.request({ method: 'eth_requestAccounts' })
+      .then((accounts: string[]) => {
+        this.account = accounts[0];
+        this.accountObservable.next(this.account);
+        this.networkObservable.next(this.browserInterface.networkVersion);
+      })
+      .catch((err: any) => {
+        console.log("WalletService:_requestionBrowserAccount", err);
+      });
+  }
 
   private executeSignature(account: string, nft: any): Promise<any> {
     let parameters = [account, this.prepareSignatureData(nft)];
-    return this.ethereum.request({ method: "eth_signTypedData_v4", params: parameters })
+    return this.browserInterface.request({ method: "eth_signTypedData_v4", params: parameters })
       .then((result: any) => {
         if (result) {
           return result;
@@ -176,7 +117,6 @@ export class WalletService {
       });
 
   }
-
 
   private prepareSignatureData(nft: any) {
     console.log("preparing signature ", config.network[nft.chainId]);
@@ -203,14 +143,5 @@ export class WalletService {
     };
     console.log("signature data prepared ", data);
     return JSON.stringify(data);
-  }
-
-
-  isValidBTCaddress(address: string, network: string): boolean {
-    return WAValidator.validate(address, network);
-  }
-
-  isValidAddress(address: string, network: string): boolean {
-    return secondaryValidator.validate(address, network);
   }
 }
