@@ -74,6 +74,7 @@ export class ManageNftComponent implements OnInit {
     }
     return "";
   }
+  
   imgToShow(): string {
     if (this.nft.smImg) {
       return this.nft.smImg;

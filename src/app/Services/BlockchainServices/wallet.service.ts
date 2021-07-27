@@ -16,7 +16,7 @@ export class WalletService {
 
   public accountObservable: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
   public account: any | null = null;
-  private browserInterface: any;
+  private _walletInterface: any;
   public networkObservable: BehaviorSubject<number | null> = new BehaviorSubject<number | null>(null);
   public chainId: number | null = null;
 
@@ -45,7 +45,8 @@ export class WalletService {
 
   sendTransaction(transaction: any): Promise<any> {
     console.table(transaction);
-    return this.browserInterface.request({
+    console.log("wallet interface is ", this._walletInterface);
+    return this._walletInterface.request({
       method: 'eth_sendTransaction',
       params: [transaction],
     });
@@ -80,21 +81,23 @@ export class WalletService {
 
   private _getWalletInterface() {
     if (window.ethereum) {
-      this.browserInterface = window.ethereum;
-      this._requestBrowserAccount();
-      this.browserInterface.on('chainChanged', (chainId: any) => {
+      console.log("window ethereum is ", window.ethereum);
+      this._walletInterface = window.ethereum;//typify this.
+      this._requestAccount();
+      this._walletInterface.on('chainChanged', (chainId: any) => {
         console.log("network id ", parseInt(chainId, 16));
         this.networkObservable.next(parseInt(chainId, 16));
       });
     }
   }
 
-  private _requestBrowserAccount(): void {
-    this.browserInterface.request({ method: 'eth_requestAccounts' })
+  private _requestAccount(): void {
+    this._walletInterface.request({ method: 'eth_requestAccounts' })
       .then((accounts: string[]) => {
         this.account = accounts[0];
         this.accountObservable.next(this.account);
-        this.networkObservable.next(this.browserInterface.networkVersion);
+        this.chainId = this._walletInterface.networkVersion;
+        this.networkObservable.next(this._walletInterface.networkVersion);
       })
       .catch((err: any) => {
         console.log("WalletService:_requestionBrowserAccount", err);
@@ -103,7 +106,7 @@ export class WalletService {
 
   private executeSignature(account: string, nft: any): Promise<any> {
     let parameters = [account, this.prepareSignatureData(nft)];
-    return this.browserInterface.request({ method: "eth_signTypedData_v4", params: parameters })
+    return this._walletInterface.request({ method: "eth_signTypedData_v4", params: parameters })
       .then((result: any) => {
         if (result) {
           return result;

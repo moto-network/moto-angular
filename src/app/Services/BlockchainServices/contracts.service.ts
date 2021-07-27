@@ -18,7 +18,7 @@ export class ContractsService {
     });
   }
 
-  getNFTFee(network: number, contract: string=this.defaultContract): Promise<any> {
+  getNFTFee(network: number, contract: string = this.defaultContract): Promise<any> {
     return this._initProvider()
       .then((web3) => {
         if (web3) {
@@ -49,63 +49,53 @@ export class ContractsService {
 
   mintNFT(nft: NFT): Promise<any> {
     return this._initProvider()
-      .then((web3) => {
-        if (web3) {
-          if (!this.networkId) {
-            return Promise.reject(new Error(noNetworkDetected))
-          }
-          const nftContract: Contract = getContract(this.networkId, "nft");
-          const web3Contract = new web3.eth.Contract(nftContract.abi, nftContract.address);
-          const encodedFunctionData = web3Contract.methods
-            .userMint(nft.name, nft.chainId, nft.beneficiary,
-              nft.contentHash, nft.tokenId).encodeABI();
-          this.getNFTFee(nft.chainId, nft.contractAddress)
-            .then((nftFee: string) => {
-              return nftFee;
-            })
-            .then((nftFee) => {
-              return { nft: nftFee, gas: web3.eth.getGasPrice() };
-            })
-            .then((fees: any) => {
-              const transactionValueString = web3.utils.toWei(fees.nft, 'ether');
-              const transactionParameters = {
-                gasPrice: web3.utils.numberToHex(fees.gas),
-                to: nft.contractAddress,
-                value: web3.utils.numberToHex(transactionValueString),
-                from: this._walletService.account,
-                data: encodedFunctionData,
-                chainId: "0x" + (nft.chainId).toString(16)
-              };
-              return transactionParameters;
-            })
-            .then((transactionParameters: any) => {
-              return this._walletService.sendTransaction(transactionParameters);
-            })
+      .then(async (web3) => {
+        if (!this.networkId || !web3) {
+          return Promise.reject(new Error(noNetworkDetected))
         }
-        return Promise.reject();
+        const nftContract: Contract = getContract(this.networkId, "nft");
+        const web3Contract = new web3.eth.Contract(nftContract.abi, nftContract.address);
+        const encodedFunctionData = web3Contract.methods
+          .userMint(nft.name, nft.chainId, nft.beneficiary,
+            nft.contentHash, nft.tokenId).encodeABI();
+        const fees = await Promise.all([this.getNFTFee(nft.chainId, nft.contractAddress), web3.eth.getGasPrice()]);
+        console.log(fees, "the fees");
+        const transactionValueString = web3.utils.toWei(fees[0], 'ether');
+        const transactionParameters = {
+          gasPrice: web3.utils.numberToHex(fees[1]),
+          to: nft.contractAddress,
+          value: web3.utils.numberToHex(transactionValueString),
+          from: this._walletService.account,
+          data: encodedFunctionData,
+          chainId: "0x" + (nft.chainId).toString(16)
+        };
+        const transactionParameters_1 = transactionParameters;
+        console.log("transaction parameters", transactionParameters_1);
+        return await this._walletService.sendTransaction(transactionParameters_1);
+      })
+      .catch((err) => {
+        console.log("contract mint err", err);
       });
   }
 
   private _initProvider(): Promise<Web3 | null> {
     if (!this._walletService.chainId) {
-      console.log("chian id i s", this._walletService.chainId);
+      console.log("chian id is", this._walletService.chainId);
       console.log('no wallet service chainid');
-      return new Promise((resolve, reject) => {
-        reject(new Error(noNetworkDetected));
-      });
+      return Promise.reject(new Error(noNetworkDetected));
     }
-    const provider:string | null = getProvider(this._walletService.chainId);
-    
+    const provider: string | null = getProvider(this._walletService.chainId);
     if (this._walletService.chainId && provider) {
-      return this._buildWeb3(provider);
+      console.log("have a provider");
+      return this._buildWeb3(provider)
     }
     return new Promise((resolve, reject) => {
       reject(new Error(unsupportedNetwork));
     });
   }
 
-  private _buildWeb3(provider: string): Promise<Web3 | null> {
-    const web3Promise = new Promise<Web3 | null>((resolve, reject) => {
+  private _buildWeb3(provider: string): Promise<Web3> {
+    const web3Promise = new Promise<Web3>((resolve, reject) => {
       resolve(new Web3(provider));
     });
     return web3Promise;

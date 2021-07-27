@@ -38,8 +38,8 @@ const storageContractTestnet: Contract = {
 };
 
 const nftTestnetAddress: string = "0x2755aBCf99a422eA7F40BB6C5ac9037D085CA67f";
-const ganacheNFTAddress: string = "0xC514851001CE34Ef41D5BddDFdB7b5CA160d7644";
-const ganachenftMarketAddress: string = "0x67D21F04e748734E5eeD3D1bE8fcbe2ebEa20A5C";
+const ganacheNFTAddress: string = "0x0233654873Fc5130530286C9FcB64f8218E01825";
+const ganachenftMarketAddress: string = "0x4ffb82aF1b6Da6A959DF21479555F5d6CC58672B";
 
 const contractAddresses:AddressCollection = {
   "97": { "nft": nftTestnetAddress },
@@ -67,13 +67,13 @@ const bscTestnetContracts:ContractCollection = {
 };
 
 const ganacheContractsCollection: ContractCollection = {
-  ganachenftAddress: ganacheNFTContract,
-  ganachenftMarketAddress:ganacheMarketContract
+  "nft": ganacheNFTContract,
+  "market":ganacheMarketContract
 };
 const mainnetContracts:ContractCollection = {};
 
 const ganacheNetwork: Network = {
-  provider: "http://127.0.0.1:7545",
+  provider: "http://127.0.0.1:38970",
   contracts: ganacheContractsCollection,
   explorerBaseUrl: "https://testnet.bscscan.com/",
   name: "ganache",

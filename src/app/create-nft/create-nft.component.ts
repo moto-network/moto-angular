@@ -48,13 +48,14 @@ export class CreateNFTComponent implements OnInit {
 
   ngOnInit(): void {
     this._walletService.accountObservable.subscribe((account) => {
-      this.account = account;
-      this.nftForm.controls['beneficiary'].setValue(account);
+      if (account) {
+        this.account = account;
+        this.nftForm.controls['beneficiary'].setValue(account);
+      }
     });
     this._walletService.networkObservable.subscribe((currentNetwork) => {
       this.chainId = currentNetwork;
       if (currentNetwork) {
-      
         if (getProvider(currentNetwork)) {
           this.nftForm.controls['chainId'].setValue(currentNetwork.toString());
           this.isValidForm();
