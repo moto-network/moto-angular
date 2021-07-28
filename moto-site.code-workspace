@@ -5,6 +5,7 @@
 		}
   ],
   "settings": {
-    "terminal.integrated.fontSize": 15
+    "terminal.integrated.fontSize": 15,
+    "dimmer.enabled": false
   }
 }

@@ -5,6 +5,7 @@ import { faArrowLeft} from '@fortawesome/free-solid-svg-icons';
 import { NFTManagerService } from '../Services/nft-manager.service';
 import { DBNFT} from 'src/declaration';
 import { ProfileService } from '../Services/profile.service';
+import { getNetworkName } from 'src/app.config';
 
 @Component({
   selector: 'app-profile-nft',
@@ -22,7 +23,7 @@ export class DisplayNFTComponent implements OnInit {
     "name": "NOTHING TO SHOW",
     "chainId": 97,
     "smImg": " ",
-    "beneficiary": "0x000000000000000000000000000000",
+    "owner": "0x000000000000000000000000000000",
     "pHash": "0000000000000000000000000",
     "medImg": "../../../assets/HD2.jpg",
     "creator": "0x000000000000000000000000000000"
@@ -55,6 +56,9 @@ export class DisplayNFTComponent implements OnInit {
     return (this.nft.tokenId.length > 25);
   }
   
+  getNetworkName() {
+    return getNetworkName(this.nft.chainId);
+  }
   /**
    * they will drop in here from the outside link must be clickable from here. 
    * for example must be able to to go creator page nft page
@@ -62,6 +66,10 @@ export class DisplayNFTComponent implements OnInit {
 
   backClicked() {
     this._location.back();
+  }
+
+  manage() {
+    this._router.navigate(['manage-nft'])
   }
 }
 

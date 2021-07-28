@@ -17,14 +17,26 @@ export class NFTManagerService {//merge this wit the other NFTManager or wahteve
   currentNetwork: number | null = null;
   nftCollection: NFTCollection | null = null;
   lastSuccessfulTransaction = "";
-
+  testnft: DBNFT = {
+    "creator": "0xae0e9d3ec2ff16cea5cac59a8777f87548177c8b",
+    "medImg": "https://storage.googleapis.com/motonetworknft/image/med_0x96c339b17672978ea1b0a6cc4e992d4e923b3c0fea50964a3a4a031add3e8c6b?GoogleAccessId=firebase-master%40motonetwork.iam.gserviceaccount.com&Expires=4780953476&Signature=BOa7exVI2imcl2ZlKrdbpWRVRw4DGoLVwe4g%2F%2Fdye%2BmBI4K8Fagfd5yr36h%2FzhK8dt94u2A7rYX%2BId6ja3QnNMZAZ%2BkoGrVW401YTzhpvghi2KWwxgPhKFeWQE2hhl8EDCE5T0hXtADt61Vi12kWeLEIpm2HoDuE3xL7cgkePEO7risNyfqIgPCUxyZ0YiEoOR7gso1rwUJ72sy%2FSrqi87CO50B9pUOtWUbEUzOld8a8jYbiYvgyFVuD8i4UqGIv0rmkzC2DZ4n5RhfGuVJMXOe7fABGgIqwCCWCXLDGsQ84o0BAVKkyU3%2FWuLU90EBKiw8wG%2BIrOLI9Wnfm%2BfhYSg%3D%3D",
+    "contentHash": "0x96c339b17672978ea1b0a6cc4e992d4e923b3c0fea50964a3a4a031add3e8c6b",
+    "smImg": "https://storage.googleapis.com/motonetworknft/image/sm_0x96c339b17672978ea1b0a6cc4e992d4e923b3c0fea50964a3a4a031add3e8c6b?GoogleAccessId=firebase-master%40motonetwork.iam.gserviceaccount.com&Expires=4780953476&Signature=RzXJ277wMe1pFzBA9YtPufOzHgSHt%2B9yi7sLMsAAkRpf38EJVWsxAE54iva8OITjz%2BzjLBe0SqRygLoZ%2BsUPy43oZDn5qtGYQ62Xpa0fFUesmWE%2BTztN6C5R%2BzxqmjH7tDeoRiU2c%2B2xZ21ria6F6dXuF7tiWLaIg1JoleTISjgjhGGW9In3kyxMbMmIocr5NMUdzh2kHoo8j5RLN50kiQnblzxVA8KGPZ7%2FJrPQU58VonCbujxMhLWoyPbJpQ3DrP3NynDLlHB2KfrYCW%2F1QVVQegHbWIgC6UQjGCD3kKrgkEZxUcJmIsVKLcxDlZNQisrI7NRRL11B6ALoSTp3ug%3D%3D",
+    "contractAddress": "0x0233654873Fc5130530286C9FcB64f8218E01825",
+    "tokenId": "0x17b02933fa1e6ad0858ea0013c64fd18",
+    "pHash": "c38e18c047cbc680",
+    "owner": "0xae0e9d3ec2ff16cea5cac59a8777f87548177c8b",
+    "chainId": 1337,
+    "name": "",
+  }
+  
   constructor(private _walletService: WalletService,
     private _contracts: ContractsService, crypto: CryptoService,
     private _remote: RemoteDataService) {
     _walletService.networkObservable.subscribe((network) => {
       this.currentNetwork = network;
     });
-
+    this.nft = this.testnft;
   }
 
   initFee(): void {
@@ -39,6 +51,14 @@ export class NFTManagerService {//merge this wit the other NFTManager or wahteve
           console.log(err);
         })
     } 
+  }
+
+  addToMarket(nft: NFT): Promise<any> {
+    return Promise.reject();
+  }
+
+  giveMarketPermission(nft:NFT) {
+    return this._contracts.setNFTMarketApproval(nft);
   }
 
   mintNFT(nft: NFT): Promise<string> {
@@ -57,6 +77,10 @@ export class NFTManagerService {//merge this wit the other NFTManager or wahteve
       }
     });
 
+  }
+
+  canMarketControl(nft: NFT): Promise<string> {
+    return this._contracts.canMarketControl(nft);
   }
 
   public uploadNFT(nft: NFT, file: File) {
@@ -94,7 +118,7 @@ export class NFTManagerService {//merge this wit the other NFTManager or wahteve
 
   }
 
-  getOwner(nft: NFT) :Promise<string | null>{
+  getOwner(nft: NFT): Promise<string | null>{
     return this._contracts.getOwner(nft);
   }
 
@@ -102,6 +126,9 @@ export class NFTManagerService {//merge this wit the other NFTManager or wahteve
     this.nft = nft;
   }
 
+  setApproval(nft: NFT) : Promise<any>{
+    return this._contracts.setNFTMarketApproval(nft);
+  }
   /*getNFTbyId(tokenId: string): Observable<DBNFT> {
     return this._remote.getNFT(tokenId);
   }*/
@@ -109,7 +136,7 @@ export class NFTManagerService {//merge this wit the other NFTManager or wahteve
   private _validNFT(nft: NFT): boolean {
     if (nft) {
       let validAddress: boolean = this._walletService
-        .isValidAddress(nft?.beneficiary, "ETH");
+        .isValidAddress(nft?.owner, "ETH");
       let validNetwork: boolean = getProvider(nft?.chainId) ? true : false;
       //add verify tokenId and contentHash
       return validAddress && validNetwork;

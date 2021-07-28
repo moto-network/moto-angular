@@ -39,7 +39,7 @@ const storageContractTestnet: Contract = {
 
 const nftTestnetAddress: string = "0x2755aBCf99a422eA7F40BB6C5ac9037D085CA67f";
 const ganacheNFTAddress: string = "0x0233654873Fc5130530286C9FcB64f8218E01825";
-const ganachenftMarketAddress: string = "0x4ffb82aF1b6Da6A959DF21479555F5d6CC58672B";
+const ganachenftMarketAddress: string = "0xCcD2d8E517EBA0dB6B13B0801E8c4E92CF266D22";
 
 const contractAddresses:AddressCollection = {
   "97": { "nft": nftTestnetAddress },
@@ -103,7 +103,6 @@ const networkCollection:NetworkCollection = {
 
 export function getProvider(chainId: number):string | null{
   let index = chainId.toString(10);
-  console.log("get provider netowrk", chainId);
   if (typeof networkCollection[index]!== 'undefined') {
     return networkCollection[index].provider;
   }
@@ -126,6 +125,12 @@ export function getNetwork(chainId:number): Network {
   return networkCollection[chainId];
 }
 
+export function getNetworkName(chainId: number): string {
+  if (typeof networkCollection[chainId] !== 'undefined') {
+    return networkCollection[chainId].name;
+  }
+  return "N/Available";
+}
 //export const UPLOAD_URL: string = "http://localhost:5001/motonetwork/us-central1/uploadNFT";
 export const UPLOAD_URL: string = "https://us-central1-motonetwork.cloudfunctions.net/uploadNFT";
   //uploadNFTurl: string = "http://localhost:5001/motonetwork/us-central1/uploadNFT";

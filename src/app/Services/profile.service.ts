@@ -72,7 +72,7 @@ export class ProfileService {
       return nft.creator;
     }
     else if (whichAddress == "beneficiary") {
-      return nft.beneficiary;
+      return nft.owner;
     }
     return null;
   }

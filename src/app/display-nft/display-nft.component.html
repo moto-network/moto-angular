@@ -6,10 +6,13 @@
     <fa-icon [icon]="leftArrow"></fa-icon>
   </button>
 </div>
+
 <div id="nft-container">
   <img class="nft-img" src={{nft.medImg}}>
 </div>
+
 <h2 class="title">{{nft?.name}}</h2>
+
 <div id="nft-info">
 
   <div class="nft-info-sub-containers">
@@ -27,10 +30,12 @@
     <h3 class="title">NFT ID</h3>
     <p>{{nft?.tokenId}}</p>
     <h3 class="title">network</h3>
-    <p>{{nft?.chainId}}</p>
+    <p>{{getNetworkName()}}</p>
+</div>
+</div>
+
+<div id="management-bar">
+  <div class="button-container">
+    <button id="manage-button" class="moto-button" (click)="manage()">manage</button>
   </div>
-
-
-
-
 </div>

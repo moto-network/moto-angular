@@ -21,16 +21,23 @@
       <p>{{getNetwork(nft.chainId)}}</p>
 
       <p class="thin-text">creator</p>
-      <p>{{nft.creator}}</p>
+      <p>{{nft?.creator}}</p>
       <a (click)="goToNFT()">more info.</a>
     </div>
-    <p id="error-message" *ngIf="error">{{errorMessage}}</p>
-    <div class="button-set" *ngIf="isBuyer()">
+    <p id="user-message" *ngIf="displayPermissionRequest()">{{messageForUser}}</p>
+    <div class="button-set" *ngIf="displayPermissionRequest()">
+      <button class="moto-button" id="one-permission-button" (click)="giveMarketPermission()">allow for one</button>
+      <button class="moto-button" id="all-permission-button">allow for all</button>
+    </div>
+    <div class="button-set" *ngIf="displayBuy()">
       <button id="buy-button" class="moto-button">buy</button>
     </div>
-    <div class="button-set" *ngIf="isSeller()">
-      <button class="moto-button" id="sell-button">
-        sell
+    <div class="button-set" *ngIf="displayNFTManagement()">
+      <button class="moto-button" id="revoke-button">
+        revoke moto market permissions
+      </button>
+      <button class="moto-button" id="sell-button">   
+        add to market
       </button>
       <button class="moto-button" id="give-button">
         give

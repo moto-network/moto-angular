@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { NFT } from 'src/declaration';
 import { NFTManagerService } from '../Services/nft-manager.service';
 import { faThumbsUp } from '@fortawesome/free-solid-svg-icons';
+import { getNetwork } from 'src/app.config';
+import { SessionManagerService } from '../Services/session-manager.service';
 declare var anime: any;
 @Component({
   selector: 'app-nft-creation-results',
@@ -17,7 +19,8 @@ export class NftCreationResultsComponent implements OnInit {
     "97": "Binance Smart Chain Test Network",
     "56":"Binance Smart Chain Main Network"
   }
-  constructor(private _nftManager: NFTManagerService) {
+  constructor(private _nftManager: NFTManagerService,
+    private _session: SessionManagerService) {
     _nftManager.getNFT()
       .subscribe((nft: NFT | null) => {
         console.log('subcribe nft', nft);
@@ -43,13 +46,28 @@ export class NftCreationResultsComponent implements OnInit {
   };
 
   ngOnInit(): void {
-    //this.nft = this.testnft;
+    if (!this.nft) {
+      this.nft = this._session.get("moto_nft_results_nft");
+      this._session.get("moto_nft_results_transaction_hash");
+    }
+    else {
+      this._session.clear("moto_nft_results_nft");
+      this._session.clear("moto_nft_results_transaction_hash");
+    }
+  }
+
+  ngOnDestroy(): void{
+    if (this.nft && this.transactionHash) {
+      this._session.set("moto_nft_results_nft", this.nft);
+      this._session.set("moto_nft_results_transaction_hash", this.transactionHash);
+    } 
   }
 
   getNetworkName(chain: number | undefined) {
     if (chain) {
-      const chainString = chain.toString();
-      return this.chains[chainString];
+      const network = getNetwork(chain)
+     
+      return network.name;
     }
     return "";
   }

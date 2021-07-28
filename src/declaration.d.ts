@@ -2,7 +2,7 @@
 
 export interface NFT {
   name: string;
-  beneficiary: string;
+  owner: string;
   chainId: number;
   tokenId: string;
   contractAddress: string;

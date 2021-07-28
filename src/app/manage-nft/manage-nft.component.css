@@ -69,10 +69,11 @@ a{
   height:100%;
 }
 
-#error-message{
+#user-message{
   color:red;
   width:80%;
   font-weight:200;
+  margin-left:20px;
 }
 
 #nft-info-box{
@@ -115,8 +116,8 @@ a{
 
 #sell-button{
   margin-right:10px;
-  background-color: rgba(70, 163, 101, 0.15);
-  color:rgba(70, 163, 101);
+  background-color: rgba(70, 163, 101);
+  color:white;
 }
 
 #give-button{
@@ -130,3 +131,17 @@ color:rgba(240,154,151);
   color:white;
   margin-right:10px;
 }
+
+#revoke-button{
+  color:white;
+  background-color: crimson;
+}
+
+
+#one-permission-button{
+  background-color: #0077b6;
+}
+
+#all-permission-button{
+  background-color: #023e8a;
+} 

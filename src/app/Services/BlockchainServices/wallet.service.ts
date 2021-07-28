@@ -1,8 +1,5 @@
 import { Injectable } from '@angular/core';
-import Web3 from "web3";
-import WalletConnectProvider from "@walletconnect/web3-provider";
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { getProvider } from 'src/app.config';
 const config = require("../../../app.config");
 const WAValidator = require('crypto-wallet-address-validator');
 const secondaryValidator = require("wallet-address-validator");
@@ -81,7 +78,6 @@ export class WalletService {
 
   private _getWalletInterface() {
     if (window.ethereum) {
-      console.log("window ethereum is ", window.ethereum);
       this._walletInterface = window.ethereum;//typify this.
       this._requestAccount();
       this._walletInterface.on('chainChanged', (chainId: any) => {
