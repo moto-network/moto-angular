@@ -1,10 +1,9 @@
 img{
   flex-shrink: 1;
   object-fit: contain;
-  width:100%;
-  height:100%;
-  max-width:350px;
-  max-height:350px;
+
+  max-width:450px;
+  max-height:450px;
 
 }
 a{
@@ -18,19 +17,21 @@ a{
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: space-between;
-  gap:2px;
+  gap:10px;
   height:100%;
+  border-radius: 8px;
 }
 
 
 .content-box{
-  display:flex;
   flex-direction: column;
-  justify-content: center;
   flex-grow: 1;
   flex-shrink:1;
+
   min-width:250px;
-  min-height:450px;
+
+  min-height:550px;
+
   height:100%;
 
 }
@@ -43,105 +44,50 @@ a{
   font-weight:200;
 }
 
-.button-set{
-  display:flex;
-  flex-direction: row;
-  justify-content: flex-end;
-  width:100%;
-  padding-bottom:15px;
-  padding-right:20px;
+.mini-info{
+  margin:0;
+  padding:0;
 
+  word-wrap: break-word;
+}
+
+#info-row{
+  justify-content: flex-start;
+  max-width: 400px;
+  margin-left:20px;
+  margin-top:20px;
+  flex-wrap:nowrap;
+  align-items: center;
+}
+#mini-nft-info-box{
+display:flex;
+height:50px;
+gap:8px;
+flex-wrap: nowrap;
+flex-direction: column; 
+justify-content: flex-start;
+
+}
+
+#mini-name{
+  margin:0;
+  padding:0;
 }
 
 #image-container{
-  flex-shrink:1;
-  width:60%;
-  height:60%;
-  margin:auto;
-}
-
-#img-box{
-  display:flex;
-  flex-direction: row;
-
-  align-items: center;
   width:100%;
   height:100%;
+
 }
 
-#user-message{
-  color:red;
-  width:80%;
-  font-weight:200;
-  margin-left:20px;
-}
-
-#nft-info-box{
-  padding-left:20px;
-  flex-grow:1;
-  height:80%;
-  width:100%;
-  justify-content: space-between;
-}
-
-#price-bar{
-  display:flex;
-  flex-direction: row;
-  justify-content: space-between;
-  width:100%;
-  height:80px;
-}
-#currency{
-  margin:0px;
-}
-
-#price-container{
-
-  display:flex;
-  flex-direction: column;
-  margin-right:40px;
-  height:100px;
-  justify-content: flex-start;
-}
-
-#price-container > h2 {
-  margin:0px;
-  margin-top:20px;
-  
-}
-
-#price{
-  color:green
-}
-
-#sell-button{
+#mini-img{
   margin-right:10px;
-  background-color: rgba(70, 163, 101);
-  color:white;
-}
-
-#give-button{
-margin-right:10px;
-background-color: rgba(240,154,151,0.15);
-color:rgba(240,154,151);
-}
-
-#buy-button{
-  background-color: #5BA77C;
-  color:white;
-  margin-right:10px;
-}
-
-#revoke-button{
-  color:white;
-  background-color: crimson;
+  max-width: 100px;
+  max-height: 100px;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;
 }
 
 
-#one-permission-button{
-  background-color: #0077b6;
-}
 
-#all-permission-button{
-  background-color: #023e8a;
-} 

@@ -29,10 +29,22 @@ export class WalletService {
     return (window.ethereum) ? true : false;
   }
 
+  /**
+   * if no account sends a request to an inteface to get an account
+   * @returns observabe
+   */
   getAccount(): Observable<string | null> {
     if (!this.account) {
       this.initWallet();
     }
+    return this.accountObservable;
+  }
+
+  /**
+   * does not request an intefface
+   * @returns observabe 
+   */
+  listenForAccount(): Observable<string | null>{
     return this.accountObservable;
   }
 
@@ -42,7 +54,7 @@ export class WalletService {
 
   sendTransaction(transaction: any): Promise<any> {
     console.table(transaction);
-    console.log("wallet interface is ", this._walletInterface);
+
     return this._walletInterface.request({
       method: 'eth_sendTransaction',
       params: [transaction],
@@ -77,6 +89,7 @@ export class WalletService {
   }
 
   private _getWalletInterface() {
+    //do a popup later so they can decide between ethereum
     if (window.ethereum) {
       this._walletInterface = window.ethereum;//typify this.
       this._requestAccount();
@@ -91,6 +104,7 @@ export class WalletService {
     this._walletInterface.request({ method: 'eth_requestAccounts' })
       .then((accounts: string[]) => {
         this.account = accounts[0];
+        console.log("account observable is about to send ", this.account);
         this.accountObservable.next(this.account);
         this.chainId = this._walletInterface.networkVersion;
         this.networkObservable.next(this._walletInterface.networkVersion);
@@ -131,7 +145,7 @@ export class WalletService {
         "NFT": [
           { "name": "name", "type": "string" },
           { "name": "chainId", "type": "uint256" },
-          { "name": "beneficiary", "type": "address" },
+          { "name": "owner", "type": "address" },
           { "name": "contentHash", "type": "bytes32" },
           { "name": "tokenId", "type": "uint256" }
         ]

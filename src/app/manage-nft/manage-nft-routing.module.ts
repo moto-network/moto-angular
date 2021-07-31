@@ -1,0 +1,19 @@
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { InfoComponent } from './info/info.component';
+import { ManageNftComponent} from './manage-nft.component'
+
+const routes: Routes = [{
+  path: "",
+  component: ManageNftComponent,
+  children: [
+  {path:"seller-menu",component:InfoComponent}
+  ]
+}
+ ];
+
+@NgModule({
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule]
+})
+export class ManageNFTRoutingModule { }

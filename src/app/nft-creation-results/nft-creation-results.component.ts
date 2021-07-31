@@ -40,7 +40,7 @@ export class NftCreationResultsComponent implements OnInit {
     "pHash": "c80418c4e42020c2",
     "contentHash": "0xe42b0711b459e0ba1379e71e0920f4611852b4e983a6d71183084002b6740d59",
     "creator": "0xdcb982dea4c22abe650c12a1678537a3e8ddd30d",
-    "beneficiary": "0xDcb982dEa4C22aBE650c12a1678537a3e8Ddd30D",
+    "owner": "0xDcb982dEa4C22aBE650c12a1678537a3e8Ddd30D",
     "tokenId": "0x8b0b9640bd2fa34f9e4937d77c9110e1"
 
   };

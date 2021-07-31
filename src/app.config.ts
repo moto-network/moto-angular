@@ -37,10 +37,10 @@ const storageContractTestnet: Contract = {
   abi: storageJson.abip
 };
 
-const nftTestnetAddress: string = "0x2755aBCf99a422eA7F40BB6C5ac9037D085CA67f";
+const nftTestnetAddress: string = "0x4De41909a50B92b025BA95f8ddf7e7a126dC40Cd";
 const ganacheNFTAddress: string = "0x0233654873Fc5130530286C9FcB64f8218E01825";
-const ganachenftMarketAddress: string = "0xCcD2d8E517EBA0dB6B13B0801E8c4E92CF266D22";
-
+const ganachenftMarketAddress: string = "0xb52D64dFF89eDF37738C99F609E436dA5Ef8d534";
+const binanceTestMarketAddress: string = "0xd4DF6E0236A01B64DB7f01f970F375384F9f5943";
 const contractAddresses:AddressCollection = {
   "97": { "nft": nftTestnetAddress },
   "1337": {"nft":ganacheNFTAddress}
@@ -50,7 +50,11 @@ const nftTestnet: Contract = {
   address: nftTestnetAddress,
   abi: motoVerifiedNFT.abi,
 };
-
+const binaanceTestMarketContract: Contract = {
+  name: 'market',
+  address: binanceTestMarketAddress,
+  abi: marketplaceJSON.abi
+}
 const ganacheMarketContract: Contract = {
   name: "market",
   address: ganachenftMarketAddress,
@@ -63,7 +67,8 @@ const ganacheNFTContract: Contract = {
 };
 
 const bscTestnetContracts:ContractCollection = {
-  "nft" : nftTestnet,
+  "nft": nftTestnet,
+  "market":binaanceTestMarketContract
 };
 
 const ganacheContractsCollection: ContractCollection = {

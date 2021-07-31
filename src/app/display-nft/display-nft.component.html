@@ -19,7 +19,7 @@
     <h3 class="title">creator</h3>
     <p><a [ngClass]="{'clickable':nftAvailable()}" (click)="goToProfile(nft?.creator)">{{nft?.creator}}</a></p>
     <h3 class="title">last known owner</h3>
-    <p><a [ngClass]="{'clickable':nftAvailable()}" (click)="goToProfile(nft?.beneficiary)">{{nft?.beneficiary}}</a></p>
+    <p><a [ngClass]="{'clickable':nftAvailable()}" (click)="goToProfile(nft?.owner)">{{nft?.owner}}</a></p>
     <h3 class="title">fingerprint</h3>
     <p>{{nft?.contentHash}}</p>
   </div>
@@ -31,11 +31,23 @@
     <p>{{nft?.tokenId}}</p>
     <h3 class="title">network</h3>
     <p>{{getNetworkName()}}</p>
-</div>
+  </div>
 </div>
 
-<div id="management-bar">
-  <div class="button-container">
-    <button id="manage-button" class="moto-button" (click)="manage()">manage</button>
+<div id="management-bar" *ngIf="showMenu()">
+
+  <div class="button-container" id="left-corner-button">
+    <button class="action-button moto-button" id='burn-button'>
+      <fa-icon [icon]="burn"></fa-icon> | destroy
+    </button>
+  </div>
+  <div class="button-container" id="right-corner-buttons">
+    <button class="action-button moto-button" id="give-button">
+      <fa-icon [icon]="give"></fa-icon> | give
+    </button>
+    <button class="action-button moto-button" 
+    id="sell-button" (click)="sellNFT()">
+      <fa-icon [icon]="sell"></fa-icon> | sell
+    </button>
   </div>
 </div>

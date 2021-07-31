@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { faArrowAltCircleRight, faCaretSquareUp, faCog } from "@fortawesome/free-solid-svg-icons";
-import { getContract, getContractAddress, getProvider } from 'src/app.config';
+import {  getContractAddress, getProvider } from 'src/app.config';
 import { WalletService } from 'src/app/Services/BlockchainServices\
 /wallet.service';
 import { FileManagerService } from 'src/app/Services/file-manager.service';
@@ -31,7 +31,7 @@ export class CreateNFTComponent implements OnInit {
   account: string | null = null;
   nftForm: FormGroup = new FormGroup({
     name: new FormControl(''),
-    beneficiary: new FormControl('', Validators.required),
+    owner: new FormControl('', Validators.required),
     chainId: new FormControl('', Validators.required),
     file: new FormControl('', Validators.required)
   });
@@ -50,7 +50,7 @@ export class CreateNFTComponent implements OnInit {
     this._walletService.accountObservable.subscribe((account) => {
       if (account) {
         this.account = account;
-        this.nftForm.controls['beneficiary'].setValue(account);
+        this.nftForm.controls['owner'].setValue(account);
       }
     });
     this._walletService.networkObservable.subscribe((currentNetwork) => {
@@ -85,11 +85,12 @@ export class CreateNFTComponent implements OnInit {
    */
   public createNFT(): void {
     this.nft.name = this.nftForm.get('name')?.value;
-    this.nft.beneficiary = this.nftForm.get('beneficiary')?.value;
+    this.nft.owner = this.nftForm.get('owner')?.value;
     this.nft.chainId = parseInt(this.nftForm.get('chainId')?.value);
     this.nft.tokenId = this.generateTokenId();
     this.nft.creator = this._walletService.account;
     this.nft.contractAddress = getContractAddress(this.nft.chainId, "nft");
+
     this.mint(this.nft);
   }
 
@@ -156,7 +157,7 @@ export class CreateNFTComponent implements OnInit {
   }
 
   private validAddress(): boolean {
-    let address: string = this.nftForm.get('beneficiary')?.value;
+    let address: string = this.nftForm.get('owner')?.value;
     if (address) {
       let validityCheck = this._walletService.isValidAddress(address, 'ETH');
       if (validityCheck) {

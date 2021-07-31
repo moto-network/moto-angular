@@ -4,6 +4,7 @@ import { WalletService } from '../Services/BlockchainServices/wallet.service';
 import { NFTManagerService } from '../Services/nft-manager.service';
 import { Contract, getContract, getNetwork } from 'src/app.config';
 import { Router } from '@angular/router';
+import { MarketService } from '../Services/market.service';
 
 @Component({
   selector: 'app-manage-nft',
@@ -21,79 +22,26 @@ export class ManageNftComponent implements OnInit {
     contractAddress: "0x0000000"
   };
 
-  messageForUser: string = "";
+  marketPermission: boolean = false;
   currentNetwork: number | null = null;
   account: string | null = null;
   nftOwner: string = "";
-  marketPermission: boolean = false;
+  
   needPermission: boolean = true;
   constructor(private _nftManager: NFTManagerService,
-    private _wallet: WalletService, private _router: Router) {
+    private _wallet: WalletService, private _router: Router,
+  private _market:MarketService) {
   }
-
+/**
+ * 
+ */
   ngOnInit(): void {
-    this._wallet.getAccount()
+    this._wallet.listenForAccount()
       .subscribe((account) => {
-        if (account) {
-          this.account = account;
-        }
+        
       });
-
-    this._nftManager.getNFT()
-      .subscribe((nft) => {
-        if (nft) {
-          this.nft = nft;
-          this.nftOwner = nft.owner;
-          this._nftManager.canMarketControl(this.nft)
-            .then((allowedAccount: string) => {
-              if (allowedAccount) {
-                this.marketPermission = this._doesMarketHavePermission(allowedAccount);
-              }
-            })
-            .catch((err) => { });
-        }
-      });
-
-    this._wallet.getNetwork()
-      .subscribe((chainId: number | null) => {
-        this.currentNetwork = chainId;
-      });
-  }
-
-  giveMarketPermission() {
-    if (this.nft && !this.marketPermission) {
-      this._nftManager.giveMarketPermission(this.nft)
-        .then((result) => {
-          console.log(result);
-        })
-        .catch((err) => {
-          alert(err);
-        });
-    }
-  }
-
-  addToMarket(): void {
-    if (this.nft && this.marketPermission) {
-      
-    }
-  }
-
-  goToNFT() {
-    if (this.nft) {
-      this._nftManager.setNFT(this.nft);
-      this._router.navigate(['nft']);
-    }
-  }
-
-  showPrice(price: string): string {
-    return '';
-  }
-
-  getNetwork(chainId: number): string {
-    if (getNetwork(chainId)) {
-      return getNetwork(chainId).name;
-    }
-    return "";
+    
+    
   }
 
   imgToShow(): string {
@@ -110,44 +58,15 @@ export class ManageNftComponent implements OnInit {
     }
   }
 
-  displayBuy(): boolean {
-    if (!this.nft) {
-      return false;
+  private checkNetwork(nft: NFT) {
+    if (this.currentNetwork && (nft.chainId != this.currentNetwork)) {
+     
     }
-    return ((this.nft.onSale ? this.nft.onSale : false) && !this._isOwner());
-  }
-
-  displayPermissionRequest(): boolean {
-    let displayRequest: boolean = (!this.marketPermission && this._isOwner());
-    if (displayRequest) {
-      this.messageForUser = "moto requires 'spend' permission to create a kind of\
-    escrow contract between you and a potential buyer.";
-    }
-    return displayRequest;
-  }
-
-  displayNFTManagement(): boolean {
-    return (this.marketPermission && this._isOwner());
   }
 
   private _isOwner(): boolean {
     //let onsale: boolean = this.nft.onSale ? this.nft.onSale : false;
     let isOwner: boolean = (this.account?.toLowerCase() === this.nftOwner.toLowerCase()) ? true : false;
     return isOwner;
-  }
-
-  private _doesMarketHavePermission(nftApprovedAccount: string): boolean {
-    if (this.nft && nftApprovedAccount) {
-      let marketContract: Contract = getContract(this.nft.chainId, "market");
-      return (marketContract.address.toLowerCase() == nftApprovedAccount.toLowerCase());
-    }
-    return false;
-  }
-
-  private checkNetwork(nft: NFT) {
-    if (this.currentNetwork && (nft.chainId != this.currentNetwork)) {
-      this.messageForUser = "Your wallet is currently connected to a \
-      different decentralized network than this NFT was created."
-    }
   }
 }

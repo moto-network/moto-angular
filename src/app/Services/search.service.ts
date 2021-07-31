@@ -30,7 +30,7 @@ export class SearchService {
         case 66:
           return this._search("contentHash", value);
 
-        case 33:
+        case 34:
           return this._search("tokenId", value);
 
         case 42:

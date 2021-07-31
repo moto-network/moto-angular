@@ -1,48 +1,19 @@
 <div class="content-row">
-  <div class="content-box" id='image-box'>
-    <div id="image-container">
-      <img src="{{imgToShow()}}" />
+  <div class="content-box">
+    <!--<img src="{{imgToShow()}}" />-->
+    <div class="content-row" id="info-row">
+      <img id="mini-img" src="{{imgToShow()}}" />
+      <div id="mini-nft-info-box">
+        <h2 id="mini-name" class="title">{{nft.name}}</h2>
+        <p class="mini-info"> NFT.ID: {{nft.tokenId}}</p>
+        <p></p>
+      </div>
     </div>
+
   </div>
 
   <div class="content-box">
-
-    <div id="nft-info-box">
-      <div id="nft-details"></div>
-      <div id="price-bar">
-        <h2 class="title">{{nft.name}}</h2>
-        <div id="price-container">
-          <h2 id="price" *ngIf="nft.price">{{nft.price}}</h2>
-          <p id="currency">{{nft.currency}}</p>
-        </div>
-      </div>
-
-      <p class="thin-text">this NFT is on:</p>
-      <p>{{getNetwork(nft.chainId)}}</p>
-
-      <p class="thin-text">creator</p>
-      <p>{{nft?.creator}}</p>
-      <a (click)="goToNFT()">more info.</a>
-    </div>
-    <p id="user-message" *ngIf="displayPermissionRequest()">{{messageForUser}}</p>
-    <div class="button-set" *ngIf="displayPermissionRequest()">
-      <button class="moto-button" id="one-permission-button" (click)="giveMarketPermission()">allow for one</button>
-      <button class="moto-button" id="all-permission-button">allow for all</button>
-    </div>
-    <div class="button-set" *ngIf="displayBuy()">
-      <button id="buy-button" class="moto-button">buy</button>
-    </div>
-    <div class="button-set" *ngIf="displayNFTManagement()">
-      <button class="moto-button" id="revoke-button">
-        revoke moto market permissions
-      </button>
-      <button class="moto-button" id="sell-button">   
-        add to market
-      </button>
-      <button class="moto-button" id="give-button">
-        give
-      </button>
-    </div>
+    <router-outlet name="manage-nft-router"></router-outlet>
 
   </div>
 </div>

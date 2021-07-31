@@ -5,8 +5,6 @@ import { GalleryComponent } from './gallery/gallery.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { DisplayNFTComponent } from '../display-nft/display-nft.component';
 
-
-
 @NgModule({
   declarations: [GalleryComponent,  DisplayNFTComponent],
   imports: [

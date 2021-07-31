@@ -38,6 +38,15 @@ margin-left:20px;
   min-width: 100px;
 }
 
+.action-button{
+  font-size:0.8rem;
+  padding:10px 34px;
+  border:8px;
+}
+
+.button-container{
+  flex-shrink:0;
+}
 #nft-container{
   margin:auto;
   display:flex;
@@ -76,13 +85,40 @@ margin-left:20px;
 }
 
 #management-bar{
-  margin-bottom:10px;
+  margin-bottom:20px;
+
   display:flex;
   flex-direction: row;
-  justify-content: flex-end;
+  justify-content: space-between;
 }
 
-#manage-button{
-  background-color: var(--moto-blue);
+#burn-button{
+background: rgb(227,85,0);
+background: linear-gradient(180deg, rgba(227,85,0,1) 0%, rgba(227,0,0,1) 100%);
+  box-shadow: rgba(184,70,27,0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+}
+
+#give-button{
+
+background: rgb(41,54,214);
+background: radial-gradient(circle, rgba(41,54,214,1) 0%, rgba(1,23,153,1) 100%);
+}
+
+#sell-button{
+  margin-left:20px;
+background: rgb(4,152,0);
+background: linear-gradient(184deg, rgba(4,152,0,1) 0%, rgba(0,182,4,1) 100%);
+}
+
+#left-corner-button{
+  margin-left:20px;
+}
+
+#right-corner-buttons{
+  
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
   margin-right:20px;
+
 }

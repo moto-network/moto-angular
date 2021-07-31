@@ -6,6 +6,8 @@
   ],
   "settings": {
     "terminal.integrated.fontSize": 15,
-    "dimmer.enabled": false
+    "dimmer.enabled": false,
+    "editor.fontFamily": "Fira Code, Menlo, Monaco, 'Courier New', monospace",
+    "editor.tabSize": 2
   }
 }

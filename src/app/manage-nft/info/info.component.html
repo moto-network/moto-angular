@@ -1,0 +1,48 @@
+<div id="action-container" *ngIf="haveNFT && isOwner()">
+  <h2 class="moto-title title">allow <span class="moto-name">moto </span> <span class="moto-sub-system">sancus </span>
+    to manage this item</h2>
+  <div class="row-info">
+    <div class="button-section">
+      <button class="moto-button action-button" id="single-permission-button" 
+      [ngClass]="{'disabled-button':allowOne}" (click)="grantMarketSinglePermission()">allow </button>
+    </div>
+    <div class="explaination-section">
+      <p class="description">
+        <span class="moto-name">moto </span> <span class="moto-sub-system">sancus </span> is one of the independent
+        subsystems of the <span class="moto-name">moto</span> network that is responsible for executing and securing
+        sales and trades. we only have control over the fees related to commissions or adding to the market; all other
+        functions are executed independently and deterministically.
+      </p>
+    </div>
+  </div>
+  <h2 class="moto-title title">allow <span class="moto-name">moto</span> to manage all future items on this network</h2>
+  <div class="row-info">
+
+    <div class="button-section">
+      <button class="moto-button action-button" id='multiple-permission-button'
+      [ngClass]="{'disabled-button':allowAll}">allow </button>
+    </div>
+    <div class="explaination-section">
+      <p class="description">this item is currently registered on {{getNetwork(nft.chainId)}}
+        would you like to allow <span class="moto-name">moto </span> <span class="moto-sub-system">sancus</span>
+        to manage all items on this network?
+      </p>
+    </div>
+  </div>
+
+  <h2 class="moto-title title">add to market</h2>
+  <div class="row-info" id='sell-section'>
+    <form id="sell-form" [formGroup]="sellingForm">
+      <input id="price-input" type="number" formControlName="price">
+    </form>
+    <button class="moto-button action-button" id='sell-button' [ngClass]="{'disabled-button':!readyForMarket}">sell </button>
+    
+  </div>
+
+  
+</div>
+<div *ngIf="!account" id="no-account-message">
+  <p>
+    if this is your item log in to see details
+  </p>
+</div>
