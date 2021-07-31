@@ -40,7 +40,12 @@ export class ManageNftComponent implements OnInit {
       .subscribe((account) => {
         
       });
-    
+    this._nftManager.getNFT()
+      .subscribe((nft) => {
+        if (nft) {
+          this.nft = nft;
+        }
+      });
     
   }
 

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import {  Router } from '@angular/router';
-import { getNetwork } from 'src/app.config';
+import { getContract, getNetwork } from 'src/app.config';
 import { WalletService } from 'src/app/Services/BlockchainServices/wallet.service';
 import { MarketService } from 'src/app/Services/market.service';
 import { NFTManagerService } from 'src/app/Services/nft-manager.service';
@@ -42,6 +42,7 @@ export class InfoComponent implements OnInit {
       .subscribe((account) => {
         if (account) {
           this.account = account;
+          console.log("account in seller menu",account);
         }
        });
     this._nftManager.getNFT()
@@ -49,13 +50,19 @@ export class InfoComponent implements OnInit {
         if (nft) {
           this.nft = nft;
           this.haveNFT = true;
+          console.log("nft in seller menu", nft);
         }
         else {
           this.haveNFT = false;
         }
       });
+    
   }
 
+  checkPermission(): void {
+    
+  }
+  
   getNetwork(chainId: number): string {
     if (getNetwork(chainId)) {
       return getNetwork(chainId).name;
@@ -66,11 +73,13 @@ export class InfoComponent implements OnInit {
   grantMarketSinglePermission(): void {
     if (this._nftManager.nft) {
       this._market.grantSinglePermission(this.nft)
-        .then((result) => {
-          console.log('grant result', result);
+        .then((result:string) => {
+          const marketContract = getContract(this.nft.chainId, "market");
+          if (marketContract.address.toUpperCase() == result.toUpperCase()) {
+            this.allowOne = true;
+          }
         });
-    }
-    
+    } 
   }
   
   goToNFT() {
@@ -82,6 +91,7 @@ export class InfoComponent implements OnInit {
 
   isOwner() :boolean{
     if (this.nft && this.account) {
+     
       return this.nft.owner.toUpperCase() == this.account.toUpperCase();
     }
     else {

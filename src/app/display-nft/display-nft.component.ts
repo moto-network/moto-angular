@@ -63,7 +63,8 @@ export class DisplayNFTComponent implements OnInit {
 
   sellNFT() {
     if (this.nft) {
-      this._market.addToMarket(this.nft);
+      this._nftManager.setNFT(this.nft);
+      this._router.navigate(['manage-nft', 'seller-menu']);
     }
   }
 

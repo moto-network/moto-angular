@@ -27,7 +27,7 @@ export class ProfileService {
 
   getNFTCollection(): Observable<NFTCollection | null> {
     if (!this.nftCollection && this.address) {
-      console.log("have it ");
+
       return this._getRemoteNFTs(this.address);
     }
     return this.collectionObservable;
@@ -39,7 +39,7 @@ export class ProfileService {
   }
 
   setNFTCollection(collection: NFTCollection){
-    console.log("set nftCollectin is", collection);
+
     this.nftCollection = collection;
     this.collectionObservable.next(this.nftCollection);
     this.address = this._getAddress(collection, "creator");
