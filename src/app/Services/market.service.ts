@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { faMapMarked } from '@fortawesome/free-solid-svg-icons';
 import { getContract } from 'src/app.config';
 import { NFT } from 'src/declaration';
 import { ContractsService } from './BlockchainServices/contracts.service';
@@ -10,7 +11,7 @@ export class MarketService {
 
   constructor(private _contracts:ContractsService) { }
 
-  grantSinglePermission(nft: NFT) :Promise<any>{
+  requestSinglePermission(nft: NFT) :Promise<string>{
     return this._contracts.grantMarketSinglePermission(nft);
   }
 
@@ -20,18 +21,17 @@ export class MarketService {
 
   addToMarket(nft: NFT): Promise<any> {
     return new Promise((resolve, reject) => {
-      this.canMarketControl(nft)
-        .then((address: string) => {
-          if (address) {
-            const marketContract = getContract(nft.chainId, "market");
-            if (marketContract.address.toUpperCase() == address.toUpperCase()) {
+      this.canMarketControlSingle(nft)
+        .then((hasPermission: boolean) => {
+
+            if (hasPermission) {
               console.log("have permission");
               resolve(this._contracts.addToMarket(nft));
             }
             else {
-              this.grantSinglePermission(nft)
-                .then((possibleHash) => {
-                  if (possibleHash) {
+              this.requestSinglePermission(nft)
+                .then((transactionHash:string) => {
+                  if (transactionHash) {
                     resolve(this._contracts.addToMarket(nft));
                   }
                   else {
@@ -39,11 +39,6 @@ export class MarketService {
                   }
                 });
             }
-          }
-          else {
-            reject(new Error("Connection Issue"));
-          }
-
         })
         .catch((err) => {
           reject(new Error("some connection error"));
@@ -51,8 +46,27 @@ export class MarketService {
     });
   }
 
+  canMarketControlAll(nft: NFT):Promise<boolean> {
+    return this._contracts.canMarketControlAll(nft);
+  }
 
-  canMarketControl(nft: NFT): Promise<string> {
-    return this._contracts.canMarketControl(nft);
+  canMarketControlSingle(nft: NFT): Promise<boolean> {
+    return new Promise<boolean>((resolve, reject) => {
+      this._contracts.canMarketControlSingle(nft)
+        .then((controller: string | null | undefined) => {
+          const marketContract = getContract(nft.chainId, "market");
+          const marketAddress = marketContract.address;
+          if (controller) {
+            resolve((controller.toUpperCase() == marketAddress.toUpperCase()));
+          }
+          else {
+            resolve(false);
+          }
+        })
+        .catch((err) => {
+          reject(new Error("Error trying to find owner"));
+        });
+     });
+    
   }
 }

@@ -1,4 +1,4 @@
-<div id="action-container" *ngIf="haveNFT && isOwner()">
+<div id="action-container">
   <h2 class="moto-title title">allow <span class="moto-name">moto </span> <span class="moto-sub-system">sancus </span>
     to manage this item</h2>
   <div class="row-info">
@@ -33,9 +33,11 @@
   <h2 class="moto-title title">add to market</h2>
   <div class="row-info" id='sell-section'>
     <form id="sell-form" [formGroup]="sellingForm">
-      <input id="price-input" type="number" formControlName="price">
+      <input id="price-input" type="number" formControlName="price" (input)="checkInput()">
     </form>
-    <button class="moto-button action-button" id='sell-button' [ngClass]="{'disabled-button':!readyForMarket}">sell </button>
+    <button class="moto-button action-button" id='sell-button' 
+    [ngClass]="{'disabled-button':!readyForMarket,'yellow-light':yellowLight  && !readyForMarket}" 
+     (keyup)="addToMarket()">sell </button>
     
   </div>
 

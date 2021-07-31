@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { OnlyOwnerGuard } from '../only-owner.guard';
 import { InfoComponent } from './info/info.component';
 import { ManageNftComponent} from './manage-nft.component'
 
@@ -8,7 +9,8 @@ const routes: Routes = [{
   component: ManageNftComponent,
   children: [
   {path:"seller-menu",component:InfoComponent}
-  ]
+  ],
+  canActivateChild:[OnlyOwnerGuard]
 }
  ];
 

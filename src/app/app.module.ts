@@ -4,14 +4,15 @@ import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { environment } from '../environments/environment.prod';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { HomeComponent } from './home/home.component';
 import {AuthenticationService } from './Services/authentication.service';
-import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SignUpComponent } from './sign-up/sign-up.component';
 import { ThankYouComponent } from './thank-you/thank-you.component';
 
@@ -28,7 +29,7 @@ import { DiscoverComponent } from './discover/discover.component';
 import { SearchService } from './Services/search.service';
 import { ProfileService } from './Services/profile.service';
 import { NftCreationResultsComponent } from './nft-creation-results/nft-creation-results.component';
-import { ManageNftComponent } from './manage-nft/manage-nft.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -45,7 +46,8 @@ import { ManageNftComponent } from './manage-nft/manage-nft.component';
     NftCreationResultsComponent,
   ],
   imports: [
-
+    BrowserAnimationsModule,
+    FontAwesomeModule,
     BrowserModule,
     AppRoutingModule,
     AngularFireModule.initializeApp(environment.firebase),
@@ -53,9 +55,10 @@ import { ManageNftComponent } from './manage-nft/manage-nft.component';
     AngularFireAuthModule,
     FormsModule,
     ReactiveFormsModule,
-    FontAwesomeModule,
+    
     DialogModule,
-    HttpClientModule
+    HttpClientModule,
+    MatSnackBarModule
   ],
   exports:[FontAwesomeModule],
   providers: [AuthenticationService,SearchService,ProfileService],

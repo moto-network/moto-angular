@@ -56,8 +56,14 @@
     color:gray !important;
 }
 
+.yellow-light{
+background-color: yellow !important;
+color:black !important;
+
+}
+
 .ready-to-sell{
-  
+
   cursor: pointer;
 }
 

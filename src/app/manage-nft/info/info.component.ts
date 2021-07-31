@@ -1,11 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ComponentFactoryResolver, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import {  Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 import { getContract, getNetwork } from 'src/app.config';
 import { WalletService } from 'src/app/Services/BlockchainServices/wallet.service';
 import { MarketService } from 'src/app/Services/market.service';
 import { NFTManagerService } from 'src/app/Services/nft-manager.service';
-import { DBNFT } from 'src/declaration';
+import { DBNFT, NFT } from 'src/declaration';
 
 @Component({
   selector: 'app-info',
@@ -14,8 +15,8 @@ import { DBNFT } from 'src/declaration';
 })
 export class InfoComponent implements OnInit {
 
-  constructor(private _wallet:WalletService, private _nftManager: NFTManagerService,
-  private _router:Router, private _market:MarketService) { }
+  constructor(private _wallet: WalletService, private _nftManager: NFTManagerService,
+    private _router: Router, private _market: MarketService, public snackBar: MatSnackBar) { }
   nft: DBNFT = {
     name: "Nothing To Show",
     tokenId: "0x0000000",
@@ -33,6 +34,7 @@ export class InfoComponent implements OnInit {
   readyForMarket: boolean = false;
   allowOne: boolean = false;
   allowAll: boolean = false;
+  yellowLight: boolean = false;
   sellingForm: FormGroup = new FormGroup({
     price: new FormControl('', Validators.required)
   });
@@ -42,9 +44,10 @@ export class InfoComponent implements OnInit {
       .subscribe((account) => {
         if (account) {
           this.account = account;
-          console.log("account in seller menu",account);
+          console.log("account in seller menu", account);
         }
-       });
+      });
+
     this._nftManager.getNFT()
       .subscribe((nft: DBNFT | null) => {
         if (nft) {
@@ -56,13 +59,48 @@ export class InfoComponent implements OnInit {
           this.haveNFT = false;
         }
       });
-    
+
+    this.checkGlobalPermission(this.nft)
+      .then((globalPermission) => {
+        if (globalPermission) {
+          this.allowAll = true;
+          this.allowOne = false;
+          this.yellowLight = true;
+        }
+        else {
+          this.checkSinglePermission(this.nft)
+        }
+      })
+
   }
 
-  checkPermission(): void {
-    
+  addToMarket() {
+    this._market.addToMarket(this.nft)
+      .then((transactionHash) => {
+
+        console.log("transaction hasah from market", transactionHash);
+      })
+      .catch((err) => { 
+        if (err) {
+          this.openSnackBar(err.messsage, 3000);
+        }
+      });
   }
-  
+
+  checkSinglePermission(nft: NFT): void {
+    this._market.canMarketControlSingle(nft)
+      .then((permission: boolean) => {
+        if (permission) {
+          this.yellowLight = true;
+          this.allowOne = true;
+        }
+      });
+  }
+
+  checkGlobalPermission(nft: NFT): Promise<boolean> {
+    return this._market.canMarketControlAll(nft);
+  }
+
   getNetwork(chainId: number): string {
     if (getNetwork(chainId)) {
       return getNetwork(chainId).name;
@@ -72,16 +110,31 @@ export class InfoComponent implements OnInit {
 
   grantMarketSinglePermission(): void {
     if (this._nftManager.nft) {
-      this._market.grantSinglePermission(this.nft)
-        .then((result:string) => {
-          const marketContract = getContract(this.nft.chainId, "market");
-          if (marketContract.address.toUpperCase() == result.toUpperCase()) {
+      this._market.requestSinglePermission(this.nft)
+        .then((result: string) => {
+          if (result) {
+            this.openSnackBar("Permission Granted");
             this.allowOne = true;
+            this.yellowLight = true;
           }
         });
-    } 
+    }
   }
-  
+
+  grantMarketTotalPermission(): void {
+    if (this._nftManager.nft) {
+      this._market.grantTotalPermission(this.nft)
+        .then((result: string) => {
+          if (result) {
+            this.openSnackBar("Permission Granted");
+            this.allowAll = true;
+            this.allowOne = true;
+            this.yellowLight = true;
+          }
+        });
+    }
+  }
+
   goToNFT() {
     if (this.nft) {
       this._nftManager.setNFT(this.nft);
@@ -89,13 +142,41 @@ export class InfoComponent implements OnInit {
     }
   }
 
-  isOwner() :boolean{
+  openSnackBar(message: string, duration: number = 3000) {
+    this.snackBar.open(message, "", {
+      duration: duration,
+    });
+  }
+
+  isOwner(): boolean {
     if (this.nft && this.account) {
-     
+
       return this.nft.owner.toUpperCase() == this.account.toUpperCase();
     }
     else {
       return false;
     }
+  }
+
+  checkInput(): void {
+    const price = Number.parseFloat(this.sellingForm.get("price")?.value);
+    if (price > 0) {
+      this.unlock();
+      this.nft['price'] = price.toString();
+    }
+    else {
+      this.lock();
+      this.openSnackBar("price should be a number greater than zero", 5000);
+    }
+  }
+
+  private lock(): void {
+    this.readyForMarket = false;
+    this.yellowLight = true;
+  }
+
+  private unlock() {
+    this.readyForMarket = true;
+    this.yellowLight = false;
   }
 }

@@ -6,6 +6,8 @@ import { WalletService } from './wallet.service';
 import { DBNFT, NFT } from 'src/declaration';
 import { noNetworkDetected, unsupportedNetwork } from 'src/errors';
 import { ObjectUnsubscribedError } from 'rxjs';
+import { type } from 'node:os';
+import { errorMonitor } from 'node:events';
 
 @Injectable({
   providedIn: 'root'
@@ -58,7 +60,7 @@ export class ContractsService {
       });
   }
 
-  canMarketControl(nft: NFT): Promise<string> {
+  canMarketControlSingle(nft: NFT): Promise<string> {
     return new Promise((resolve, reject) => {
       this._initNFTProvider(nft)
         .then((web3) => {
@@ -77,7 +79,31 @@ export class ContractsService {
           }
         });
     });
+  }
 
+  canMarketControlAll(nft: NFT): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      this._initNFTProvider(nft)
+        .then((web3) => {
+          if (web3) {
+            const nftContract: Contract = getContract(nft.chainId, "nft");
+            const web3Contract = new web3.eth.Contract(nftContract.abi, nftContract.address);
+            const marketContract: Contract = getContract(nft.chainId, "market");
+            web3Contract.methods.isApprovedForAll(nft.owner, marketContract.address).call()
+              .then((result: boolean) => {
+                if (typeof result !== undefined || typeof result !== null) {
+                  resolve(result);
+                }
+                else {
+                  reject(new Error("error checkingg All privileges"));
+                }
+              })
+              .catch(() => {
+                reject(new Error("connection issue"));
+              });
+          }
+        });
+    });
   }
 
   getOwner(nft: NFT): Promise<string | null> {
@@ -99,7 +125,6 @@ export class ContractsService {
   }
 
   addToMarket(nft: DBNFT): Promise<any> {
-  
     return new Promise((resolve, reject) => {
       if (nft.chainId != this.userWalletNetworkId) {
         reject(new Error("User is on a different network than this NFT"));
@@ -143,15 +168,15 @@ export class ContractsService {
           if (!this.userWalletNetworkId || !web3) {
             reject(new Error(noNetworkDetected));
           }
-          else{
-          const nftContract: Contract = getContract(this.userWalletNetworkId, "nft");
-          const web3Contract = new web3.eth.Contract(nftContract.abi, nftContract.address);
-          const encodedFunctionData = web3Contract.methods
-            .userMint(nft.name, nft.chainId, nft.owner,
-              nft.contentHash, nft.tokenId).encodeABI();
-          const fees = await Promise.all([web3.eth.getGasPrice(),this.getNFTFee(nft.chainId, nft.contractAddress)]);
-          const gas = web3.utils.numberToHex(fees[0]);
-          const value = web3.utils.numberToHex(fees[1]);
+          else {
+            const nftContract: Contract = getContract(this.userWalletNetworkId, "nft");
+            const web3Contract = new web3.eth.Contract(nftContract.abi, nftContract.address);
+            const encodedFunctionData = web3Contract.methods
+              .userMint(nft.name, nft.chainId, nft.owner,
+                nft.contentHash, nft.tokenId).encodeABI();
+            const fees = await Promise.all([web3.eth.getGasPrice(), this.getNFTFee(nft.chainId, nft.contractAddress)]);
+            const gas = web3.utils.numberToHex(fees[0]);
+            const value = web3.utils.numberToHex(fees[1]);
             resolve(this._sendTransaction(gas, value, nft, encodedFunctionData));
           }
         })
@@ -159,7 +184,7 @@ export class ContractsService {
           console.log("contract mint err", err);
         });
     });
-    
+
   }
 
   grantMarketSinglePermission(nft: NFT): Promise<any> {
@@ -186,7 +211,7 @@ export class ContractsService {
     });
   }
 
-  grantMarketTotalPermission(nft:NFT): Promise<any> {
+  grantMarketTotalPermission(nft: NFT): Promise<any> {
     const nftContract = getContract(nft.chainId, 'nft');
     const marketContract = getContract(nft.chainId, "market");
     if (nft.chainId != this.userWalletNetworkId) {
@@ -244,7 +269,7 @@ export class ContractsService {
 
   private _buildWeb3(provider: string): Promise<Web3> {
     const web3Promise = new Promise<Web3>((resolve, reject) => {
-     
+
       resolve(new Web3(provider));
     });
     return web3Promise;
