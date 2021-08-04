@@ -1,11 +1,11 @@
 
 <h2 class="title">gallery</h2>
 
-<div id="gallery" class="gg-container" >
-
-  <div class='nft gg-box' *ngFor="let tokenId of ProfileNFTs">
-  <img class="nft-img" (click)="goToNFT(nftCollection[tokenId])" src={{nftCollection[tokenId].smImg}}>
-  </div>
+<div id="gallery">
+<img class="nft-img" (click)="goToNFT(nftCollection[tokenId])" 
+*ngFor="let tokenId of ProfileNFTs"
+src={{nftCollection[tokenId].smImg}}>
+  
   <div *ngIf="nothingToShow">
     Nothing to show here.
   </div>

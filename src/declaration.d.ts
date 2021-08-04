@@ -27,6 +27,22 @@ export interface DBNFT extends NFT {
   currency?: string;
 }
 
+export interface Order {
+  address: string;
+  blockNumber: number;
+  transactionHash: string;
+  id: string;
+  tokenId: string;
+  seller: string;
+  contractAddress: string;
+  price: string;
+  expiresAt: string;
+}
+
+export type OrderCollection = {
+  [id: string]: Order;
+}
+
 export type NFTCollection = {
   [tokenId: string]: DBNFT;
 }

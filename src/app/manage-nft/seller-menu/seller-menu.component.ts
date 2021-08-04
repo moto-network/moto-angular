@@ -9,9 +9,9 @@ import { NFTManagerService } from 'src/app/Services/nft-manager.service';
 import { DBNFT, NFT } from 'src/declaration';
 
 @Component({
-  selector: 'app-info',
-  templateUrl: './info.component.html',
-  styleUrls: ['./info.component.css']
+  selector: 'seller-menu',
+  templateUrl: './seller-menu.component.html',
+  styleUrls: ['./seller-menu.component.css']
 })
 export class InfoComponent implements OnInit {
 
@@ -62,7 +62,7 @@ export class InfoComponent implements OnInit {
 
     this.checkGlobalPermission(this.nft)
       .then((globalPermission) => {
-        if (globajlPermission) {
+        if (globalPermission) {
           this.allowAll = true;
           this.allowOne = false;
           this.yellowLight = true;
@@ -77,8 +77,20 @@ export class InfoComponent implements OnInit {
   addToMarket() {
     this._market.addToMarket(this.nft)
       .then((transactionHash) => {
-
-        console.log("transaction hasah from market", transactionHash);
+        if (transactionHash) {
+          this._market.createListing(this.nft)
+            .then((listing) => {
+              console.log("listing", listing);
+              if (listing) {
+                this._market.setListing(listing);
+                this._router.navigate(['manage-nft', 'listing-management']);
+              }
+              else {
+                this.openSnackBar("something went wrong", 3000);
+              }
+            });
+        }
+        
       })
       .catch((err) => { 
         if (err) {

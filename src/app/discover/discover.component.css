@@ -6,7 +6,21 @@ margin-left:20px;
 }
 
 #gallery{
+  display:flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap:4px;
+  width:100%;
+  height:auto;
+  padding:10px;
 }
 .nft-img{
- box-shadow: rgba(0, 0, 0, 0.04) 0px 3px 5px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+  width:300px;
+  height:300px;
+  object-fit: cover;
+  border-radius: 8px;
+  flex-grow:1;
+  flex-shrink: 1;
+  cursor: pointer;
 }

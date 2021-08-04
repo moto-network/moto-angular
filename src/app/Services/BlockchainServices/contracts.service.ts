@@ -152,7 +152,7 @@ export class ContractsService {
               data: encodedFunctionData,
               chainId: "0x" + (nft.chainId).toString(16)
             };
-            return await this._wallet.sendTransaction(transactionParameters);
+            resolve(this._wallet.sendTransaction(transactionParameters));
           }
         })
         .catch((err) => {

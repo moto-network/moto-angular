@@ -14,7 +14,7 @@ interface Network {
   contracts: ContractCollection;
   explorerBaseUrl: string;//must be url
   name: string,
-  symbol:string
+symbol:string
 }
 
 type NetworkCollection = {
@@ -34,7 +34,7 @@ const storageJson = require("./StorageManagementV1.json");
 const storageContractTestnet: Contract = {
   name: "storage",
   address: "",
-  abi: storageJson.abip
+  abi: storageJson.abi
 };
 
 const nftTestnetAddress: string = "0x4De41909a50B92b025BA95f8ddf7e7a126dC40Cd";
@@ -138,5 +138,6 @@ export function getNetworkName(chainId: number): string {
 }
 //export const UPLOAD_URL: string = "http://localhost:5001/motonetwork/us-central1/uploadNFT";
 export const UPLOAD_URL: string = "https://us-central1-motonetwork.cloudfunctions.net/uploadNFT";
+export const CREATE_ORDER_URL: string = "https://us-central1-motonetwork.cloudfunctions.net/orderCreated";
   //uploadNFTurl: string = "http://localhost:5001/motonetwork/us-central1/uploadNFT";
 

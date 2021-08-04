@@ -21,10 +21,7 @@ export class DiscoverComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log("sesson data,", this.haveSessionData());
-    if (!this.haveSessionData()) {
-      this.loadNFTs();
-    }
+    this.loadNFTs();
   }
 
   loadNFTs() {
@@ -62,39 +59,9 @@ export class DiscoverComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
-    this.saveToLocal();
     
   }
 
-  private haveSessionData(): boolean {
-    if (this.haveScrollInfo()) {
-      this.nftCollection = JSON.parse(sessionStorage.getItem("moto_network_discover_collection")!);
-      this.scrollPosition = JSON.parse(sessionStorage.getItem("moto_network_discover_scroll_position")!);
-      console.table({
-        "scroll data": this.scrollPosition,
-      });
-      let scrollOptions:ScrollToOptions = {
-        top: this.scrollPosition,
-        behavior:"auto"
-      };
-      document.body.scrollTop = this.scrollPosition;
-      return true;
-    }
-    return false;
-  }
-  private saveToLocal(): void {
-    sessionStorage.setItem("moto_network_discover_collection", JSON.stringify(this.nftCollection));
-    sessionStorage.setItem("moto_network_discover_scroll_position", JSON.stringify(document.body.scrollTop));
-  }
-
-  private haveScrollInfo(): boolean{
-    const scrollInfo = "moto_network_discover_scroll_position";
-    const collectionInfo: string = "moto_network_discover_collection";
-    if (sessionStorage.getItem(scrollInfo) && sessionStorage.getItem(collectionInfo)) {
-      return true;
-    }
-    return false;
-  }
 
   display(nft: DBNFT): void {
     this._nftManager.setNFT(nft);

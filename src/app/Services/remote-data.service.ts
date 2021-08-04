@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { DBNFT, NFT, NFTCollection } from "src/declaration";
+import { DBNFT, NFT, NFTCollection, Order as Listing } from "src/declaration";
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AngularFirestore, QuerySnapshot } from '@angular/fire/firestore';
-import { getProvider, UPLOAD_URL } from "src/app.config";
+import { CREATE_ORDER_URL, getProvider, UPLOAD_URL } from "src/app.config";
 import { Observable, Subject } from 'rxjs';
 import { ChinaDataService } from './china-data.service';
 @Injectable({
@@ -41,6 +41,22 @@ export class RemoteDataService {
       (res) => console.log(res),
       (err) => console.log(err)
     );
+  }
+
+  public createListing(nft:NFT): Promise<Listing>{
+    return new Promise<Listing>((resolve, reject) => {
+      const formData = new FormData();
+      formData.append('nft', JSON.stringify(nft));
+      this.http.post<any>(CREATE_ORDER_URL, formData)
+        .subscribe((response) => {
+          console.log("response", response);
+          if (response) {
+            resolve(response as Listing);
+          }
+        }
+      );
+    });
+    
   }
 
   public getAllNFTs(): Observable<NFTCollection> {

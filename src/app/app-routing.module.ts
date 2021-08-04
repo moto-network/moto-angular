@@ -25,7 +25,7 @@ const routes: Routes = [{ path: "", component: HomeComponent },
     path: "manage-nft",
     loadChildren: () => import('./manage-nft/manage-nft.module')
       .then(m => m.ManageNftModule),
-    canLoad:[OnlyAccountGuard]
+    //canLoad:[OnlyAccountGuard]
   },
   {
     path: "profile",

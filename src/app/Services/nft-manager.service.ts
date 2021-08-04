@@ -99,6 +99,7 @@ export class NFTManagerService {//merge this wit the other NFTManager or wahteve
     }
     else {
       if (this.nftCollection) {
+        console.log("have nft collection");
         nftObservable.next(this.nftCollection);
         return nftObservable;
       }

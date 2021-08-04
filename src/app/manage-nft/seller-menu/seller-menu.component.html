@@ -37,7 +37,7 @@
     </form>
     <button class="moto-button action-button" id='sell-button' 
     [ngClass]="{'disabled-button':!readyForMarket,'yellow-light':yellowLight  && !readyForMarket}" 
-     (keyup)="addToMarket()">sell </button>
+     (click)="addToMarket()">sell </button>
     
   </div>
 
