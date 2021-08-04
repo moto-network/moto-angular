@@ -8,6 +8,7 @@ import { noNetworkDetected, unsupportedNetwork } from 'src/errors';
 import { ObjectUnsubscribedError } from 'rxjs';
 import { type } from 'node:os';
 import { errorMonitor } from 'node:events';
+const BigNumber = require("big-number");
 
 @Injectable({
   providedIn: 'root'
@@ -137,7 +138,8 @@ export class ContractsService {
             if (!nft.price) {
               reject(new Error("price not set"));
             }
-            const price: string = web3.utils.toWei(nft.price!, 'ether');
+            const value = new BigNumber(nft.price!);
+            const price: string = value.divided(1000000).toString();// web3.utils.toWei(nft.price!, 'ether');
             const timeInHex: string = web3.utils.toHex("10000000000");
             const encodedFunctionData = web3Contract.methods
               .createOrder(nft.contractAddress, nft.tokenId, price, timeInHex)

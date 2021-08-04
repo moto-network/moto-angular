@@ -43,6 +43,7 @@
     "material": "^0.4.3",
     "ng2-charts": "^2.4.2",
     "node-binance-api": "^0.12.5",
+    "number-suffix": "^1.0.1",
     "primeicons": "^4.1.0",
     "primeng": "^11.3.0-rc.1",
     "rxjs": "~6.6.0",

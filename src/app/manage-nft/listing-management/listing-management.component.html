@@ -1,3 +1,22 @@
 <div id="listing-info">
-  <div id="price">{{getFormattedPrice(listing?.price)}}</div>
+  <div><h2 class="moto-title">{{nft ? nft.name : ""}}It Takes Two</h2></div>
+  <div id="price">
+    <h1>{{shortPrice(listing?.price)}}</h1>
+    <p class="small-font">{{numberWithSpaces(getFormattedPrice(listing?.price))}}</p>
+  </div>
+  <div id="button-container"></div>
+  <div id="more-info">
+    <h3 class="moto-title focus">order id</h3>
+    <p class="desc focus">{{listing?.id}}</p>
+    <h3 class="moto-title">listing creation block number</h3>
+    <p class="desc">{{listing?.blockNumber}}</p>
+    <h3 class="moto-title">transaction hash</h3>
+    <p class="desc">{{listing?.transactionHash}}</p>
+   
+    <h3 class="moto-title">nft ID</h3>
+    <p class="desc">{{listing?.tokenId}}</p>
+    <h3 class="moto-title">nft address</h3>
+    <p class="desc">{{listing?.contractAddress}}</p>
+
+  </div>
 </div>

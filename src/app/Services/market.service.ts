@@ -99,7 +99,7 @@ export class MarketService {
 
   formatCurrency(price:string):string {;
     const value = new BigNumber(price);
-    return value.div(6).toString();
+    return value.div(1000000).toString();
   }
 
   createListing(nft: NFT): Promise<Listing>{
