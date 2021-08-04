@@ -1,12 +1,12 @@
 import { compileDirectiveFromRender2 } from '@angular/compiler/src/render3/view/compiler';
 import { Injectable } from '@angular/core';
-import { faMapMarked } from '@fortawesome/free-solid-svg-icons';
-import { BehaviorSubject } from 'rxjs';
+
+import { BehaviorSubject, Observable } from 'rxjs';
 import { getContract } from 'src/app.config';
-import { NFT, Order as Listing } from 'src/declaration';
+import { NFT, Listing as Listing } from 'src/declaration';
 import { ContractsService } from './BlockchainServices/contracts.service';
 import { RemoteDataService } from './remote-data.service';
-
+const BigNumber = require("big-number");
 @Injectable({
   providedIn: 'root'
 })
@@ -30,10 +30,11 @@ export class MarketService {
     this.listingObservable.next(this.listing);
   }
 
-  getListing(listingId?: string) {
+  getListing(listingId?: string):Observable<Listing | null> {
     if (!listingId) {
       this.listingObservable.next(this.listing);
     }
+    return this.listingObservable;
   }
 
   requestSinglePermission(nft: NFT) :Promise<string>{
@@ -94,6 +95,11 @@ export class MarketService {
         });
      });
     
+  }
+
+  formatCurrency(price:string):string {;
+    const value = new BigNumber(price);
+    return value.div(6).toString();
   }
 
   createListing(nft: NFT): Promise<Listing>{

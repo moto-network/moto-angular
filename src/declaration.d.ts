@@ -27,7 +27,7 @@ export interface DBNFT extends NFT {
   currency?: string;
 }
 
-export interface Order {
+export interface Listing {
   address: string;
   blockNumber: number;
   transactionHash: string;
@@ -39,8 +39,8 @@ export interface Order {
   expiresAt: string;
 }
 
-export type OrderCollection = {
-  [id: string]: Order;
+export type ListingCollection = {
+  [id: string]: Listing;
 }
 
 export type NFTCollection = {

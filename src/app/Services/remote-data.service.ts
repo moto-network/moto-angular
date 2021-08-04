@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { DBNFT, NFT, NFTCollection, Order as Listing } from "src/declaration";
+import { DBNFT, NFT, NFTCollection, Listing as Listing } from "src/declaration";
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AngularFirestore, QuerySnapshot } from '@angular/fire/firestore';
 import { CREATE_ORDER_URL, getProvider, UPLOAD_URL } from "src/app.config";

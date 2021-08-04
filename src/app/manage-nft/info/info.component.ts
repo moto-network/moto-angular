@@ -62,7 +62,7 @@ export class InfoComponent implements OnInit {
 
     this.checkGlobalPermission(this.nft)
       .then((globalPermission) => {
-        if (globajlPermission) {
+        if (globalPermission) {
           this.allowAll = true;
           this.allowOne = false;
           this.yellowLight = true;
