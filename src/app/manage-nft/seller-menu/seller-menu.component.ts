@@ -7,7 +7,7 @@ import { WalletService } from 'src/app/Services/BlockchainServices/wallet.servic
 import { MarketService } from 'src/app/Services/market.service';
 import { NFTManagerService } from 'src/app/Services/nft-manager.service';
 import { FileNFT, ListingNFT, NFT } from 'src/declaration';
-
+declare var anime:any;
 @Component({
   selector: 'seller-menu',
   templateUrl: './seller-menu.component.html',
@@ -39,7 +39,7 @@ export class InfoComponent implements OnInit {
   sellingForm: FormGroup = new FormGroup({
     price: new FormControl('', Validators.required)
   });
-
+  scalingAnimation: any = null;
   ngOnInit(): void {
     this._wallet.listenForAccount()
       .subscribe((account) => {
@@ -74,11 +74,23 @@ export class InfoComponent implements OnInit {
       })
 
   }
+  ngAfterViewInit(): void{
+  
+    this.scalingAnimation = anime({
+      targets: '#main-content-container',
+      scale:[1,0.98,1],
+      duration: 3000,
+      easing:"easeInOutSine",
+      loop: true,
+      autoplay: false
+    })
+   }
 
   /**
    * this is behind a locked input so it cant be called before input is validated
    */
   addToMarket() {
+    this.startLoadingAnimation();
     if (this.nft && this.price) {
       this._market.addToMarket(this.nft, this.price)
         .then((transactionHash) => {
@@ -95,7 +107,6 @@ export class InfoComponent implements OnInit {
                 }
               });
           }
-
         })
         .catch((err) => {
           if (err) {
@@ -107,6 +118,28 @@ export class InfoComponent implements OnInit {
       this.openSnackBar("Missing Price", 3000);
     }
     
+  }
+
+  startLoadingAnimation() {
+    let sellbutton = document.getElementById("sell-button");
+    if (sellbutton) {
+      console.log("sellbutton found")
+      sellbutton.style.pointerEvents = "none";
+    }
+
+    this.scalingAnimation.play();
+  }
+
+  stopAnimations() {
+    let sellbutton = document.getElementById("sell-button");
+    if ( this.scalingAnimation) {
+      this.scalingAnimation.reset();
+      this.scalingAnimation.stop();
+    }
+    if (sellbutton) {
+      sellbutton.style.pointerEvents = "all";
+    }
+
   }
 
   checkSinglePermission(nft: NFT): void {

@@ -33,7 +33,11 @@
   <h2 class="moto-title title">add to market</h2>
   <div class="row-info" id='sell-section'>
     <form id="sell-form" [formGroup]="sellingForm">
-      <input id="price-input" type="number" formControlName="price" (input)="checkInput()">
+      <div id='input-price-bar'>
+<input id="price-input" type="number" formControlName="price" (input)="checkInput()">
+<h3 class="thin" id="currency-name"> <span class="moto-name">moto</span> <span style="font-weight:300">coins</span></h3>
+      </div>
+      
     </form>
     <button class="moto-button action-button" id='sell-button' 
     [ngClass]="{'disabled-button':!readyForMarket,'yellow-light':yellowLight  && !readyForMarket}" 

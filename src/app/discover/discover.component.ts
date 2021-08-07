@@ -17,13 +17,29 @@ export class DiscoverComponent implements OnInit {
   loadingAnimation: any = null;
   session_id = "moto_discover";
   constructor(private _nftManager: NFTManagerService,
-    private _router: Router) {
+    private _router: Router, private _sessionManager:SessionManagerService) {
   }
 
   ngOnInit(): void {
-    this.loadNFTs();
+    let sessionData = this._sessionManager.get("moto_discover_nftCollection");
+    if (!sessionData) {
+      this.loadNFTs();
+    }
+    else {
+      this.localLoad(sessionData);
+    }
   }
 
+  private localLoad(nftCollection: NFTCollection): void {
+    console.log("lcoaal calleld");
+    this.nftCollection = nftCollection;
+    if (this._sessionManager.get("moto_profile_scrollTop")) {
+      document.body.scrollTop = this._sessionManager.get("moto_profile_scrollTop");
+      this.nftCollection = this._sessionManager.get("moto_profile_nftCollection");
+    }
+
+
+  }
   loadNFTs() {
     this._nftManager.getNFTs()
       .subscribe((collection: NFTCollection | null) => {
@@ -64,6 +80,8 @@ export class DiscoverComponent implements OnInit {
 
 
   display(nft: FileNFT): void {
+    this._sessionManager.set("moto_discover_nftCollection", this.nftCollection);
+    this._sessionManager.set("moto_discover_scrollTop", document.body.scrollTop);
     this._nftManager.setNFT(nft);
     this._router.navigate(['nft']);
   }

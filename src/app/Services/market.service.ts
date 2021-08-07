@@ -51,15 +51,15 @@ export class MarketService {
 
   addToMarket(nft: NFT, price:string): Promise<any> {
     return new Promise((resolve, reject) => {
-      if (!price) {
-        reject(new Error("no price"));
-      }
+      
       this.canMarketControlSingle(nft)
         .then((hasPermission: boolean) => {
 
           if (hasPermission) {
             console.log("have permission");
-            resolve(this._contracts.addNFTtoMarket(nft,price));
+            const priceBN = new BigNumber(price);
+            const motoSubUnitPrice = priceBN.multipliedBy(1000000);
+            resolve(this._contracts.addNFTtoMarket(nft,motoSubUnitPrice.toString()));
           }
           else {
             this.requestSinglePermission(nft)

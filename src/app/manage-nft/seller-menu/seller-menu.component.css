@@ -139,7 +139,8 @@ color:black !important;
 }
 
 #sell-form{
-  margin-left:20px
+  margin-left:20px;
+  width:50%;
 }
 
 #sell-section{
@@ -160,4 +161,16 @@ color:black !important;
   margin-top:40px;
 }
 
+#input-price-bar{
+  width:100%;
+  display:flex;
+  flex-direction: row;
+  justify-content: flex-start;
 
+}
+
+#currency-name{
+  margin:0;
+  padding:0;
+  margin-left:10px
+}

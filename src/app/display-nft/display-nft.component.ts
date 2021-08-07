@@ -74,7 +74,9 @@ export class DisplayNFTComponent implements OnInit {
   }
 
   goToProfile(address: string | undefined) {
+    console.log("is thre addres", address);
     if (address) {
+      console.log("address here igiong to prfoile ", address);
       this._profileManager.initProfile(address);
       this._router.navigate(['profile']);
     }

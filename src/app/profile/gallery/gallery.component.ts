@@ -59,7 +59,7 @@ export class GalleryComponent implements OnInit {
   }
 
   private remoteLoad() {
-    console.log("remote called");
+
     this._profileManager.getNFTCollection()
       .subscribe((nftCollection: NFTCollection | null) => {
         if (nftCollection) {

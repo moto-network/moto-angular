@@ -247,7 +247,6 @@ export class ContractsService {
             if (!priceInSubUnits) {
               reject(new Error("price not set"));
             }
-            const value = new BigNumber(priceInSubUnits);
             const priceInHex = web3.utils.numberToHex(priceInSubUnits);
             const timeInHex: string = web3.utils.toHex("10000000000");
             const encodedFunctionData = web3Contract.methods

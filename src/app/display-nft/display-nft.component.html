@@ -34,7 +34,7 @@
   </div>
 </div>
 
-<div class="management-bar" *ngIf="showMenu()"><!--showBuyMenu()-->
+<div class="management-bar" *ngIf="showMenu()"><!--()-->
 
   <div class="button-container" id="left-corner-button">
    <!-- <button class="moto-button" id='burn-button'>
@@ -52,7 +52,7 @@
   </div>
 </div>
 
-<div class="management-bar" *ngIf="true">
+<div class="management-bar" *ngIf="showBuyMenu()">
   <div class="button-container right-corner-buttons" >
     
     <button class="moto-button" id="buy-button" (click)="buyNFT()">
