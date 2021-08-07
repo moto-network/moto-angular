@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { faArrowLeft, faFireAlt,faGift ,faMoneyBill} from '@fortawesome/free-solid-svg-icons';
 import { NFTManagerService } from '../Services/nft-manager.service';
-import { DBNFT } from 'src/declaration';
+import { FileNFT, ListingNFT } from 'src/declaration';
 import { ProfileService } from '../Services/profile.service';
 import { getNetworkName } from 'src/app.config';
 import { WalletService } from '../Services/BlockchainServices/wallet.service';
@@ -23,7 +23,7 @@ export class DisplayNFTComponent implements OnInit {
   sell: any = faMoneyBill;
   account: string | null = null
   nftOwner: string | null = null;
-  nft: DBNFT = {
+  nft: FileNFT & Partial<ListingNFT> = {
     "tokenId": "0x0000000000000",
     "contractAddress": "0x000000000000000000000000000000",
     "contentHash": "0x00000000000000000000000000000000000000000000000000000000000000",
@@ -63,9 +63,14 @@ export class DisplayNFTComponent implements OnInit {
 
   sellNFT() {
     if (this.nft) {
-      this._nftManager.setNFT(this.nft);
+      this._nftManager.setNFT(this.nft as ListingNFT);
       this._router.navigate(['manage-nft', 'seller-menu']);
     }
+  }
+
+  buyNFT() {
+    this._router.navigate(['manage-nft', 'buyer-menu']);
+    this._nftManager.setNFT(this.nft);
   }
 
   goToProfile(address: string | undefined) {
@@ -89,7 +94,7 @@ export class DisplayNFTComponent implements OnInit {
     return getNetworkName(this.nft.chainId);
   }
 
-  private _getOwner(nft:DBNFT): void {
+  private _getOwner(nft:FileNFT): void {
     if (nft) {
       this._nftManager.getOwner(nft)
         .then((owner) => {
@@ -114,6 +119,11 @@ export class DisplayNFTComponent implements OnInit {
       return  (this.account.toUpperCase() == this.nftOwner.toUpperCase());
     }
     return false;
+  }
+
+  public showBuyMenu(): boolean { 
+    const isOnSale: boolean = typeof this.nft.onSale === 'undefined' ? false : this.nft.onSale;
+    return isOnSale && !this._isOwner();
   }
 
   public showMenu():boolean {

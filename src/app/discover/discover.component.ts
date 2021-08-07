@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { DBNFT, NFTCollection } from 'src/declaration';
+import { FileNFT, NFTCollection } from 'src/declaration';
 import { NFTManagerService } from '../Services/nft-manager.service';
 import { SessionManagerService } from '../Services/session-manager.service';
 const gridGallery = require("../../assets/js/grid-gallery.min.js");
@@ -63,7 +63,7 @@ export class DiscoverComponent implements OnInit {
   }
 
 
-  display(nft: DBNFT): void {
+  display(nft: FileNFT): void {
     this._nftManager.setNFT(nft);
     this._router.navigate(['nft']);
   }

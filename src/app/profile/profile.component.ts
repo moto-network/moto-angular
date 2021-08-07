@@ -2,7 +2,7 @@ import { HttpParams } from '@angular/common/http';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { faGem, faCrown, faHeart, faGift, faHandHoldingHeart } from '@fortawesome/free-solid-svg-icons';
-import { DBNFT, NFT, NFTCollection, SessionData } from 'src/declaration';
+import { FileNFT, NFT, NFTCollection, SessionData } from 'src/declaration';
 import { Location } from "@angular/common";
 import { ProfileService } from '../Services/profile.service';
 

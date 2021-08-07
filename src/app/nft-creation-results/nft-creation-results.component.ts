@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NFT } from 'src/declaration';
 import { NFTManagerService } from '../Services/nft-manager.service';
 import { faThumbsUp } from '@fortawesome/free-solid-svg-icons';
-import { getNetwork } from 'src/app.config';
+import { getExplorer, getNetwork } from 'src/app.config';
 import { SessionManagerService } from '../Services/session-manager.service';
 declare var anime: any;
 @Component({
@@ -46,6 +46,7 @@ export class NftCreationResultsComponent implements OnInit {
   };
 
   ngOnInit(): void {
+
     if (!this.nft) {
       this.nft = this._session.get("moto_nft_results_nft");
       this._session.get("moto_nft_results_transaction_hash");
@@ -72,4 +73,13 @@ export class NftCreationResultsComponent implements OnInit {
     return "";
   }
  
+  getLink(linkParam:string,value:string | undefined):string {
+    if (this.nft && value) {
+      let explorer: string = getExplorer(this.nft?.chainId);
+      return explorer + linkParam +"/" + value;
+    }
+    else {
+      return "";
+    }
+  }
 }

@@ -3,7 +3,7 @@ import { WalletService } from './BlockchainServices/wallet.service';
 import { ContractsService } from './BlockchainServices/contracts.service';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { CryptoService } from './crypto.service';
-import { DBNFT, NFT, NFTCollection } from "src/declaration";
+import { FileNFT, ListingNFT, NFT, NFTCollection } from "src/declaration";
 import { getContract, getProvider } from "src/app.config";
 import { RemoteDataService } from './remote-data.service';
 
@@ -12,12 +12,12 @@ import { RemoteDataService } from './remote-data.service';
   providedIn: 'root'
 })
 export class NFTManagerService {//merge this wit the other NFTManager or wahtever it's called
-  nft: DBNFT | null = null;
+  nft: NFT | null = null;
   currentFee: number | null = null;
   currentNetwork: number | null = null;
   nftCollection: NFTCollection | null = null;
   lastSuccessfulTransaction = "";
-  testnft: DBNFT = {
+  testnft: FileNFT = {
     "creator": "0xDcb982dEa4C22aBE650c12a1678537a3e8Ddd30D",
     "medImg": "https://storage.googleapis.com/motonetworknft/image/med_0x96c339b17672978ea1b0a6cc4e992d4e923b3c0fea50964a3a4a031add3e8c6b?GoogleAccessId=firebase-master%40motonetwork.iam.gserviceaccount.com&Expires=4780953476&Signature=BOa7exVI2imcl2ZlKrdbpWRVRw4DGoLVwe4g%2F%2Fdye%2BmBI4K8Fagfd5yr36h%2FzhK8dt94u2A7rYX%2BId6ja3QnNMZAZ%2BkoGrVW401YTzhpvghi2KWwxgPhKFeWQE2hhl8EDCE5T0hXtADt61Vi12kWeLEIpm2HoDuE3xL7cgkePEO7risNyfqIgPCUxyZ0YiEoOR7gso1rwUJ72sy%2FSrqi87CO50B9pUOtWUbEUzOld8a8jYbiYvgyFVuD8i4UqGIv0rmkzC2DZ4n5RhfGuVJMXOe7fABGgIqwCCWCXLDGsQ84o0BAVKkyU3%2FWuLU90EBKiw8wG%2BIrOLI9Wnfm%2BfhYSg%3D%3D",
     "contentHash": "0x96c339b17672978ea1b0a6cc4e992d4e923b3c0fea50964a3a4a031add3e8c6b",
@@ -28,21 +28,20 @@ export class NFTManagerService {//merge this wit the other NFTManager or wahteve
     "owner": "0xDcb982dEa4C22aBE650c12a1678537a3e8Ddd30D",
     "chainId": 97,
     "name": "Takes Two",
-    "price":"200"
   }
-  
+
   constructor(private _walletService: WalletService,
     private _contracts: ContractsService, crypto: CryptoService,
     private _remote: RemoteDataService) {
     _walletService.networkObservable.subscribe((network) => {
       this.currentNetwork = network;
     });
-//   this.nft = this.testnft;
+    //   this.nft = this.testnft;
   }
 
   initFee(): void {
     if (this.currentNetwork) {
-      this._contracts.getNFTFee(this.currentNetwork)
+      this._contracts.getNFTFee(this.currentNetwork, "nft")
         .then((fee: any) => {
           if (fee) {
             this.currentFee = fee;
@@ -51,7 +50,7 @@ export class NFTManagerService {//merge this wit the other NFTManager or wahteve
         .catch((err) => {
           console.log(err);
         })
-    } 
+    }
   }
 
   mintNFT(nft: NFT): Promise<string> {
@@ -83,12 +82,12 @@ export class NFTManagerService {//merge this wit the other NFTManager or wahteve
     }
   }
 
-  getNFT(parameter?: string, value?: string): Observable<DBNFT | null> {
-    const nftObservable: BehaviorSubject<DBNFT | null> = new BehaviorSubject<DBNFT | null>(this.nft);
+  getNFT<NFTType extends NFT>(parameter?: string, value?: string): Observable<NFTType | null> {
+    const nftObservable: BehaviorSubject<NFTType | null> = new BehaviorSubject<NFTType | null>(this.nft as NFTType);
     if (value && parameter) {
-      return this._remote.getNFT(parameter, value);
+      return this._remote.getNFT<NFTType>(parameter, value);
     }
-    nftObservable.next(this.nft);
+    nftObservable.next(this.nft as NFTType);
     return nftObservable;
   }
 
@@ -111,11 +110,11 @@ export class NFTManagerService {//merge this wit the other NFTManager or wahteve
 
   }
 
-  getOwner(nft: NFT): Promise<string | null>{
-    return this._contracts.getOwner(nft);
+  getOwner(nft: NFT): Promise<string | null> {
+    return this._contracts.getNFTOwner(nft);
   }
 
-  setNFT(nft: DBNFT) {
+  setNFT(nft: FileNFT) {
     this.nft = nft;
   }
 

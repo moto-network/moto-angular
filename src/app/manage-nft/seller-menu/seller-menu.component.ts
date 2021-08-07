@@ -6,7 +6,7 @@ import { getContract, getNetwork } from 'src/app.config';
 import { WalletService } from 'src/app/Services/BlockchainServices/wallet.service';
 import { MarketService } from 'src/app/Services/market.service';
 import { NFTManagerService } from 'src/app/Services/nft-manager.service';
-import { DBNFT, NFT } from 'src/declaration';
+import { FileNFT, ListingNFT, NFT } from 'src/declaration';
 
 @Component({
   selector: 'seller-menu',
@@ -17,7 +17,7 @@ export class InfoComponent implements OnInit {
 
   constructor(private _wallet: WalletService, private _nftManager: NFTManagerService,
     private _router: Router, private _market: MarketService, public snackBar: MatSnackBar) { }
-  nft: DBNFT = {
+  nft: NFT & Partial<ListingNFT> = {
     name: "Nothing To Show",
     tokenId: "0x0000000",
     owner: "0x00000000",
@@ -26,6 +26,7 @@ export class InfoComponent implements OnInit {
     contentHash: "0x000000",
     contractAddress: "0x0000000"
   };
+  price: string = "";
   messageForUser: string = "";
   marketPermission: boolean = false;
   account: string | null = null;
@@ -49,7 +50,7 @@ export class InfoComponent implements OnInit {
       });
 
     this._nftManager.getNFT()
-      .subscribe((nft: DBNFT | null) => {
+      .subscribe((nft: FileNFT | null) => {
         if (nft) {
           this.nft = nft;
           this.haveNFT = true;
@@ -74,29 +75,38 @@ export class InfoComponent implements OnInit {
 
   }
 
+  /**
+   * this is behind a locked input so it cant be called before input is validated
+   */
   addToMarket() {
-    this._market.addToMarket(this.nft)
-      .then((transactionHash) => {
-        if (transactionHash) {
-          this._market.createListing(this.nft)
-            .then((listing) => {
-              console.log("listing", listing);
-              if (listing) {
-                this._market.setListing(listing);
-                this._router.navigate(['manage-nft', 'listing-management']);
-              }
-              else {
-                this.openSnackBar("something went wrong", 3000);
-              }
-            });
-        }
-        
-      })
-      .catch((err) => { 
-        if (err) {
-          this.openSnackBar(err.messsage, 3000);
-        }
-      });
+    if (this.nft && this.price) {
+      this._market.addToMarket(this.nft, this.price)
+        .then((transactionHash) => {
+          if (transactionHash) {
+            this._market.updateListingDB(this.nft)
+              .then((listing) => {
+                console.log("listing", listing);
+                if (listing) {
+                  this._market.setListing(listing);
+                  this._router.navigate(['manage-nft', 'listing-management']);
+                }
+                else {
+                  this.openSnackBar("something went wrong", 3000);
+                }
+              });
+          }
+
+        })
+        .catch((err) => {
+          if (err) {
+            this.openSnackBar(err.messsage, 3000);
+          }
+        });
+    }
+    else {
+      this.openSnackBar("Missing Price", 3000);
+    }
+    
   }
 
   checkSinglePermission(nft: NFT): void {
@@ -174,7 +184,8 @@ export class InfoComponent implements OnInit {
     const price = Number.parseFloat(this.sellingForm.get("price")?.value);
     if (price > 0) {
       this.unlock();
-      this.nft['price'] = price.toString();
+      this.price = price.toString();
+
     }
     else {
       this.lock();

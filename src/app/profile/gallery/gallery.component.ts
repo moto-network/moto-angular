@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 
 import { ProfileService } from 'src/app/Services/profile.service';
 import { SessionManagerService } from 'src/app/Services/session-manager.service';
-import { DBNFT, NFTCollection } from 'src/declaration';
+import { FileNFT, NFTCollection } from 'src/declaration';
 
 declare var anime: any;
 
@@ -16,7 +16,7 @@ declare var anime: any;
 export class GalleryComponent implements OnInit {
   nftCollection: NFTCollection = {};
   nftDisplayCollection: NFTCollection = {};
-  nftGallery: DBNFT[] = [];
+  nftGallery: FileNFT[] = [];
   address: string | null = null;
   loadingAnimation: any = null;
   nothingToShow: boolean = false;
@@ -91,7 +91,7 @@ export class GalleryComponent implements OnInit {
     
   }
 
-  goToNFT(nft: DBNFT) {
+  goToNFT(nft: FileNFT) {
     this._sessionManager.set("moto_profile_nftCollection", this.nftCollection);
     this._sessionManager.set("moto_profile_scrollTop", document.body.scrollTop);
     this._profileManager.setNFT(nft);

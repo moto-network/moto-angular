@@ -6,7 +6,7 @@ import { getContract, getNetwork } from 'src/app.config';
 import { WalletService } from 'src/app/Services/BlockchainServices/wallet.service';
 import { MarketService } from 'src/app/Services/market.service';
 import { NFTManagerService } from 'src/app/Services/nft-manager.service';
-import { DBNFT, NFT } from 'src/declaration';
+import { FileNFT, NFT } from 'src/declaration';
 
 @Component({
   selector: 'app-info',
@@ -17,7 +17,7 @@ export class InfoComponent implements OnInit {
 
   constructor(private _wallet: WalletService, private _nftManager: NFTManagerService,
     private _router: Router, private _market: MarketService, public snackBar: MatSnackBar) { }
-  nft: DBNFT = {
+  nft: FileNFT = {
     name: "Nothing To Show",
     tokenId: "0x0000000",
     owner: "0x00000000",
@@ -49,7 +49,7 @@ export class InfoComponent implements OnInit {
       });
 
     this._nftManager.getNFT()
-      .subscribe((nft: DBNFT | null) => {
+      .subscribe((nft: FileNFT | null) => {
         if (nft) {
           this.nft = nft;
           this.haveNFT = true;

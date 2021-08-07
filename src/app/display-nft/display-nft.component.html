@@ -34,20 +34,29 @@
   </div>
 </div>
 
-<div id="management-bar" *ngIf="showMenu()">
+<div class="management-bar" *ngIf="showMenu()"><!--showBuyMenu()-->
 
   <div class="button-container" id="left-corner-button">
-    <button class="action-button moto-button" id='burn-button'>
+   <!-- <button class="moto-button" id='burn-button'>
       <fa-icon [icon]="burn"></fa-icon> | destroy
-    </button>
+    </button>-->
   </div>
-  <div class="button-container" id="right-corner-buttons">
-    <button class="action-button moto-button" id="give-button">
+  <div class="button-container right-corner-buttons">
+   <!--<button class="moto-button" id="give-button">
       <fa-icon [icon]="give"></fa-icon> | give
-    </button>
+    </button>-->
     <button class="action-button moto-button" 
     id="sell-button" (click)="sellNFT()">
-      <fa-icon [icon]="sell"></fa-icon> | sell
+     sell
+    </button>
+  </div>
+</div>
+
+<div class="management-bar" *ngIf="true">
+  <div class="button-container right-corner-buttons" >
+    
+    <button class="moto-button" id="buy-button" (click)="buyNFT()">
+      buy
     </button>
   </div>
 </div>

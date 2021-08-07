@@ -1,5 +1,4 @@
 
-
 export interface NFT {
   name: string;
   owner: string;
@@ -8,7 +7,17 @@ export interface NFT {
   contractAddress: string;
   contentHash: string;
   creator: string;
-  
+}
+
+export interface FileNFT extends NFT {
+  readonly smImg?: string;
+  readonly medImg?: string;
+  readonly pHash?: string;
+}
+
+export interface ListingNFT extends NFT {
+  readonly onSale: boolean;
+  order: Listing;
 }
 
 export interface SearchResults {
@@ -16,15 +25,6 @@ export interface SearchResults {
   suggestedRoute?: string;
   result?: any;
   empty: boolean;
-}
-
-export interface DBNFT extends NFT {
-  smImg?: string;
-  medImg?: string;
-  pHash?: string;
-  onSale?: boolean;
-  price?: string;
-  currency?: string;
 }
 
 export interface Listing {
@@ -44,7 +44,7 @@ export type ListingCollection = {
 }
 
 export type NFTCollection = {
-  [tokenId: string]: DBNFT;
+  [tokenId: string]: FileNFT;
 }
 
 export type LocalSession = {

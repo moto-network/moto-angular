@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { DBNFT, NFT, NFTCollection, Listing as Listing } from "src/declaration";
+import { FileNFT, NFT, NFTCollection, Listing as Listing } from "src/declaration";
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AngularFirestore, QuerySnapshot } from '@angular/fire/firestore';
 import { CREATE_ORDER_URL, getProvider, UPLOAD_URL } from "src/app.config";
@@ -13,10 +13,11 @@ export class RemoteDataService {
   constructor(private http: HttpClient, private _db: AngularFirestore,
   private _china:ChinaDataService) { }
 
-  public getNFT(parameter: string, value: string): Observable<DBNFT | null>{
-    const nftObservable: Subject<DBNFT | null> = new Subject<DBNFT | null>();
+  public getNFT<NFTType extends Required<NFT>>(parameter: string, value: string):
+    Observable<NFTType | null>{
+    const nftObservable: Subject<NFTType | null> = new Subject<NFTType | null>();
     if (this.isChina) {
-      return new Subject<DBNFT>();
+      return new Subject<NFTType | null>();
     }
     else {
       this._db
@@ -25,7 +26,7 @@ export class RemoteDataService {
           .subscribe((result:any) => {
             if (result && !result.empty) {
 
-              nftObservable.next(result.docs[0].data() as DBNFT);
+              nftObservable.next(result.docs[0].data() as NFTType);
             }
           });
       return nftObservable;
@@ -43,7 +44,7 @@ export class RemoteDataService {
     );
   }
 
-  public createListing(nft:NFT): Promise<Listing>{
+  public updateListingDB(nft:NFT): Promise<Listing>{
     return new Promise<Listing>((resolve, reject) => {
       const formData = new FormData();
       formData.append('nft', JSON.stringify(nft));
@@ -69,7 +70,7 @@ export class RemoteDataService {
       this._db.collection("NFTs").get()
         .subscribe((querySnapshot) => {
           querySnapshot.forEach((doc) => {
-            let nft: DBNFT = doc.data() as DBNFT;
+            let nft: FileNFT = doc.data() as FileNFT;
             nftCollection[nft.tokenId] = nft;
             collectionSubject.next(nftCollection);
           });
@@ -95,7 +96,7 @@ export class RemoteDataService {
           collectionSubject.next(null);
         }
         querySnapshot.forEach((doc) => {
-          let nft: DBNFT = doc.data() as DBNFT;
+          let nft: FileNFT = doc.data() as FileNFT;
           nftCollection[nft.tokenId] = nft;
           collectionSubject.next(nftCollection);
         });

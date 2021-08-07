@@ -49,6 +49,24 @@ margin-left:20px;
 .button-container{
   flex-shrink:0;
 }
+
+.management-bar{
+  margin-bottom:20px;
+
+  display:flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+
+.right-corner-buttons{
+  
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  margin-right:20px;
+
+}
+
 #nft-container{
   margin:auto;
   display:flex;
@@ -66,7 +84,6 @@ margin-left:20px;
   justify-content: space-between;
   align-items: center;
 }
-
 
 #nft-info{
   display:flex;
@@ -86,14 +103,6 @@ margin-left:20px;
   border:0;
 }
 
-#management-bar{
-  margin-bottom:20px;
-
-  display:flex;
-  flex-direction: row;
-  justify-content: space-between;
-}
-
 #burn-button{
 background: rgb(227,85,0);
 background: linear-gradient(180deg, rgba(227,85,0,1) 0%, rgba(227,0,0,1) 100%);
@@ -108,19 +117,18 @@ background: radial-gradient(circle, rgba(41,54,214,1) 0%, rgba(1,23,153,1) 100%)
 
 #sell-button{
   margin-left:20px;
-background: rgb(4,152,0);
-background: linear-gradient(184deg, rgba(4,152,0,1) 0%, rgba(0,182,4,1) 100%);
+background: #F25781;
+color:white;
+}
+
+#buy-button{
+  color:#011734;
+  background:#CEECF2;
+
 }
 
 #left-corner-button{
   margin-left:20px;
 }
 
-#right-corner-buttons{
-  
-  display: flex;
-  justify-content: space-between;
-  flex-direction: row;
-  margin-right:20px;
 
-}

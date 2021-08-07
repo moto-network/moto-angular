@@ -1,0 +1,94 @@
+h3{
+  font-weight:400;
+}
+.desc {
+  font-weight:200;
+}
+h2{
+  padding:0;
+  margin:0;
+}
+h1{
+  padding:0;
+  margin:0;
+}
+p{
+  padding:0;
+  margin:0;
+}
+.small-font{
+  font-size: 0.9rem;
+  font-weight:300;
+}
+.focus{
+  color:#E03453;
+}
+
+.desc{
+  font-weight:300;
+}
+
+.insufficient-funds{
+  color:#A80D0A !important;
+}
+
+.info{
+  margin-top:10px;
+  margin-bottom:10px;
+}
+
+.disabled-button{
+    box-shadow: none;
+    pointer-events: none;
+    background: rgb(231, 231, 231) !important;
+    color:gray !important;
+}
+
+#buyer-menu{
+  margin-left:20px;
+  display:flex;
+  flex-direction: column;
+  gap:10px;
+}
+#price{
+  display:flex;
+  flex-direction: column;
+}
+
+#approved-amount{
+  color: #00A835;
+}
+
+#top-info{
+  margin-top:30px;
+}
+
+#buttons{
+  display:flex;
+  flex-direction: row;
+  gap:10px;
+}
+
+#buy-box{
+  margin-bottom:20px;
+  display: flex;
+  flex-direction: row-reverse;
+}
+#buy-button{
+  background-color: #00A835;
+  color:white;
+  margin-right:30px;
+}
+
+#increase-button{
+  color:white;
+  background-color: #00A835;
+}
+#exact-amount-button{
+  color:white;
+  background-color: #46c3d1;
+}
+#decrease-button{
+  background-color:#A80D0A;
+  color:white;
+}

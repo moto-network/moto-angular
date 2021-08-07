@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { DBNFT, NFT, NFTCollection } from 'src/declaration';
+import { FileNFT, NFT, NFTCollection } from 'src/declaration';
 import { NFTManagerService } from './nft-manager.service';
 
 @Injectable({
@@ -11,7 +11,7 @@ export class ProfileService {
   isCreator: boolean = false;
   nftCollection: NFTCollection | null = null;
   collectionObservable: BehaviorSubject<NFTCollection | null> = new BehaviorSubject<NFTCollection | null>(this.nftCollection);
-  nft: DBNFT | null = null;
+  nft: FileNFT | null = null;
   constructor(private _nftManager: NFTManagerService) {
   }
 
@@ -33,7 +33,7 @@ export class ProfileService {
     return this.collectionObservable;
   }
 
-  setNFT(nft: DBNFT): void {
+  setNFT(nft: FileNFT): void {
     this.nft = nft;
     this._nftManager.setNFT(nft);
   }
@@ -45,7 +45,7 @@ export class ProfileService {
     this.address = this._getAddress(collection, "creator");
   }
 
-  getNFT(): DBNFT | null {
+  getNFT(): FileNFT | null {
     if (this.nft) {
       return this.nft;
     }

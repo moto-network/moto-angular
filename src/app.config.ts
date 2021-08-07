@@ -2,6 +2,7 @@ export interface Contract {
   name: string;
   address: string;
   abi: any;
+  desc?: string;
 }
 
 interface ContractCollection {
@@ -29,14 +30,10 @@ type AddressCollection = {
 import { ContractsService } from "./app/Services/BlockchainServices/contracts.service";
 const marketplaceJSON = require("./app/Services/BlockchainServices/contracts/Marketplace.json")
 const motoVerifiedNFT = require("./app/Services/BlockchainServices/contracts/BEPMotoNFT.json");
-const storageJson = require("./StorageManagementV1.json");
+const motoJSON = require("./app/Services/BlockchainServices/contracts/BEP20.json");
 
-const storageContractTestnet: Contract = {
-  name: "storage",
-  address: "",
-  abi: storageJson.abi
-};
 
+const motoBinanceTestAddress: string = "0xdc912E01a97773425adD43dB5dba75ce61Fd4c93";
 const nftTestnetAddress: string = "0x4De41909a50B92b025BA95f8ddf7e7a126dC40Cd";
 const ganacheNFTAddress: string = "0x0233654873Fc5130530286C9FcB64f8218E01825";
 const ganachenftMarketAddress: string = "0xb52D64dFF89eDF37738C99F609E436dA5Ef8d534";
@@ -45,6 +42,11 @@ const contractAddresses:AddressCollection = {
   "97": { "nft": nftTestnetAddress },
   "1337": {"nft":ganacheNFTAddress}
 };
+const motoTestbsc: Contract = {
+  name: "moto",
+  address: motoBinanceTestAddress,
+  abi:motoJSON.abi
+}
 const nftTestnet: Contract = {
   name:"nft",
   address: nftTestnetAddress,
@@ -68,7 +70,8 @@ const ganacheNFTContract: Contract = {
 
 const bscTestnetContracts:ContractCollection = {
   "nft": nftTestnet,
-  "market":binaanceTestMarketContract
+  "market": binaanceTestMarketContract,
+  "moto":motoTestbsc
 };
 
 const ganacheContractsCollection: ContractCollection = {
@@ -103,7 +106,8 @@ const bscMainnetNetwork:Network = {
 
 const networkCollection:NetworkCollection = {
   "97": bscTestnetNetwork,
-  "1337":ganacheNetwork
+  "1337": ganacheNetwork,
+
 };
 
 export function getProvider(chainId: number):string | null{

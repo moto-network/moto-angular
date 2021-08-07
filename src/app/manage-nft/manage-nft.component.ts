@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { DBNFT, NFT } from 'src/declaration';
+import { FileNFT, NFT } from 'src/declaration';
 import { WalletService } from '../Services/BlockchainServices/wallet.service';
 import { NFTManagerService } from '../Services/nft-manager.service';
 import { Contract, getContract, getNetwork } from 'src/app.config';
@@ -12,7 +12,7 @@ import { MarketService } from '../Services/market.service';
   styleUrls: ['./manage-nft.component.css']
 })
 export class ManageNftComponent implements OnInit {
-  nft: DBNFT = {
+  nft: FileNFT = {
     name: "Nothing To Show",
     tokenId: "0x0000000",
     owner: "0x00000000",
