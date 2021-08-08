@@ -32,6 +32,7 @@ export class GalleryComponent implements OnInit {
 
   ngOnInit(): void {
     let sessionData = this._sessionManager.get("moto_profile_nftCollection");
+    console.log("session data is ", sessionData);
     if (!sessionData) {
       this.remoteLoad();
       setTimeout(() => {

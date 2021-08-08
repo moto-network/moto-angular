@@ -38,6 +38,10 @@ export class MarketService {
     return this.listingObservable;
   }
 
+  getCoinBalance() :Promise<string>{
+    return this._contracts.getCoinBalance();
+  }
+
   getAllowance(): Promise<string> {
     return this._contracts.getAllocation('moto');
   }

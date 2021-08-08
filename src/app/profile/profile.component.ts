@@ -50,9 +50,6 @@ export class ProfileComponent implements OnInit {
   ngOnDestroy(): void {
     
   }
-
-  
-
   private createNavigation(profile:string):string {
     const url = this._router.createUrlTree([], { relativeTo: this._route, queryParams: { address: profile } }).toString();
     return url;

@@ -1,22 +1,28 @@
 <div id="buyer-menu">
   <div  id="top-info">
-    <h2 class="moto-title">{{nft.name}}</h2>
+    <h2 class="moto-title">{{nft? nft.name : "nothing to show"}}</h2>
   </div>
   <div class="info" id="price">
-    <h1>{{shortenPrice(getFormattedPrice(price.toString()))}} <span class="moto-name">moto</span></h1>
-    <p class="small-font">{{numberWithSpaces(getFormattedPrice(price.toString()))}}</p>
+    <h1>{{shortenPrice(priceInSubUnits.toString())}} <span class="moto-name">moto</span><span class="moto-title">coin</span></h1>
+    <p class="small-font">{{numberWithSpaces(priceInSubUnits.toString())}}</p>
   </div>
   <div class="info">
-    <h2 id="approved-amount">{{shortenPrice(allowance.toString())}} 
-      <span class="moto-name">moto</span>  
-      <span style="color:black"> available for this purchase</span></h2>
-    <p class="small-font">{{numberWithSpaces(getFormattedPrice(allowance.toString()))}}</p>
+    <h2 id="moto-balance">{{shortenPrice(motoBalance.toString())}}
+      <span class="moto-name">moto</span><span class="moto-title">coin</span>
+      <span style="color:black" class="moto-title"> balance of your account  </span>
+    </h2>
+
+    <h2 id="approved-amount"[ngClass]="{'insufficient-funds':!isApprovedSufficient()}">{{shortenPrice(approvedAmount.toString())}} 
+      <span class="moto-name">moto</span> <span class="moto-title" style="color:black">coin</span> 
+      <span style="color:black"> available for purchase</span></h2>
     
   </div>
   <div class="info">
     <p class="desc">
-      approve funds for purchase. (<span class="moto-name"> transferless </span> 
-      <span class="moto-sub-system">escrow </span>)
+      <span class="moto-name">moto </span> uses <span class="moto-name"> transferless </span> 
+      <span class="moto-sub-system">escrow </span> to protect both parties. <span class="moto-name">moto</span> must be permissioned
+      to spend on your behalf.
+      
     </p>
     <p class="desc">
       no money can ever leave your account unless you make a purchase.
@@ -30,7 +36,7 @@
     <div>
       <button class="moto-button" id="exact-amount-button" 
       (click)="approveExactAmount()" 
-      [ngClass]="{'disabled-button':!nft && isApprovedSufficient()}">approve exact amount</button>
+      [ngClass]="{'disabled-button':!nft || isApprovedSufficient()}">approve exact amount</button>
     </div>
    
   </div>

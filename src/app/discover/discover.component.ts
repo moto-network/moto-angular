@@ -22,6 +22,7 @@ export class DiscoverComponent implements OnInit {
 
   ngOnInit(): void {
     let sessionData = this._sessionManager.get("moto_discover_nftCollection");
+    
     if (!sessionData) {
       this.loadNFTs();
     }
@@ -33,9 +34,9 @@ export class DiscoverComponent implements OnInit {
   private localLoad(nftCollection: NFTCollection): void {
     console.log("lcoaal calleld");
     this.nftCollection = nftCollection;
-    if (this._sessionManager.get("moto_profile_scrollTop")) {
-      document.body.scrollTop = this._sessionManager.get("moto_profile_scrollTop");
-      this.nftCollection = this._sessionManager.get("moto_profile_nftCollection");
+    if (this._sessionManager.get("moto_discover_scrollTop")) {
+      document.body.scrollTop = this._sessionManager.get("moto_discover_scrollTop");
+      this.nftCollection = this._sessionManager.get("moto_discover_nftCollection");
     }
 
 

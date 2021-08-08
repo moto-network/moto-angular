@@ -6,7 +6,8 @@ import { LocalSession ,SessionData} from 'src/declaration';
 })
 export class SessionManagerService {
 
-  constructor() { }
+  constructor() {
+  }
 
   set(name:string, value:any): void {
     sessionStorage.setItem(name, JSON.stringify(value));

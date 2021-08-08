@@ -1,0 +1,10 @@
+<div id='universal-dialog'>
+  <h2 mat-dialog-title>{{title}}</h2>
+  <mat-dialog-content>{{message}}
+  </mat-dialog-content>
+  <mat-dialog-actions>
+
+    <!-- The mat-dialog-close directive optionally accepts a value as a result for the dialog. -->
+    <button mat-button [mat-dialog-close]="true" class="moto-button" id="okay-button">okay</button>
+  </mat-dialog-actions>
+</div>

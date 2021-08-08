@@ -10,8 +10,9 @@ import { CreateNFTComponent } from './create-nft/create-nft.component';
 import { DiscoverComponent } from './discover/discover.component';
 import { DisplayNFTComponent } from './display-nft/display-nft.component';
 import { NftCreationResultsComponent } from './nft-creation-results/nft-creation-results.component';
-import { ManageNftComponent } from './manage-nft/manage-nft.component';
+
 import { OnlyAccountGuard } from './only-account.guard';
+import { UniversalDialogComponent } from './universal-dialog/universal-dialog.component';
 const routes: Routes = [{ path: "", component: HomeComponent },
 { path: "login", component: LoginComponent },
 { path: "signup", component: SignUpComponent },
@@ -20,18 +21,19 @@ const routes: Routes = [{ path: "", component: HomeComponent },
 { path: "discover", component: DiscoverComponent },
 { path: "nft", component: DisplayNFTComponent },
 { path: "on-ramp", component: OnRampComponent },
-  { path: "nft-results", component: NftCreationResultsComponent },
-  {
-    path: "manage-nft",
-    loadChildren: () => import('./manage-nft/manage-nft.module')
-      .then(m => m.ManageNftModule),
-    //canLoad:[OnlyAccountGuard]
-  },
-  {
-    path: "profile",
-    loadChildren: () => import('./profile/profile.module')
-      .then(m => m.ProfileModule)
-  }
+{ path: "universal", component: UniversalDialogComponent },
+{ path: "nft-results", component: NftCreationResultsComponent },
+{
+  path: "manage-nft",
+  loadChildren: () => import('./manage-nft/manage-nft.module')
+    .then(m => m.ManageNftModule),
+  //canLoad:[OnlyAccountGuard]
+},
+{
+  path: "profile",
+  loadChildren: () => import('./profile/profile.module')
+    .then(m => m.ProfileModule)
+}
 ];
 
 @NgModule({

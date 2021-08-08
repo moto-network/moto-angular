@@ -15,7 +15,7 @@ import {AuthenticationService } from './Services/authentication.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SignUpComponent } from './sign-up/sign-up.component';
 import { ThankYouComponent } from './thank-you/thank-you.component';
-
+import { MatDialogModule } from '@angular/material/dialog';
 import { AccountComponent } from './account/account.component';
 import {DialogModule} from "primeng/dialog";
 
@@ -29,6 +29,7 @@ import { DiscoverComponent } from './discover/discover.component';
 import { SearchService } from './Services/search.service';
 import { ProfileService } from './Services/profile.service';
 import { NftCreationResultsComponent } from './nft-creation-results/nft-creation-results.component';
+import { UniversalDialogComponent } from './universal-dialog/universal-dialog.component';
 
 @NgModule({
   declarations: [
@@ -44,6 +45,7 @@ import { NftCreationResultsComponent } from './nft-creation-results/nft-creation
     CreateNFTComponent,
     DiscoverComponent,
     NftCreationResultsComponent,
+    UniversalDialogComponent,
   ],
   imports: [
     BrowserAnimationsModule,
@@ -55,7 +57,7 @@ import { NftCreationResultsComponent } from './nft-creation-results/nft-creation
     AngularFireAuthModule,
     FormsModule,
     ReactiveFormsModule,
-    
+    MatDialogModule,
     DialogModule,
     HttpClientModule,
     MatSnackBarModule

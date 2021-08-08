@@ -7,6 +7,21 @@ import { FileNFT, ListingNFT, NFT } from 'src/declaration';
 import { noNetworkDetected } from 'src/errors';
 
 import { BigNumber } from "bignumber.js";
+import { getLocaleNumberFormat } from '@angular/common';
+
+/*function initWeb3<T>(initPromise: Promise<Web3>): Promise<T> {
+  return new Promise<T>((resolve, reject) => {
+    initPromise
+      .then((web3) => {
+        if (web3) {
+          resolve(target);
+        }
+        else {
+          reject(new Error("web3 error");
+        }
+      })
+  });
+}*/
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +32,9 @@ export class ContractsService {
 
   constructor(private _wallet: WalletService) {
     _wallet.networkObservable.subscribe((networkId) => {
-      this.userWalletNetworkId = networkId;
+      if (networkId) {
+        this.userWalletNetworkId = networkId;
+      }
     });
   }
 
@@ -28,7 +45,7 @@ export class ContractsService {
    * @param {string} contract which nft ccontract 
    * @returns {Promise<string>}
    */
-  getNFTFee(network: number, contractName:string="nft"): Promise<string> {
+  getNFTFee(network: number, contractName: string = "nft"): Promise<string> {
     return this._initWalletProvider(network)
       .then((web3) => {
         if (web3) {
@@ -58,6 +75,26 @@ export class ContractsService {
         }
         return Promise.reject(new Error("No Network Detected"));
       });
+  }
+
+  getCoinBalance(): Promise<string> {
+    return new Promise((resolve, reject) => {
+      if (!this.userWalletNetworkId) {
+        reject(new Error("No wallet found"));
+      }
+      this._initWalletProvider(this.userWalletNetworkId)
+        .then((web3) => {
+          if (!web3) {
+            reject(new Error("No wallet detected"));
+          }
+          const motoContract: Contract = getContract(this.userWalletNetworkId!, 'moto');
+          const motoWeb3 = new web3!.eth.Contract(motoContract.abi, motoContract.address);
+          resolve(motoWeb3.methods.balanceOf(this._wallet.account).call());
+        })
+      
+     });
+
+
   }
 
   getMarketCommission(nft: NFT): Promise<string> {
@@ -135,7 +172,7 @@ export class ContractsService {
     });
   }
 
-  buyNFT(coin: string, nft: NFT, nftPrice:string) {
+  buyNFT(coin: string, nft: NFT, nftPrice: string) {
     return new Promise((resolve, reject) => {
       this._initWalletProvider(this.userWalletNetworkId)
         .then((web3) => {
@@ -164,7 +201,7 @@ export class ContractsService {
                       resolve(this._sendTransaction(gasHex, "0x0", market.address, nft.chainId, data));
                     }
                   });
-                
+
               }
             });
         })
@@ -176,7 +213,7 @@ export class ContractsService {
    * @param {string} coin coin name. not address 
    * @returns {Promise<string>}
    */
-  getAllocation(coin: string):Promise<string> {
+  getAllocation(coin: string): Promise<string> {
     return new Promise((resolve, reject) => {
       this._initWalletProvider(this.userWalletNetworkId)
         .then((web3) => {
@@ -185,6 +222,9 @@ export class ContractsService {
           }
           resolve(this._getAllocation(coin, web3!));
         })
+        .catch((err) => {
+          reject(err);
+        });
     });
   }
 
@@ -195,20 +235,22 @@ export class ContractsService {
    * @param {string} amount 
    * @returns {Promise<string>}
    */
-  setExactAllocation(coin: string, nft: NFT, price:string) :Promise<string>{
+  setExactAllocation(coin: string, nft: NFT, price: string): Promise<string> {
     return new Promise((resolve, reject) => {
       this._initWalletProvider(this.userWalletNetworkId)
         .then((web3) => {
           if (!web3) {
-            reject(new Error("unable to connect"));
+            reject(new Error("Unable to connect to blockchain server"));
           }
-          resolve(this._setExactAllocation(coin, nft,price , web3!))
+          resolve(this._setExactAllocation(coin, nft, price, web3!))
         })
-
+        .catch((err) => {
+          reject(err);
+        });
     });
   }
 
-  increaseAllocation(coin: string, amount: string):Promise<string> {
+  increaseAllocation(coin: string, amount: string): Promise<string> {
     return new Promise((resolve, reject) => {
       this._initWalletProvider(this.userWalletNetworkId)
         .then((web3) => {
@@ -221,7 +263,7 @@ export class ContractsService {
     });
   }
 
-  decreaseAllocation(coin: string, amount: string) :Promise<string>{
+  decreaseAllocation(coin: string, amount: string): Promise<string> {
     return new Promise((resolve, reject) => {
       this._initWalletProvider(this.userWalletNetworkId)
         .then((web3) => {
@@ -234,7 +276,7 @@ export class ContractsService {
     });
   }
 
-  addNFTtoMarket(nft: NFT,priceInSubUnits:string): Promise<any> {
+  addNFTtoMarket(nft: NFT, priceInSubUnits: string): Promise<any> {
     return new Promise((resolve, reject) => {
       if (nft.chainId != this.userWalletNetworkId) {
         reject(new Error("User is on a different network than this NFT"));
@@ -287,7 +329,7 @@ export class ContractsService {
             const fees = await Promise.all([web3.eth.getGasPrice(), this.getNFTFee(nft.chainId, "nft")]);
             const gas = web3.utils.numberToHex(fees[0]);
             const value = web3.utils.numberToHex(fees[1]);
-            resolve(this._sendTransaction(gas, value, nft.contractAddress, nft.chainId,encodedFunctionData));
+            resolve(this._sendTransaction(gas, value, nft.contractAddress, nft.chainId, encodedFunctionData));
           }
         })
         .catch((err) => {
@@ -311,7 +353,7 @@ export class ContractsService {
               .approve(marketContract.address, nft.tokenId).encodeABI();
             const gas = await Promise.all([web3.eth.getGasPrice()]);
             const gasPrice = web3.utils.numberToHex(gas[0]);
-            resolve(this._sendTransaction(gasPrice, "0x0", nft.contractAddress,nft.chainId, encodedFunctionData))
+            resolve(this._sendTransaction(gasPrice, "0x0", nft.contractAddress, nft.chainId, encodedFunctionData))
           }
           else {
             reject(new Error("No Active Network. Make sure your wallet is connnected."))
@@ -335,7 +377,7 @@ export class ContractsService {
               .setApprovalForAll(marketContract.address, true).encodeABI();
             const gas = await Promise.all([web3.eth.getGasPrice()]);
             const gasPrice = web3.utils.numberToHex(gas[0]);
-            resolve(this._sendTransaction(gasPrice, "0x0", nft.contractAddress,nft.chainId, encodedFunctionData))
+            resolve(this._sendTransaction(gasPrice, "0x0", nft.contractAddress, nft.chainId, encodedFunctionData))
           }
           else {
             reject(new Error("No Active Network. Make sure your wallet is connnected."))
@@ -364,11 +406,11 @@ export class ContractsService {
     const market = getContract(this.userWalletNetworkId, "market");
     const coinContract = getContract(this.userWalletNetworkId, coin);
     const coinWeb3 = new web3.eth.Contract(coinContract.abi, coinContract.address);
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       Promise.all(
         [coinWeb3.methods
           .increaseAllowance(market.address, amount)
-          .estimateGas({ from: this._wallet.account }),
+          .estimateGas({ from: this._wallet.account, gasPrice: await web3.eth.getGasPrice() }),
         coinWeb3.methods
           .increaseAllowance(market.address, amount)
           .encodeABI()])
@@ -385,7 +427,7 @@ export class ContractsService {
     const market = getContract(this.userWalletNetworkId, "market");
     const coinContract = getContract(this.userWalletNetworkId, coin);
     const coinWeb3 = new web3.eth.Contract(coinContract.abi, coinContract.address);
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       Promise.all(
         [coinWeb3.methods
           .decreaseAllowance(market.address, amount)
@@ -400,16 +442,16 @@ export class ContractsService {
 
   }
 
-  private _setExactAllocation(coin: string, nft: NFT, price:string, web3: Web3): Promise<string> {
+  private _setExactAllocation(coin: string, nft: NFT, price: string, web3: Web3): Promise<string> {
     if (!this.userWalletNetworkId) {
-      return Promise.reject(new Error("no wallet"));
+      return Promise.reject(new Error("no wallet connected"));
     }
     const market = getContract(this.userWalletNetworkId, "market");
     const coinContract = getContract(this.userWalletNetworkId, coin);
     const coinWeb3 = new web3.eth.Contract(coinContract.abi, coinContract.address);
 
     return new Promise((resolve, reject) => {
-     
+
       Promise.all([coinWeb3.methods
         .allowance(this._wallet.account, market.address)
         .call(), this.getMarketCommission(nft)])
@@ -434,7 +476,8 @@ export class ContractsService {
 
   private _requestAllocationFromContract(gasAndData: string[], toAddress: string): Promise<string> {
     if (gasAndData[0] && gasAndData[1]) {
-      return this._sendTransaction(gasAndData[0], '0x0', toAddress, this.userWalletNetworkId!, gasAndData[1]);
+      console.log("gas variable is ", gasAndData[0]);
+      return this._sendTransaction(gasAndData[0].toString(), '0x0', toAddress, this.userWalletNetworkId!, gasAndData[1]);
     }
     else {
       return Promise.reject(new Error("wallet error"));
@@ -444,7 +487,7 @@ export class ContractsService {
     to: string, chainId: number, data: any) {
 
     const transactionParameters = {
-      gasPrice: gas,
+      gas: gas,
       value: valueInHex,
       to: to,
       from: this._wallet.account,
@@ -460,7 +503,7 @@ export class ContractsService {
 
   private _initWalletProvider(chainId: number | null): Promise<Web3 | null> {
     if (!chainId) {
-      return Promise.reject(new Error("No network connection"));
+      return Promise.reject(new Error("No wallet detected. Did you connect a wallet provider?"));
     }
     return this._initProvider(chainId);
   }
@@ -479,7 +522,7 @@ export class ContractsService {
       resolve(new Web3(provider));
     });
     return web3Promise;
-  }  
+  }
 }
 
 
