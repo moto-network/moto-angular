@@ -30,6 +30,7 @@ import { SearchService } from './Services/search.service';
 import { ProfileService } from './Services/profile.service';
 import { NftCreationResultsComponent } from './nft-creation-results/nft-creation-results.component';
 import { UniversalDialogComponent } from './universal-dialog/universal-dialog.component';
+import { UserDashComponent } from './user-dash/user-dash.component';
 
 @NgModule({
   declarations: [
@@ -46,6 +47,7 @@ import { UniversalDialogComponent } from './universal-dialog/universal-dialog.co
     DiscoverComponent,
     NftCreationResultsComponent,
     UniversalDialogComponent,
+    UserDashComponent,
   ],
   imports: [
     BrowserAnimationsModule,

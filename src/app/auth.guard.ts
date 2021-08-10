@@ -12,13 +12,21 @@ export class AuthGuard implements CanActivate {
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-      if(this._authenticationService.isLoggedIn()){
-        return true;
-      }
-      else{
-        this._router.navigate(['login']);
-        return false;
-      }
+    console.log("ccurrent users is ", this._authenticationService.currentUser())
+    return new Promise<boolean>((resolve, reject) => {
+      this._authenticationService.afAuth.currentUser
+        .then((user) => {
+          if (user) {
+            resolve(true);
+          }
+          else {
+            resolve(false)
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+    })
   }
   
 }

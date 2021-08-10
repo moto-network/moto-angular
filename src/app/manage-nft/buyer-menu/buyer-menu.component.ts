@@ -88,7 +88,7 @@ export class BuyerMenuComponent implements OnInit {
       this._market.approveExactAmount('moto', this.nft, this.priceInSubUnits.toString())
         .then((approvedAmount) => {
           this.approvedAmount = new BigNumber(approvedAmount);
-          const formattedAmount = this.getFormattedPrice(approvedAmount);
+          const formattedAmount = this.getFormattedPrice(approvedAmount.toString());
           const message = formattedAmount + " has been approved.";
           this.openSnackBar(message);
         })
@@ -132,9 +132,8 @@ export class BuyerMenuComponent implements OnInit {
   }
 
   isApprovedSufficient(): boolean {
-
     return this.approvedAmount.gte(this.priceInSubUnits) && this.approvedAmount.gt(0)
-      && this.priceInSubUnits.gte(this.motoBalance);
+      && this.motoBalance.gte(this.priceInSubUnits);
   }
 
   openSnackBar(message: string, duration: number = 3000) {

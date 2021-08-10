@@ -39,12 +39,6 @@ p{
   margin-bottom:10px;
 }
 
-.disabled-button{
-    box-shadow: none;
-    pointer-events: none;
-    background: rgb(231, 231, 231) !important;
-    color:gray !important;
-}
 
 
 

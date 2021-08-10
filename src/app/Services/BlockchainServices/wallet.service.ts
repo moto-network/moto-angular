@@ -20,7 +20,7 @@ export class WalletService {
   constructor() {
   }
 
-  initWallet(): Observable<string | null>{
+  initWallet(): Observable<string | null> {
     this._getWalletInterface();
     return this.accountObservable;
   }
@@ -44,7 +44,7 @@ export class WalletService {
    * does not request an intefface
    * @returns observabe 
    */
-  listenForAccount(): Observable<string | null>{
+  listenForAccount(): Observable<string | null> {
     return this.accountObservable;
   }
 
@@ -73,21 +73,6 @@ export class WalletService {
     return secondaryValidator.validate(address, network);
   }
 
-  async signForNFT(nft: any): Promise<any> {
-    if (this.account) {
-      return new Promise((resolve, reject) => {
-        console.log("this.account ", this.account);
-        resolve(this.executeSignature(this.account, nft));
-
-      });
-    }
-    else {
-      return new Promise((resolve, reject) => {
-        reject(new Error("NoAccountFound"));
-      });
-    }
-  }
-
   private _getWalletInterface() {
     //do a popup later so they can decide between ethereum
     if (window.ethereum) {
@@ -114,11 +99,12 @@ export class WalletService {
       });
   }
 
-  private executeSignature(account: string, nft: any): Promise<any> {
-    let parameters = [account, this.prepareSignatureData(nft)];
+  getLoginSignature(account: string, nonce: string, chainId: number): Promise<string> {
+    let parameters = [account, this.prepSignatureData(account, nonce, chainId)];
     return this._walletInterface.request({ method: "eth_signTypedData_v4", params: parameters })
       .then((result: any) => {
         if (result) {
+          console.log("signature is ", result);
           return result;
         }
         else {
@@ -131,28 +117,28 @@ export class WalletService {
 
   }
 
-  private prepareSignatureData(nft: any) {
-    console.log("preparing signature ", config.network[nft.chainId]);
-    let domain = config.network[nft.chainId].contracts.nft.domain;
+  private prepSignatureData(userAccount: string, nonce: string, chainId: number) {
+
     let data = {
+      "domain": {
+        name: "Moto Network",
+        version: "3",
+        chainId: chainId
+      },
       "types": {
         "EIP712Domain": [
           { "name": "name", "type": "string" },
           { "name": "version", "type": "string" },
-          { "name": "verifyingContract", "type": "address" },
           { "name": "chainId", "type": "uint256" }
         ],
-        "NFT": [
-          { "name": "name", "type": "string" },
-          { "name": "chainId", "type": "uint256" },
-          { "name": "owner", "type": "address" },
-          { "name": "contentHash", "type": "bytes32" },
-          { "name": "tokenId", "type": "uint256" }
+        "Identity": [
+          { "name": "account", "type": "string" },
+          { "name": "nonce", "type": "string" },
+          { "name": "chainId", "type": "uint256" }
         ]
       },
-      "primaryType": "NFT",
-      "domain": domain,
-      "message": nft
+      "primaryType": "Identity",
+      "message": { account: userAccount, nonce: nonce, chainId: chainId }
     };
     console.log("signature data prepared ", data);
     return JSON.stringify(data);

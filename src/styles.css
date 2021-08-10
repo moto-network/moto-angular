@@ -101,3 +101,10 @@ box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 1px, rgba(0, 0, 0, 0.07) 0px 2px 2px, rg
   background-color: #F25781;
   color:white;
 }
+
+.disabled-button{
+    box-shadow: none;
+    pointer-events: none;
+    background: rgb(231, 231, 231) !important;
+    color:gray !important;
+}

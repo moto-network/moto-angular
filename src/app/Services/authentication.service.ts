@@ -17,19 +17,6 @@ export class AuthenticationService {
     ) {
       
     }
-  
-    initialize(){
-      this.afAuth.authState.subscribe(user => {
-        if (user) {
-          this.userState = user;
-          localStorage.setItem('user', JSON.stringify(this.userState));
-          
-      }
-        else {
-          this.userState = null;
-        }
-      });
-    }
 
     SignIn(email: string, password:string ){
       return this.afAuth.signInWithEmailAndPassword(email, password)
@@ -46,19 +33,13 @@ export class AuthenticationService {
           window.alert(error.message)
         });
     }
+  
+  currentUser() {
+    return this.afAuth.currentUser;
+  }
+  
+  walletSignIn(token: string) {
+    return this.afAuth.signInWithCustomToken(token)
+  }
 
-    getuid():string{
-      return this.uid;
-    }
-
-    isLoggedIn(): boolean {
-      const localStorageUser:string|null = localStorage.getItem('user');
-      if(localStorageUser){
-        const user = JSON.parse(localStorageUser);
-        return (user !== null) ? true : false; //add email verification here
-      }
-      else{
-        return false;
-      }
-     }
 }

@@ -8,6 +8,7 @@ import { WalletService } from 'src/app/Services/BlockchainServices\
 import { FileManagerService } from 'src/app/Services/file-manager.service';
 import { NFTManagerService } from '../Services/nft-manager.service';
 import { NFT } from 'src/declaration';
+import { ProfileService } from '../Services/profile.service';
 
 @Component({
   selector: 'app-create-nft',
@@ -42,7 +43,8 @@ export class CreateNFTComponent implements OnInit {
 
   constructor(private _walletService: WalletService,
     private nftManager: NFTManagerService, private router: Router,
-    private fileManager: FileManagerService) {
+    private fileManager: FileManagerService,
+    private profile:ProfileService) {
 
   }
 

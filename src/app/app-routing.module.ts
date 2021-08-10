@@ -13,14 +13,16 @@ import { NftCreationResultsComponent } from './nft-creation-results/nft-creation
 
 import { OnlyAccountGuard } from './only-account.guard';
 import { UniversalDialogComponent } from './universal-dialog/universal-dialog.component';
+import { UserDashComponent } from './user-dash/user-dash.component';
 const routes: Routes = [{ path: "", component: HomeComponent },
 { path: "login", component: LoginComponent },
 { path: "signup", component: SignUpComponent },
-{ path: "account", component: AccountComponent, canActivate: [AuthGuard] },
+{ path: "account", component: AccountComponent,  },
 { path: "create", component: CreateNFTComponent },
 { path: "discover", component: DiscoverComponent },
 { path: "nft", component: DisplayNFTComponent },
 { path: "on-ramp", component: OnRampComponent },
+  { path: "user-dashboard", component: UserDashComponent, canActivate: [AuthGuard]},
 { path: "universal", component: UniversalDialogComponent },
 { path: "nft-results", component: NftCreationResultsComponent },
 {

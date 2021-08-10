@@ -22,7 +22,7 @@ export class LoginComponent implements OnInit {
     password: new FormControl('')
   });
   constructor(private _authentication: AuthenticationService,
-    private _walletService: WalletService,
+    private _wallet: WalletService,
     private _router: Router, private _profile: ProfileService,
     private _location:Location) {
 
@@ -31,17 +31,14 @@ export class LoginComponent implements OnInit {
   animation: any = null;
   accountAvailable:boolean = false;
   openMetaMask(): void {
-    this._walletService.initWallet()
-      .subscribe((account: string | null) => {
-        if (account) {
-          this._location.back();
-        }
-       });
+    this._profile.login();
   }
 
   openWalletConnect(): void {
     //this._walletService.walletConnect();
   }
+
+
 
   ngOnInit(): void {
   }

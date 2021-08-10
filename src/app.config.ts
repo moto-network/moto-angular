@@ -143,5 +143,7 @@ export function getNetworkName(chainId: number): string {
 //export const UPLOAD_URL: string = "http://localhost:5001/motonetwork/us-central1/uploadNFT";
 export const UPLOAD_URL: string = "https://us-central1-motonetwork.cloudfunctions.net/uploadNFT";
 export const CREATE_ORDER_URL: string = "https://us-central1-motonetwork.cloudfunctions.net/orderCreated";
+export const GET_NONCE_URL: string = "http://localhost:5001/motonetwork/us-central1/getNonce";
+export const VERIFY_SIG_URL: string = "http://localhost:5001/motonetwork/us-central1/verifySignature"
   //uploadNFTurl: string = "http://localhost:5001/motonetwork/us-central1/uploadNFT";
 

@@ -1,7 +1,12 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { take } from 'rxjs/operators';
 import { FileNFT, NFT, NFTCollection } from 'src/declaration';
+import { AuthenticationService } from './authentication.service';
+import { WalletService } from './BlockchainServices/wallet.service';
 import { NFTManagerService } from './nft-manager.service';
+import { RemoteDataService } from './remote-data.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +17,45 @@ export class ProfileService {
   nftCollection: NFTCollection | null = null;
   collectionObservable: BehaviorSubject<NFTCollection | null> = new BehaviorSubject<NFTCollection | null>(this.nftCollection);
   nft: FileNFT | null = null;
-  constructor(private _nftManager: NFTManagerService) {
+  constructor(private _nftManager: NFTManagerService, private _wallet: WalletService,
+    private _remote: RemoteDataService, private auth: AuthenticationService,
+  private _router:Router) {
+  }
+  
+  login() {
+    this._wallet.initWallet()
+      .subscribe((account: string | null) => {
+        if (account) {
+
+          this._remote.getNonce(account)
+            .subscribe((nonce) => {
+              console.log("nonce is ", nonce);
+              if (nonce) {
+                this._wallet.getNetwork()
+                  .subscribe((networkId) => {
+                    if (networkId) {
+                      this._wallet.getLoginSignature(account, nonce, networkId)
+                        .then((sig) => {
+                          if (sig) {
+                            this._remote.verifySignature(account, nonce, networkId, sig)
+                              .subscribe((token) => {
+                                if (token) {
+                                  this.auth.walletSignIn(token)
+                                    .then((result) => {
+                                      this._router.navigate(['user-dashboard']);
+                                    })
+                                    .catch((err) => { });
+                                }
+                              });
+                          }
+                        })
+                    }
+                  })
+              }
+            });
+         
+        }
+      });
   }
 
   initProfile(address:string):void {

@@ -36,7 +36,8 @@ export interface Listing {
   seller: string;
   contractAddress: string;
   price: string;
-  expiresAt: string;
+  expiresAt?: string;
+  buyer?: string;
 }
 
 export type ListingCollection = {
