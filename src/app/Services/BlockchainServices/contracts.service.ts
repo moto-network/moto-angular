@@ -93,8 +93,24 @@ export class ContractsService {
         })
       
      });
+  }
 
+  getMotoNFTBalance(): Promise<string>{
+    return new Promise((resolve, reject) => {
+      if (!this.userWalletNetworkId) {
+        reject(new Error("No wallet found"));
+      }
+      this._initWalletProvider(this.userWalletNetworkId)
+        .then((web3) => {
+          if (!web3) {
+            reject(new Error("No wallet detected"));
+          }
+          const motoContract: Contract = getContract(this.userWalletNetworkId!, 'nft');
+          const nftWeb3 = new web3!.eth.Contract(motoContract.abi, motoContract.address);
+          resolve(nftWeb3.methods.balanceOf(this._wallet.account).call());
+        })
 
+    });
   }
 
   getMarketCommission(nft: NFT): Promise<string> {

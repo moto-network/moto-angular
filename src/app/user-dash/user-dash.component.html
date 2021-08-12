@@ -1,7 +1,7 @@
 <div id="top-row">
   <div id="balance-info">
     <div class="balance-row">
-      <h1 class="moto-title">{{shortenPrice('20320008908')}}</h1>
+      <h1 class="moto-title">{{shortenPrice(motoBalance)}}</h1>
       <h2 class="moto-title moto-name">moto<span style="font-weight:500;color:black">balance</span></h2>
     </div>
     <div class="balance-row">
@@ -10,11 +10,18 @@
     </div>
   </div>
 
-  <div id="latest-purchase">
+  <div id="latest-purchase" *ngIf="nft">
 
-    <h2 class="moto-title" id="latest-purchase-title">
-      latest purchase
+    <h2 class="moto-title" id="latest-purchase-title" >
+      newest
     </h2>
-    <img id="purchase-photo" class="box-shadow" src={{nft?.smImg}}>
+    <img id="purchase-photo" class="box-shadow" src={{nft?.smImg}} >
   </div>
+</div>
+<div id="nfts-table">
+<div class="nft-table-row box-shadow" *ngFor="let tokenId of ProfileNFTs">
+  <img src={{nftCollection[tokenId].smImg}} class="table-row-img box-shadow">
+  <h3 class="moto-title">{{nftCollection[tokenId].name}}</h3>
+  <button class="moto-button" id="generate-link-button">create download link</button>
+</div>
 </div>

@@ -42,6 +42,10 @@ export class MarketService {
     return this._contracts.getCoinBalance();
   }
 
+  getNFTBalance(): Promise<string> {
+    return this._contracts.getMotoNFTBalance();
+  }
+
   getAllowance(): Promise<string> {
     return this._contracts.getAllocation('moto');
   }
