@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ProfileService } from '../Services/profile.service';
 
 @Component({
   selector: 'app-user-dash',
@@ -7,7 +8,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class UserDashComponent implements OnInit {
 
-  constructor() { }
+  constructor(private _profile: ProfileService) {
+    this._profile.getUserAccountToken()
+      .then((token) => {
+        console.log('token is ', token);
+      });
+  }
 
   ngOnInit(): void {
   }

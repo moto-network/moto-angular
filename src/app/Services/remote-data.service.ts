@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { FileNFT, NFT, NFTCollection, Listing as Listing } from "src/declaration";
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { AngularFirestore, QuerySnapshot } from '@angular/fire/firestore';
-import { CREATE_ORDER_URL, getProvider, GET_NONCE_URL, UPLOAD_URL, VERIFY_SIG_URL } from "src/app.config";
+import { AngularFirestore } from '@angular/fire/firestore';
+import { CREATE_ORDER_URL,GEN_LINK, GET_NONCE_URL, UPLOAD_NFT_URL, VERIFY_SIG_URL } from "src/app.config";
 import { Observable, Subject } from 'rxjs';
 import { ChinaDataService } from './china-data.service';
 import { map, take } from 'rxjs/operators';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -56,7 +57,7 @@ export class RemoteDataService {
     formData.append('nft', JSON.stringify(nft));
     formData.append('file', file);
 
-    this.http.post<any>(UPLOAD_URL, formData).subscribe(
+    this.http.post<any>(UPLOAD_NFT_URL, formData).subscribe(
       (res) => console.log(res),
       (err) => console.log(err)
     );
@@ -97,6 +98,21 @@ export class RemoteDataService {
     }
   }
 
+  generateDownloadLink(nft: NFT, userToken: string): Observable<string> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${userToken}`
+    })
+    const formData = new FormData();
+    formData.append('nft', JSON.stringify(nft));
+    return this.http.post<any>(GEN_LINK, formData, { headers: headers })
+      .pipe(take(1),
+        map((arrayBuffer) => {
+          var enc = new TextDecoder("utf-8");
+          return enc.decode(arrayBuffer);
+        }))
+      
+  }
 
   public getNFTs(searchParameter: string, searchValue: string): Observable<NFTCollection | null> {
     const nftCollection: NFTCollection = {};

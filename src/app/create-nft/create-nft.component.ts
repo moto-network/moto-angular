@@ -9,6 +9,10 @@ import { FileManagerService } from 'src/app/Services/file-manager.service';
 import { NFTManagerService } from '../Services/nft-manager.service';
 import { NFT } from 'src/declaration';
 import { ProfileService } from '../Services/profile.service';
+import { Observable, Subscription } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { LoginComponent } from '../login/login.component';
+import { UniversalDialogComponent } from '../universal-dialog/universal-dialog.component';
 
 @Component({
   selector: 'app-create-nft',
@@ -40,22 +44,25 @@ export class CreateNFTComponent implements OnInit {
   chainId: number | null = null;
   file: File | null = null;
   nft: any = {};
-
+  networkSubscription: Subscription | null = null;
+  accountSubscription: Subscription | null = null;
   constructor(private _walletService: WalletService,
     private nftManager: NFTManagerService, private router: Router,
     private fileManager: FileManagerService,
-    private profile:ProfileService) {
+    private profile:ProfileService, private dialog:MatDialog) {
 
   }
 
   ngOnInit(): void {
-    this._walletService.accountObservable.subscribe((account) => {
+    this.accountSubscription =  this._walletService.listenForAccount()
+      .subscribe((account) => {
       if (account) {
         this.account = account;
         this.nftForm.controls['owner'].setValue(account);
       }
     });
-    this._walletService.networkObservable.subscribe((currentNetwork) => {
+    this.networkSubscription = this._walletService.getNetwork()
+      .subscribe((currentNetwork) => {
       this.chainId = currentNetwork;
       if (currentNetwork) {
         if (getProvider(currentNetwork)) {
@@ -66,18 +73,24 @@ export class CreateNFTComponent implements OnInit {
     });
   }
 
+  ngOnDestroy(): void {
+    this.networkSubscription?.unsubscribe();
+    this.accountSubscription?.unsubscribe();
+  }
   /**
    * for the UI button if there is no account
    */
   public initAccount(): void {
-    this._walletService.getAccount()
+    this.dialog.open(LoginComponent, {height:"400px", width:"400px"});
+
+   /* this._walletService.getAccount()
       .subscribe((account: string | null) => {
         if (account) {
           this.account = account;
           this.isValidForm();
         }
-      });
-    this.isValidForm();
+      });*/
+//    this.isValidForm();
   }
 
   /**
@@ -114,7 +127,6 @@ export class CreateNFTComponent implements OnInit {
 
         }
       });
-
   }
 
   /**

@@ -19,46 +19,81 @@ export class ProfileService {
   nft: FileNFT | null = null;
   constructor(private _nftManager: NFTManagerService, private _wallet: WalletService,
     private _remote: RemoteDataService, private auth: AuthenticationService,
-  private _router:Router) {
+    private _router: Router) {
   }
-  
-  login() {
-    this._wallet.initWallet()
-      .subscribe((account: string | null) => {
-        if (account) {
 
-          this._remote.getNonce(account)
-            .subscribe((nonce) => {
-              console.log("nonce is ", nonce);
-              if (nonce) {
-                this._wallet.getNetwork()
-                  .subscribe((networkId) => {
-                    if (networkId) {
-                      this._wallet.getLoginSignature(account, nonce, networkId)
-                        .then((sig) => {
-                          if (sig) {
-                            this._remote.verifySignature(account, nonce, networkId, sig)
-                              .subscribe((token) => {
-                                if (token) {
-                                  this.auth.walletSignIn(token)
-                                    .then((result) => {
-                                      this._router.navigate(['user-dashboard']);
-                                    })
-                                    .catch((err) => { });
-                                }
-                              });
-                          }
-                        })
-                    }
-                  })
+  getUserAccountToken(): Promise<string | undefined> {
+    return this.auth.currentUser()
+      .then((currentUser) => {
+        return currentUser?.getIdToken(true)
+      })
+      .then((token) => {
+        return token;
+      })
+  }
+
+  login() :Promise<any>{
+    return new Promise((resolve, reject) => {
+      this._wallet.initWallet()
+        .subscribe((account: string | null) => {
+          if (account) {
+
+            this._remote.getNonce(account)
+              .subscribe((nonce) => {
+                console.log("nonce is ", nonce);
+                if (nonce) {
+                  this._wallet.getNetwork()
+                    .subscribe((networkId) => {
+                      if (networkId) {
+                        this._wallet.getLoginSignature(account, nonce, networkId)
+                          .then((sig) => {
+                            if (sig) {
+                              this._remote.verifySignature(account, nonce, networkId, sig)
+                                .subscribe((token) => {
+                                  if (token) {
+                                    console.log("toooken is ", token);
+                                    resolve(this.auth.walletSignIn(token))
+                        
+                                  }
+                                  else {
+                                    reject(new Error('Login Error'));
+                                  }
+                                });
+                            }
+                          })
+                      }
+                    })
+                }
+              });
+
+          }
+        });
+    });
+
+  }
+
+  getDownloadLink(nft: NFT): Promise<string | void> {
+    return new Promise((resolve, reject) => {
+      this.getUserAccountToken()
+        .then((token) => {
+          if (!token) {
+            reject(new Error("user not logged in"));
+          }
+          this._nftManager.getNFTDownloadLink(nft, token!)
+            .subscribe((link) => {
+              if (link) {
+                resolve(link);
               }
-            });
-         
-        }
-      });
+              else {
+                reject(new Error("no link available"));
+              }
+            })
+
+        });
+    });
   }
 
-  initProfile(address:string):void {
+  initProfile(address: string): void {
     this.address = address;
     this._getRemoteNFTs(this.address)
       .subscribe((collection: NFTCollection) => {
@@ -81,7 +116,7 @@ export class ProfileService {
     this._nftManager.setNFT(nft);
   }
 
-  setNFTCollection(collection: NFTCollection){
+  setNFTCollection(collection: NFTCollection) {
 
     this.nftCollection = collection;
     this.collectionObservable.next(this.nftCollection);

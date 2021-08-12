@@ -313,7 +313,7 @@ export class ContractsService {
     });
   }
 
-  mintNFT(nft: NFT): Promise<any> {
+  createNFT(nft: NFT): Promise<any> {
     return new Promise((resolve, reject) => {
       this._initWalletProvider(this.userWalletNetworkId)
         .then(async (web3) => {
@@ -323,10 +323,11 @@ export class ContractsService {
           else {
             const nftContract: Contract = getContract(this.userWalletNetworkId, "nft");
             const web3Contract = new web3.eth.Contract(nftContract.abi, nftContract.address);
-            const encodedFunctionData = web3Contract.methods
+            const functionCall = web3Contract.methods
               .userMint(nft.name, nft.chainId, nft.owner,
-                nft.contentHash, nft.tokenId).encodeABI();
-            const fees = await Promise.all([web3.eth.getGasPrice(), this.getNFTFee(nft.chainId, "nft")]);
+                nft.contentHash, nft.tokenId);
+            const encodedFunctionData = functionCall.encodeABI();
+            const fees = await Promise.all([functionCall.estimateGas(), this.getNFTFee(nft.chainId, "nft")]);
             const gas = web3.utils.numberToHex(fees[0]);
             const value = web3.utils.numberToHex(fees[1]);
             resolve(this._sendTransaction(gas, value, nft.contractAddress, nft.chainId, encodedFunctionData));
@@ -337,6 +338,8 @@ export class ContractsService {
         });
     });
   }
+
+ 
 
   grantMarketSinglePermission(nft: NFT): Promise<any> {
     const nftContract = getContract(nft.chainId, 'nft');

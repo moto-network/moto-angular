@@ -53,10 +53,14 @@ export class NFTManagerService {//merge this wit the other NFTManager or wahteve
     }
   }
 
+  getNFTDownloadLink(nft: NFT, userIDToken:string):Observable<string> {
+    return this._remote.generateDownloadLink(nft, userIDToken)
+  }
+
   mintNFT(nft: NFT): Promise<string> {
     return new Promise((resolve, reject) => {
       if (this._validNFT(nft)) {
-        this._contracts.mintNFT(nft)
+        this._contracts.createNFT(nft)
           .then((transactionHash) => {
             console.log("transaction hash is", transactionHash);
             this.lastSuccessfulTransaction = transactionHash;

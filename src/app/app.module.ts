@@ -29,8 +29,9 @@ import { DiscoverComponent } from './discover/discover.component';
 import { SearchService } from './Services/search.service';
 import { ProfileService } from './Services/profile.service';
 import { NftCreationResultsComponent } from './nft-creation-results/nft-creation-results.component';
-import { UniversalDialogComponent } from './universal-dialog/universal-dialog.component';
+import { SimpleMessageDialogComponent } from './simple-message-dialog/simple-message-dialog.component';
 import { UserDashComponent } from './user-dash/user-dash.component';
+import { UniversalDialogComponent } from './universal-dialog/universal-dialog.component';
 
 @NgModule({
   declarations: [
@@ -46,8 +47,9 @@ import { UserDashComponent } from './user-dash/user-dash.component';
     CreateNFTComponent,
     DiscoverComponent,
     NftCreationResultsComponent,
-    UniversalDialogComponent,
+    SimpleMessageDialogComponent,
     UserDashComponent,
+    UniversalDialogComponent,
   ],
   imports: [
     BrowserAnimationsModule,

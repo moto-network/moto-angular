@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Injector, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthenticationService } from '../Services/authentication.service';
@@ -7,7 +7,8 @@ import { faThumbsUp } from "@fortawesome/free-solid-svg-icons";
 import { ProfileService } from '../Services/profile.service';
 import { LookupAddress } from 'node:dns';
 import { Location } from '@angular/common';
-
+import { MatDialogRef } from '@angular/material/dialog';
+import { Optional } from '@angular/core';
 declare var anime: any;
 @Component({
   selector: 'app-login',
@@ -21,17 +22,29 @@ export class LoginComponent implements OnInit {
     email: new FormControl(''),
     password: new FormControl('')
   });
+
   constructor(private _authentication: AuthenticationService,
     private _wallet: WalletService,
     private _router: Router, private _profile: ProfileService,
-    private _location:Location) {
+    private _location: Location, @Optional() private matDialogRef: MatDialogRef<LoginComponent>) {
+
 
   }
   account: string | null = null;
   animation: any = null;
-  accountAvailable:boolean = false;
+  accountAvailable: boolean = false;
   openMetaMask(): void {
-    this._profile.login();
+    this._profile.login()
+      .then((result) => {
+        if (result) {
+          if (this.matDialogRef) {
+            this.matDialogRef.close();
+          }
+          else {
+            this._router.navigate(['user-dashboard']);
+          }
+        }
+      });
   }
 
   openWalletConnect(): void {

@@ -12,7 +12,7 @@ import { DisplayNFTComponent } from './display-nft/display-nft.component';
 import { NftCreationResultsComponent } from './nft-creation-results/nft-creation-results.component';
 
 import { OnlyAccountGuard } from './only-account.guard';
-import { UniversalDialogComponent } from './universal-dialog/universal-dialog.component';
+import { SimpleMessageDialogComponent } from './simple-message-dialog/simple-message-dialog.component';
 import { UserDashComponent } from './user-dash/user-dash.component';
 const routes: Routes = [{ path: "", component: HomeComponent },
 { path: "login", component: LoginComponent },
@@ -23,7 +23,7 @@ const routes: Routes = [{ path: "", component: HomeComponent },
 { path: "nft", component: DisplayNFTComponent },
 { path: "on-ramp", component: OnRampComponent },
   { path: "user-dashboard", component: UserDashComponent, canActivate: [AuthGuard]},
-{ path: "universal", component: UniversalDialogComponent },
+{ path: "universal", component: SimpleMessageDialogComponent },
 { path: "nft-results", component: NftCreationResultsComponent },
 {
   path: "manage-nft",

@@ -9,7 +9,7 @@ import BigNumber from 'bignumber.js';
 import { WalletService } from 'src/app/Services/BlockchainServices/wallet.service';
 import { MarketService } from 'src/app/Services/market.service';
 import { NFTManagerService } from 'src/app/Services/nft-manager.service';
-import { UniversalDialogComponent } from 'src/app/universal-dialog/universal-dialog.component';
+import { SimpleMessageDialogComponent } from 'src/app/simple-message-dialog/simple-message-dialog.component';
 import { FileNFT, Listing, ListingNFT, NFT } from 'src/declaration';
 @Component({
   selector: 'app-buyer-menu',
@@ -108,7 +108,7 @@ export class BuyerMenuComponent implements OnInit {
   }
 
   openDialog(title: string, message: string) :void{
-    this.dialog.open(UniversalDialogComponent,
+    this.dialog.open(SimpleMessageDialogComponent,
       { data: { title: title, message: message } });
   }
 
