@@ -1,1 +1,20 @@
-<p>user-dash works!</p>
+<div id="top-row">
+  <div id="balance-info">
+    <div class="balance-row">
+      <h1 class="moto-title">{{shortenPrice('20320008908')}}</h1>
+      <h2 class="moto-title moto-name">moto<span style="font-weight:500;color:black">balance</span></h2>
+    </div>
+    <div class="balance-row">
+      <h1 class="moto-title">2</h1>
+      <h2 class="moto-title moto-name">moto<span style="font-weight:500;color:black">NFTs</span></h2>
+    </div>
+  </div>
+
+  <div id="latest-purchase">
+
+    <h2 class="moto-title" id="latest-purchase-title">
+      latest purchase
+    </h2>
+    <img id="purchase-photo" class="box-shadow" src={{nft?.smImg}}>
+  </div>
+</div>

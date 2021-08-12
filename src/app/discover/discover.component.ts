@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { FileNFT, NFTCollection } from 'src/declaration';
 import { NFTManagerService } from '../Services/nft-manager.service';
 import { SessionManagerService } from '../Services/session-manager.service';
@@ -16,6 +17,7 @@ export class DiscoverComponent implements OnInit {
   scrollPosition: any;
   loadingAnimation: any = null;
   session_id = "moto_discover";
+  loadNFTSub: Subscription | null = null;
   constructor(private _nftManager: NFTManagerService,
     private _router: Router, private _sessionManager:SessionManagerService) {
   }
@@ -42,7 +44,7 @@ export class DiscoverComponent implements OnInit {
 
   }
   loadNFTs() {
-    this._nftManager.getNFTs()
+    this.loadNFTSub = this._nftManager.getNFTs()
       .subscribe((collection: NFTCollection | null) => {
         if (collection) {
           this.loadingAnimation.pause();
@@ -76,7 +78,7 @@ export class DiscoverComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
-    
+    this.loadNFTSub?.unsubscribe();
   }
 
 

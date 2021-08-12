@@ -121,8 +121,26 @@ export class MarketService {
     return this._remote.updateListingDB(nft);
   }
 
-  buyNFT(nft: NFT, price:string): Promise<any> {
-    return this._contracts.buyNFT('moto',nft, price);
+  buyNFT(nft: NFT, price: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this._contracts.buyNFT('moto', nft, price)
+        .then((hash) => {
+          if (hash) {
+            this._remote.finalizeOrder(nft)
+              .subscribe((listing: Listing) => {
+                if (listing) {
+                  this.setListing(listing);
+                  console.log("listing");
+                  resolve(listing);
+                }
+              });
+          }
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
+    
   }
 
   increaseAllocationForMarket(coin:string , amount:string): Promise<string> {
@@ -133,7 +151,8 @@ export class MarketService {
     return this._contracts.decreaseAllocation(coin, amount);
   }
 
-  approveExactAmount(coin: string, nft: NFT, price:string):Promise<string> {
+  approveExactAmount(coin: string, nft: NFT, price: string): Promise<string> {
+    console.log("approveExactAmoouunt function in ");
     return this._contracts.setExactAllocation(coin, nft, price);
   }
 

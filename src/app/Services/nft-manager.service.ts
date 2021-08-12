@@ -36,7 +36,7 @@ export class NFTManagerService {//merge this wit the other NFTManager or wahteve
     _walletService.networkObservable.subscribe((network) => {
       this.currentNetwork = network;
     });
-    //   this.nft = this.testnft;
+       this.nft = this.testnft;
   }
 
   initFee(): void {

@@ -1,14 +1,17 @@
 import { Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { faArrowLeft, faFireAlt,faGift ,faMoneyBill} from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft, faFireAlt, faGift, faMoneyBill } from '@fortawesome/free-solid-svg-icons';
 import { NFTManagerService } from '../Services/nft-manager.service';
 import { FileNFT, ListingNFT } from 'src/declaration';
 import { ProfileService } from '../Services/profile.service';
 import { getNetworkName } from 'src/app.config';
 import { WalletService } from '../Services/BlockchainServices/wallet.service';
 import { MarketService } from '../Services/market.service';
-
+import { Subscription } from 'rxjs';
+import { NullTemplateVisitor } from '@angular/compiler';
+import { MatDialog } from '@angular/material/dialog';
+import { LoginComponent } from '../login/login.component';
 
 @Component({
   selector: 'app-profile-nft',
@@ -16,7 +19,7 @@ import { MarketService } from '../Services/market.service';
   styleUrls: ['./display-nft.component.css']
 
 })
-export class DisplayNFTComponent implements OnInit {
+export class DisplayNFTComponent implements OnInit, OnDestroy {
   leftArrow: any = faArrowLeft;
   burn: any = faFireAlt;
   give: any = faGift;
@@ -35,11 +38,18 @@ export class DisplayNFTComponent implements OnInit {
     "medImg": "../../../assets/HD2.jpg",
     "creator": "0x000000000000000000000000000000"
   };
+  accountSub: Subscription | null = null;
+  getNFTSub: Subscription | null = null;
   testCount: number = 0;
   constructor(private _nftManager: NFTManagerService, private _location: Location,
     private _profileManager: ProfileService, private _router: Router,
-    private _wallet: WalletService, private _market:MarketService) {
+    private _wallet: WalletService, private _market: MarketService,
+    private _dialog: MatDialog) {
 
+  }
+  ngOnDestroy(): void {
+    this.getNFTSub?.unsubscribe();
+    this.accountSub?.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -50,15 +60,14 @@ export class DisplayNFTComponent implements OnInit {
           this._getOwner(nft);
         }
       });
-    
+
     this._wallet.listenForAccount()
       .subscribe((account) => {
-        this.testCount = this.testCount + 1;
 
         if (account) {
           this.account = account;
         }
-       });
+      });
   }
 
   sellNFT() {
@@ -69,8 +78,21 @@ export class DisplayNFTComponent implements OnInit {
   }
 
   buyNFT() {
-    this._router.navigate(['manage-nft', 'buyer-menu']);
-    this._nftManager.setNFT(this.nft);
+    if (this.account) {
+      this._nftManager.setNFT(this.nft);
+      this._router.navigate(['manage-nft', 'buyer-menu']);
+      
+    }
+    else {
+      this._dialog.open(LoginComponent, { height: "500px", width: "400px" });
+      this._dialog.afterAllClosed.subscribe(() => {
+        if (this.account) {
+          this._nftManager.setNFT(this.nft);
+          this._router.navigate(['manage-nft', 'buyer-menu']);
+        }
+       });
+    }
+   
   }
 
   goToProfile(address: string | undefined) {
@@ -96,7 +118,7 @@ export class DisplayNFTComponent implements OnInit {
     return getNetworkName(this.nft.chainId);
   }
 
-  private _getOwner(nft:FileNFT): void {
+  private _getOwner(nft: FileNFT): void {
     if (nft) {
       this._nftManager.getOwner(nft)
         .then((owner) => {
@@ -105,7 +127,7 @@ export class DisplayNFTComponent implements OnInit {
           }
         })
         .catch(() => {
-          
+
         });
     }
 
@@ -115,20 +137,20 @@ export class DisplayNFTComponent implements OnInit {
   private _isOwner(): boolean {
     //let onsale: boolean = this.nft.onSale ? this.nft.onSale : false;
     let isOwner: boolean = false
-    
+
     if (this.account && this.nftOwner) {
 
-      return  (this.account.toUpperCase() == this.nftOwner.toUpperCase());
+      return (this.account.toUpperCase() == this.nftOwner.toUpperCase());
     }
     return false;
   }
 
-  public showBuyMenu(): boolean { 
+  public showBuyMenu(): boolean {
     const isOnSale: boolean = typeof this.nft.onSale === 'undefined' ? false : this.nft.onSale;
     return isOnSale && !this._isOwner();
   }
 
-  public showMenu():boolean {
+  public showMenu(): boolean {
     return this._isOwner();
   }
   /**

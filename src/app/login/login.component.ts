@@ -27,17 +27,23 @@ export class LoginComponent implements OnInit {
     private _wallet: WalletService,
     private _router: Router, private _profile: ProfileService,
     private _location: Location, @Optional() private matDialogRef: MatDialogRef<LoginComponent>) {
-
-
+    if (matDialogRef) {
+      this.dialogNote = true;
+    }
   }
+  dialogNote = false;
   account: string | null = null;
   animation: any = null;
   accountAvailable: boolean = false;
+  loading: boolean = false;
   openMetaMask(): void {
+    this.loading = true;
     this._profile.login()
       .then((result) => {
+        
         if (result) {
           if (this.matDialogRef) {
+            this.loading = false;
             this.matDialogRef.close();
           }
           else {

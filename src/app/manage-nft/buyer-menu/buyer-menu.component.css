@@ -72,11 +72,14 @@ p{
   margin-bottom:20px;
   display: flex;
   flex-direction: row-reverse;
+
 }
 #buy-button{
   background-color: #00A835;
   color:white;
   margin-right:30px;
+  cursor: pointer;
+  pointer-events: all;
 }
 
 #increase-button{

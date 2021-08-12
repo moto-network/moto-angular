@@ -44,6 +44,7 @@ export class CreateNFTComponent implements OnInit {
   chainId: number | null = null;
   file: File | null = null;
   nft: any = {};
+  loading: boolean = false;
   networkSubscription: Subscription | null = null;
   accountSubscription: Subscription | null = null;
   constructor(private _walletService: WalletService,
@@ -82,15 +83,6 @@ export class CreateNFTComponent implements OnInit {
    */
   public initAccount(): void {
     this.dialog.open(LoginComponent, {height:"400px", width:"400px"});
-
-   /* this._walletService.getAccount()
-      .subscribe((account: string | null) => {
-        if (account) {
-          this.account = account;
-          this.isValidForm();
-        }
-      });*/
-//    this.isValidForm();
   }
 
   /**
@@ -110,6 +102,7 @@ export class CreateNFTComponent implements OnInit {
   }
 
   private mint(nft: NFT) {
+    this.loading = true;
     this.nftManager.mintNFT(nft)//add a please wait thing
       .then((transactionHash: string) => {
         if (transactionHash && nft) {
@@ -117,6 +110,7 @@ export class CreateNFTComponent implements OnInit {
           if (this.file) {
             this.nftManager.uploadNFT(nft, this.file);
           }
+          this.loading = false;
           this.router.navigate(['nft-results']);
         }
       })

@@ -1,13 +1,14 @@
 <div id="login-page">
   <img id="moto-logo" src="../../assets/ICON-PNG.png">
 
-  <div id="meta-mask-go" class="connect-button" (click)="openMetaMask()" *ngIf="!accountAvailable">
+  <div id="meta-mask-go" class="connect-button" (click)="openMetaMask()" *ngIf="!accountAvailable && !loading" >
     <img id="meta-mask-logo" src="../../assets/metamask-fox.svg">
     <p>metamask</p>
   </div>
 
-  <div id="already">
-    <fa-icon id="loggedInIcon" [icon]="loggedIn"></fa-icon>
+  <div id="dialog-note" *ngIf="dialogNote">
+    <h2 class="moto-title">login to continue</h2>
   </div>
-
+  <div id="loading" *ngIf="loading">
+    <img id="loading-img" src="../../assets/loading.webp"></div>
 </div>

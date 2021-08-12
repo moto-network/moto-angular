@@ -173,6 +173,7 @@ export class ContractsService {
   }
 
   buyNFT(coin: string, nft: NFT, nftPrice: string) {
+    console.log("inside buyNFT");
     return new Promise((resolve, reject) => {
       this._initWalletProvider(this.userWalletNetworkId)
         .then((web3) => {
@@ -182,6 +183,7 @@ export class ContractsService {
           this._getAllocation(coin, web3!)
             .then((marketAllocation) => {
               if (marketAllocation) {
+                console.log("market alocation from buyNNFT", marketAllocation);
                 const marketAllocationBN = new BigNumber(marketAllocation);
                 const priceBN = new BigNumber(nftPrice);
                 if (!marketAllocationBN.gte(priceBN)) {
@@ -197,6 +199,7 @@ export class ContractsService {
                   .estimateGas({ from: this._wallet.account })
                   .then((gasEstimate: string) => {
                     if (gasEstimate) {
+                      console.log("gaas", gasEstimate);
                       const gasHex = web3!.utils.numberToHex(gasEstimate);
                       resolve(this._sendTransaction(gasHex, "0x0", market.address, nft.chainId, data));
                     }
@@ -413,11 +416,12 @@ export class ContractsService {
       Promise.all(
         [coinWeb3.methods
           .increaseAllowance(market.address, amount)
-          .estimateGas({ from: this._wallet.account, gasPrice: await web3.eth.getGasPrice() }),
+          .estimateGas({ from: this._wallet.account }),
         coinWeb3.methods
           .increaseAllowance(market.address, amount)
           .encodeABI()])
         .then((gasAndData) => {
+          console.log(" _increaseAllocation");
           resolve(this._requestAllocationFromContract(gasAndData, coinContract.address));
         });
     });
@@ -459,12 +463,15 @@ export class ContractsService {
         .allowance(this._wallet.account, market.address)
         .call(), this.getMarketCommission(nft)])
         .then((allocationAndFee: string[]) => {
+          console.log("allocation and fee", allocationAndFee);
           if (allocationAndFee[0] && allocationAndFee[1]) {
+
             const fee = new BigNumber(allocationAndFee[1]);
             const allocationBN = new BigNumber(allocationAndFee[0]);
             const priceBN = new BigNumber(price);
             const totalNeededBN = priceBN.plus(fee);
             if (allocationBN.lt(totalNeededBN)) {
+              console.log("allocation is less than total needed");
               const requestAmount = totalNeededBN.minus(allocationBN);
               resolve(this._increaseAllocation(coin, requestAmount.toString(), web3));
 

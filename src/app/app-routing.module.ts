@@ -22,7 +22,7 @@ const routes: Routes = [{ path: "", component: HomeComponent },
 { path: "discover", component: DiscoverComponent },
 { path: "nft", component: DisplayNFTComponent },
 { path: "on-ramp", component: OnRampComponent },
-  { path: "user-dashboard", component: UserDashComponent, canActivate: [AuthGuard]},
+{ path: "user-dashboard", component: UserDashComponent, /*canActivate: [AuthGuard]*/},
 { path: "universal", component: SimpleMessageDialogComponent },
 { path: "nft-results", component: NftCreationResultsComponent },
 {

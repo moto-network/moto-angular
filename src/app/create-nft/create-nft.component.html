@@ -18,8 +18,7 @@
       </select>
 
       <h3>Owner</h3>
-      <input class="text-inputs" type="text" placeholder=" address" formControlName="owner"
-        (change)="isValidForm()" />
+      <input class="text-inputs" type="text" placeholder=" address" formControlName="owner" (change)="isValidForm()" />
     </div>
     <div id="upload-bar">
 
@@ -27,9 +26,9 @@
 
         <label id="upload-label" for="upload-field" class="custom-file-upload">
           <h3 id="upload-title">upload</h3>
-          
+
         </label>
-      
+
       </div>
       <p id="upload-file-name">{{filename}}</p>
     </div>
@@ -39,14 +38,16 @@
 
 
   <br>
-  <div id="bottom-button-row">
+  <div id="bottom-button-row" *ngIf="!loading">
     <button id="init-account-button" *ngIf="!account" (click)="initAccount()">log in first</button>
     <button id="mint-button">
       <fa-icon [icon]="mintButton" [ngClass]="{'mint-unlocked':formValidityForUI}" (click)="createNFT()">
       </fa-icon>
     </button>
 
-
+    
   </div>
-
+<div id="loading" *ngIf="loading">
+  <img id="loading-img" src="../../assets/loading.webp">
+</div>
 </div>

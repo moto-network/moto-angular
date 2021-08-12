@@ -27,10 +27,6 @@
       have a record.
     </p>
   </div>
-</div>
-
-
-<div class="row">
   <div class="row-box">
     <h3 class="secondary-title"> transaction hash</h3>
     <a href="{{getLink('tx',transactionHash)}}">
@@ -42,15 +38,12 @@
       explorer.
     </p>
   </div>
-</div>
-
-<div class="row">
   <div class="row-box">
     <h3 class="secondary-title"> network</h3>
     <p class="strong">{{getNetworkName(nft?.chainId)}}</p>
     <p class="short-paragraph">
       you NFT data is recorded on this decentralized
-       network and our internal servers.
+      network and our internal servers.
     </p>
   </div>
 </div>
@@ -66,20 +59,14 @@
       {{getNetworkName(nft?.chainId)}}.
     </p>
   </div>
-</div>
-
-<div class="row">
   <div class="row-box">
     <h3 class="secondary-title">fingerprint</h3>
-    <p class="strong"><a class="link" href="">{{nft?.contentHash}}</a></p>
+    <p class="strong">{{nft?.contentHash}}</p>
     <p class="short-paragraph">
-      every file has a unique identifier 
+      every file has a unique identifier
       based on the inherent data of the file itself.
     </p>
   </div>
-</div>
-
-<div class="row">
   <div class="row-box">
     <h3 class="secondary-title">creator</h3>
     <p class="strong"><a class="link" href="{{getLink('address',nft?.creator)}}">{{nft?.creator}}</a></p>
@@ -88,6 +75,7 @@
     </p>
   </div>
 </div>
+
 
 <div class="row">
   <div class="row-box">

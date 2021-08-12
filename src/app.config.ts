@@ -145,6 +145,7 @@ export const UPLOAD_NFT_URL: string = "http://localhost:5001/motonetwork/us-cent
 export const CREATE_ORDER_URL: string = "https://us-central1-motonetwork.cloudfunctions.net/orderCreated";
 export const GET_NONCE_URL: string = "http://localhost:5001/motonetwork/us-central1/getNonce";
 export const VERIFY_SIG_URL: string = "http://localhost:5001/motonetwork/us-central1/verifySignature";
-export const GEN_LINK: string = "hhttp://localhost:5001/motonetwork/us-central1/generateFileLink";
+export const GEN_LINK: string = "http://localhost:5001/motonetwork/us-central1/generateFileLink";
+export const FINALIZE_ORDER: string = "http://localhost:5001/motonetwork/us-central1/finalizeBuyOrder";
   //uploadNFTurl: string = "http://localhost:5001/motonetwork/us-central1/uploadNFT";
 

@@ -108,3 +108,14 @@ box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 1px, rgba(0, 0, 0, 0.07) 0px 2px 2px, rg
     background: rgb(231, 231, 231) !important;
     color:gray !important;
 }
+
+#loading{
+  display:flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#loading-img{
+  height:200px;
+  width:200px;
+}

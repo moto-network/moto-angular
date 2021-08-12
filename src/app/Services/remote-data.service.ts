@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { FileNFT, NFT, NFTCollection, Listing as Listing } from "src/declaration";
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { CREATE_ORDER_URL,GEN_LINK, GET_NONCE_URL, UPLOAD_NFT_URL, VERIFY_SIG_URL } from "src/app.config";
+import { CREATE_ORDER_URL,FINALIZE_ORDER,GEN_LINK, GET_NONCE_URL, UPLOAD_NFT_URL, VERIFY_SIG_URL } from "src/app.config";
 import { Observable, Subject } from 'rxjs';
 import { ChinaDataService } from './china-data.service';
 import { map, take } from 'rxjs/operators';
@@ -79,6 +79,12 @@ export class RemoteDataService {
 
   }
 
+  public finalizeOrder(nft: NFT): Observable<Listing>{
+    const formData = new FormData();
+    formData.append('nft', JSON.stringify(nft));
+    return this.http.post<any>(FINALIZE_ORDER, formData)
+      .pipe(take(1), map(data => data as Listing));
+  }
   public getAllNFTs(): Observable<NFTCollection> {
     const nftCollection: NFTCollection = {};
     if (this.isChina) {

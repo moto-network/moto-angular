@@ -40,13 +40,14 @@ export class AppComponent {
   animation: any;
   timeline: any;
   notificationBar: any;
+  userIconLink: string = "/login";
   topBarFlash: any;
   searchAnimation: any = null;
   searchForm: FormGroup = new FormGroup({
     searchInput: new FormControl('')
   });
   constructor(private _auth: AuthenticationService,
-    private _walletService: WalletService,
+    private _wallet: WalletService,
     private _router: Router, private _nftManager: NFTManagerService,
     private _profileManager: ProfileService, private _searchManager: SearchService) {
 
@@ -57,10 +58,11 @@ export class AppComponent {
     this._auth.afAuth.authState.subscribe((user) => {
       this.changeActiveUserState();
     });
-    this._walletService.accountObservable.subscribe((remoteAddress) => {
+    this._wallet.listenForAccount().subscribe((remoteAddress) => {
       this.address = remoteAddress;
+      
       if (remoteAddress) {
-
+        this.userIconLink = "/user-dashboard";
         this.topBarFlash.play();
       }
     });

@@ -1,17 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FileNFT, NFT } from 'src/declaration';
 import { WalletService } from '../Services/BlockchainServices/wallet.service';
 import { NFTManagerService } from '../Services/nft-manager.service';
 import { Contract, getContract, getNetwork } from 'src/app.config';
 import { Router } from '@angular/router';
 import { MarketService } from '../Services/market.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-manage-nft',
   templateUrl: './manage-nft.component.html',
   styleUrls: ['./manage-nft.component.css']
 })
-export class ManageNftComponent implements OnInit {
+export class ManageNftComponent implements OnInit, OnDestroy{
   nft: FileNFT = {
     name: "Nothing To Show",
     tokenId: "0x0000000",
@@ -26,7 +27,7 @@ export class ManageNftComponent implements OnInit {
   currentNetwork: number | null = null;
   account: string | null = null;
   nftOwner: string = "";
-  
+  walletSub: Subscription | null = null;
   needPermission: boolean = true;
   constructor(private _nftManager: NFTManagerService,
     private _wallet: WalletService, private _router: Router,
@@ -36,7 +37,7 @@ export class ManageNftComponent implements OnInit {
  * 
  */
   ngOnInit(): void {
-    this._wallet.listenForAccount()
+    this.walletSub = this._wallet.listenForAccount()
       .subscribe((account) => {
         
       });
@@ -47,6 +48,10 @@ export class ManageNftComponent implements OnInit {
         }
       });
     
+  }
+
+  ngOnDestroy(): void{
+    this.walletSub?.unsubscribe();
   }
 
   imgToShow(): string {

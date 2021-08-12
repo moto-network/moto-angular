@@ -23,7 +23,7 @@ export class BuyerMenuComponent implements OnInit {
   approvedAmount = new BigNumber(0);
   priceInSubUnits = new BigNumber(0);
   nft: Partial<ListingNFT> & FileNFT | null = null;
-
+  loading = false;
   //numberWithSpaces(getFormattedPrice('229834792384'))
   constructor(private _market: MarketService,
     private _nftMananger: NFTManagerService, private _router: Router,
@@ -41,10 +41,13 @@ export class BuyerMenuComponent implements OnInit {
   }
 
   buyNFT() {
+    this.loading = true;
     if (this.nft) {
       this._market.buyNFT(this.nft, this.priceInSubUnits.toString())
-        .then((hash) => {
-          console.log(hash);
+        .then((listing:Listing) => {
+          if (listing) {
+            this._router.navigate(['user-dashboard']);
+          }
         });
     }
     
@@ -132,8 +135,11 @@ export class BuyerMenuComponent implements OnInit {
   }
 
   isApprovedSufficient(): boolean {
-    return this.approvedAmount.gte(this.priceInSubUnits) && this.approvedAmount.gt(0)
-      && this.motoBalance.gte(this.priceInSubUnits);
+    return this.approvedAmount.gte(this.priceInSubUnits) && this.approvedAmount.gt(0);
+  }
+
+  isMotoBalanceInsufficient(): boolean {
+    return this.motoBalance.lt(this.priceInSubUnits);
   }
 
   openSnackBar(message: string, duration: number = 3000) {
