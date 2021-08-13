@@ -36,7 +36,7 @@ export class NFTManagerService {//merge this wit the other NFTManager or wahteve
     _walletService.networkObservable.subscribe((network) => {
       this.currentNetwork = network;
     });
-       this.nft = this.testnft;
+       //this.nft = this.testnft;
   }
 
   initFee(): void {
@@ -78,12 +78,8 @@ export class NFTManagerService {//merge this wit the other NFTManager or wahteve
 
   }
 
-  public uploadNFT(nft: NFT, file: File) {
-    if (file) {
-      if (nft) {
-        this._remote.uploadFile(nft, file);
-      }
-    }
+  public uploadNFT(nft: NFT, file: File) :Observable<boolean>{
+    return this._remote.uploadFile(nft, file);
   }
 
   getNFT<NFTType extends NFT>(parameter?: string, value?: string): Observable<NFTType | null> {
@@ -115,6 +111,10 @@ export class NFTManagerService {//merge this wit the other NFTManager or wahteve
   }
 
   getOwner(nft: NFT): Promise<string | null> {
+    this._contracts.getNFTOwner(nft)
+      .then((result) => {
+        console.log("result ", result);
+      })
     return this._contracts.getNFTOwner(nft);
   }
 

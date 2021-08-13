@@ -12,7 +12,6 @@ export class AuthGuard implements CanActivate {
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    console.log("ccurrent users is ", this._authenticationService.currentUser())
     return new Promise<boolean>((resolve, reject) => {
       this._authenticationService.afAuth.currentUser
         .then((user) => {
@@ -20,6 +19,7 @@ export class AuthGuard implements CanActivate {
             resolve(true);
           }
           else {
+            this._router.navigate(["login"]);
             resolve(false)
           }
         })

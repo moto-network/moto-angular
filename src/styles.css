@@ -97,9 +97,13 @@ box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 1px, rgba(0, 0, 0, 0.07) 0px 2px 2px, rg
      box-sizing: border-box; 
 }
 
-.snackbar{
-  background-color: #F25781;
+.snackbar-error{
+  background-color:#ffeda2 ;
+  color:#8212ff;
+}
+.snackbar-info{
   color:white;
+  background-color: #011734;
 }
 
 .disabled-button{

@@ -5,23 +5,35 @@
       <h2 class="moto-title moto-name">moto<span style="font-weight:500;color:black">balance</span></h2>
     </div>
     <div class="balance-row">
-      <h1 class="moto-title">2</h1>
+      <h1 class="moto-title">{{motoNFTBalance}}</h1>
       <h2 class="moto-title moto-name">moto<span style="font-weight:500;color:black">NFTs</span></h2>
     </div>
   </div>
 
-  <div id="latest-purchase" *ngIf="nft">
-
-    <h2 class="moto-title" id="latest-purchase-title" >
-      newest
-    </h2>
-    <img id="purchase-photo" class="box-shadow" src={{nft?.smImg}} >
+  <div id="icons-bar" class="box-shadow">
+    <button class="icons box-shadow" (click)="goToProfile()">
+      <fa-icon [icon]="user"></fa-icon>
+    </button>
+    <button id = "create-nft-icon"class="icons box-shadow" (click)="createNFT()">
+      <fa-icon [icon]="add"></fa-icon>
+    </button>
   </div>
 </div>
+
 <div id="nfts-table">
-<div class="nft-table-row box-shadow" *ngFor="let tokenId of ProfileNFTs">
-  <img src={{nftCollection[tokenId].smImg}} class="table-row-img box-shadow">
-  <h3 class="moto-title">{{nftCollection[tokenId].name}}</h3>
-  <button class="moto-button" id="generate-link-button">create download link</button>
+  <div class="nft-table-row box-shadow" *ngFor="let tokenId of ProfileNFTs">
+    <img src={{nftCollection[tokenId].smImg}} class="table-row-img box-shadow" (click)="goToNFT(nftCollection[tokenId])">
+    <h3 class="moto-title">{{nftCollection[tokenId].name}}</h3>
+    <div>
+      <button class="moto-button" id="display-nft-button" (click)="goToNFT(nftCollection[tokenId])">
+        <fa-icon [icon]="view"></fa-icon>
+      </button>
+      <button class="moto-button" id="generate-link-button" (click)="downloadNFT(nftCollection[tokenId])">
+        <fa-icon [icon]="download"></fa-icon>
+      </button>
+    </div>
+  </div>
 </div>
+<div id="loading" *ngIf="loading">
+  <img id="loading-img" src="../../assets/loading.webp">
 </div>

@@ -57,6 +57,7 @@ export class DisplayNFTComponent implements OnInit, OnDestroy {
       .subscribe((nft) => {
         if (nft) {
           this.nft = nft;
+
           this._getOwner(nft);
         }
       });
@@ -65,6 +66,7 @@ export class DisplayNFTComponent implements OnInit, OnDestroy {
       .subscribe((account) => {
 
         if (account) {
+          console.log("display account is ", account);
           this.account = account;
         }
       });
@@ -119,9 +121,11 @@ export class DisplayNFTComponent implements OnInit, OnDestroy {
   }
 
   private _getOwner(nft: FileNFT): void {
+    console.log("owne called");
     if (nft) {
       this._nftManager.getOwner(nft)
         .then((owner) => {
+          console.log("owner is", owner);
           if (owner) {
             this.nftOwner = owner.toUpperCase();
           }
@@ -139,7 +143,7 @@ export class DisplayNFTComponent implements OnInit, OnDestroy {
     let isOwner: boolean = false
 
     if (this.account && this.nftOwner) {
-
+      console.log('is owner ', (this.account.toUpperCase() == this.nftOwner.toUpperCase()));
       return (this.account.toUpperCase() == this.nftOwner.toUpperCase());
     }
     return false;

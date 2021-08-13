@@ -2,11 +2,14 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subscription } from 'rxjs';
 import { FileNFT, Listing, NFT, NFTCollection } from 'src/declaration';
-
+import { faDownload, faEye, faUserCircle, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { WalletService } from '../Services/BlockchainServices/wallet.service';
 import { MarketService } from '../Services/market.service';
 import { NFTManagerService } from '../Services/nft-manager.service';
 import { ProfileService } from '../Services/profile.service';
+import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { DownloadLinkDialogComponent } from '../download-link-dialog/download-link-dialog.component';
 
 @Component({
   selector: 'app-user-dash',
@@ -14,6 +17,10 @@ import { ProfileService } from '../Services/profile.service';
   styleUrls: ['./user-dash.component.css']
 })
 export class UserDashComponent implements OnInit, OnDestroy {
+  download = faDownload;
+  view = faEye;
+  user = faUserCircle;
+  add = faPlusCircle;
   nft: FileNFT | null = null;
   listing: Listing | null = null;
   listingSub: Subscription | null = null;
@@ -24,35 +31,38 @@ export class UserDashComponent implements OnInit, OnDestroy {
   accountSub: Subscription | null = null;
   motoBalance: string = "";
   motoNFTBalance: string = "";
+  loading: boolean = false;
   constructor(private _profile: ProfileService, private _market: MarketService,
     private _nftManager: NFTManagerService, private _wallet: WalletService,
-    public snackBar: MatSnackBar
+    public snackBar: MatSnackBar, private _router: Router, public dialog: MatDialog
   ) {
 
   }
 
   ngOnInit(): void {
+    this.loading = true;
     this.getLatestListing();
     this.getAccount();
     this.getBalances();
+    setTimeout(() => {this.loading = false }, 5000);
   }
 
-getBalances():void{
-  this._market.getCoinBalance()
-    .then((balance) => {
-      this.motoBalance = balance;
-    })
-    .catch((err) => {
-      this.openSnackBar(err.message);
-    });
-  this._market.getNFTBalance()
-    .then((balance) => {
-      this.motoNFTBalance = balance;
-    })
-    .catch((err) => {
-      this.openSnackBar(err.message);
-    });
-}
+  getBalances(): void {
+    this._market.getCoinBalance()
+      .then((balance) => {
+        this.motoBalance = balance;
+      })
+      .catch((err) => {
+        this.openSnackBar(err.message);
+      });
+    this._market.getNFTBalance()
+      .then((balance) => {
+        this.motoNFTBalance = balance;
+      })
+      .catch((err) => {
+        this.openSnackBar(err.message);
+      });
+  }
 
   getLatestListing() {
     this.listingSub = this._market.getListing()
@@ -73,10 +83,11 @@ getBalances():void{
     this.accountSub = this._wallet.listenForAccount()
       .subscribe((account) => {
         if (account) {
-          this.account;
+          this.account = account;
           this.nftCollectionSub = this._nftManager.getNFTs("owner", account)
             .subscribe((collection: NFTCollection | null) => {
               if (collection) {
+                this.loading = false;
                 this.nftCollection = collection;
               }
             });
@@ -123,6 +134,33 @@ getBalances():void{
     else {
       return value.toString();
     }
+  }
+
+  downloadNFT(nft: FileNFT): void {
+    this._profile.getDownloadLink(nft)
+      .then((link) => {
+        if (link) {
+          this.dialog.open(DownloadLinkDialogComponent,
+            { data: { link: link } });
+        }
+      });
+
+  }
+
+  goToNFT(nft: FileNFT) {
+    this._nftManager.setNFT(nft);
+    this._router.navigate(['nft']);
+  }
+
+  goToProfile() {
+    if (this.account) {
+      this._profile.initProfile(this.account);
+      this._router.navigate(['profile']);
+    }
+  }
+
+  createNFT() {
+    this._router.navigate(['create']);
   }
 
   get ProfileNFTs() {

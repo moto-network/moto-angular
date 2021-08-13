@@ -1,0 +1,24 @@
+#download-dialog{
+  display:flex;
+  flex-direction: column;
+  gap:8px;
+  justify-content: space-between;
+  padding:10px;
+  align-items: center;
+}
+
+#nft-img {
+  width:400px;
+  height:auto;
+  max-height: 600px;
+  object-fit: cover;
+}
+
+#desc{
+  font-weight:200;
+}
+
+#download-button{
+  background-color: var(--moto-pink);
+  color:white;
+}

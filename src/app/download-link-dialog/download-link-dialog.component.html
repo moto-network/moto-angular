@@ -1,0 +1,11 @@
+<div id="download-dialog">
+  <img id="nft-img" class="box-shadow" src={{nft?.smImg}}>
+  <p id="desc">
+    this download link is only valid for 3 hours.
+  </p>
+  <div id="button-container">
+    <a href={{data.link}} download>
+      <button id="download-button" class="moto-button" (click)="download()">download</button>
+    </a>
+  </div>
+</div>

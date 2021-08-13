@@ -32,6 +32,8 @@ import { NftCreationResultsComponent } from './nft-creation-results/nft-creation
 import { SimpleMessageDialogComponent } from './simple-message-dialog/simple-message-dialog.component';
 import { UserDashComponent } from './user-dash/user-dash.component';
 import { UniversalDialogComponent } from './universal-dialog/universal-dialog.component';
+import { DownloadLinkDialogComponent } from './download-link-dialog/download-link-dialog.component';
+import { MarketComponent } from './market/market.component';
 
 @NgModule({
   declarations: [
@@ -50,6 +52,8 @@ import { UniversalDialogComponent } from './universal-dialog/universal-dialog.co
     SimpleMessageDialogComponent,
     UserDashComponent,
     UniversalDialogComponent,
+    DownloadLinkDialogComponent,
+    MarketComponent,
   ],
   imports: [
     BrowserAnimationsModule,

@@ -8,23 +8,23 @@ import { SessionManagerService } from '../Services/session-manager.service';
 declare var anime: any;
 
 @Component({
-  selector: 'app-discover',
-  templateUrl: './discover.component.html',
-  styleUrls: ['./discover.component.css']
+  selector: 'app-market',
+  templateUrl: './market.component.html',
+  styleUrls: ['./market.component.css']
 })
-export class DiscoverComponent implements OnInit {
+export class MarketComponent implements OnInit {
   nftCollection: NFTCollection = {};
   scrollPosition: any;
   loadingAnimation: any = null;
   session_id = "moto_discover";
   loadNFTSub: Subscription | null = null;
   constructor(private _nftManager: NFTManagerService,
-    private _router: Router, private _sessionManager:SessionManagerService) {
+    private _router: Router, private _sessionManager: SessionManagerService) {
   }
 
   ngOnInit(): void {
     let sessionData = this._sessionManager.get("moto_discover_nftCollection");
-    
+
     if (!sessionData) {
       this.loadNFTs();
     }
@@ -69,12 +69,12 @@ export class DiscoverComponent implements OnInit {
         translateX: [0, -5, 4, 0],
       });
 
-    if (Object.keys(this.nftCollection).length == 0 ) {
+    if (Object.keys(this.nftCollection).length == 0) {
       this.loadingAnimation.play();
     }
 
-  
-    
+
+
   }
 
   ngOnDestroy(): void {
@@ -92,4 +92,5 @@ export class DiscoverComponent implements OnInit {
   get NFTs() {
     return Object.keys(this.nftCollection);
   }
+
 }

@@ -8,6 +8,7 @@ import { noNetworkDetected } from 'src/errors';
 
 import { BigNumber } from "bignumber.js";
 import { getLocaleNumberFormat } from '@angular/common';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 /*function initWeb3<T>(initPromise: Promise<Web3>): Promise<T> {
   return new Promise<T>((resolve, reject) => {
@@ -30,7 +31,7 @@ export class ContractsService {
   userWalletNetworkId: number | null = null;
   defaultContract = "0x2755aBCf99a422eA7F40BB6C5ac9037D085CA67f";
 
-  constructor(private _wallet: WalletService) {
+  constructor(private _wallet: WalletService, public snackBar: MatSnackBar) {
     _wallet.networkObservable.subscribe((networkId) => {
       if (networkId) {
         this.userWalletNetworkId = networkId;
@@ -91,11 +92,11 @@ export class ContractsService {
           const motoWeb3 = new web3!.eth.Contract(motoContract.abi, motoContract.address);
           resolve(motoWeb3.methods.balanceOf(this._wallet.account).call());
         })
-      
-     });
+
+    });
   }
 
-  getMotoNFTBalance(): Promise<string>{
+  getMotoNFTBalance(): Promise<string> {
     return new Promise((resolve, reject) => {
       if (!this.userWalletNetworkId) {
         reject(new Error("No wallet found"));
@@ -177,8 +178,8 @@ export class ContractsService {
         .then((web3) => {
           if (web3) {
             const nftContract: Contract = getContract(nft.chainId, "nft");
-
             const web3Contract = new web3.eth.Contract(nftContract.abi, nftContract.address);
+            console.log("contract calling");
             resolve(web3Contract.methods.ownerOf(nft.tokenId).call());
           }
           else {
@@ -211,15 +212,7 @@ export class ContractsService {
                 const price = web3!.utils.numberToHex(nftPrice);
                 const data = web3market.methods.executeOrder(nft.contractAddress, nft.tokenId, price)
                   .encodeABI();
-                web3market.methods.executeOrder(nft.contractAddress, nft.tokenId, price)
-                  .estimateGas({ from: this._wallet.account })
-                  .then((gasEstimate: string) => {
-                    if (gasEstimate) {
-                      console.log("gaas", gasEstimate);
-                      const gasHex = web3!.utils.numberToHex(gasEstimate);
-                      resolve(this._sendTransaction(gasHex, "0x0", market.address, nft.chainId, data));
-                    }
-                  });
+                resolve(this._sendTransaction("0x0", market.address, nft.chainId, data));
 
               }
             });
@@ -346,19 +339,18 @@ export class ContractsService {
               .userMint(nft.name, nft.chainId, nft.owner,
                 nft.contentHash, nft.tokenId);
             const encodedFunctionData = functionCall.encodeABI();
-            const fees = await Promise.all([functionCall.estimateGas(), this.getNFTFee(nft.chainId, "nft")]);
-            const gas = web3.utils.numberToHex(fees[0]);
-            const value = web3.utils.numberToHex(fees[1]);
-            resolve(this._sendTransaction(gas, value, nft.contractAddress, nft.chainId, encodedFunctionData));
+
+            resolve(this._sendTransaction('0x0', nft.contractAddress, nft.chainId, encodedFunctionData));
           }
         })
         .catch((err) => {
-          console.log("contract mint err", err);
+
+          reject(err);
         });
     });
   }
 
- 
+
 
   grantMarketSinglePermission(nft: NFT): Promise<any> {
     const nftContract = getContract(nft.chainId, 'nft');
@@ -373,9 +365,8 @@ export class ContractsService {
             const web3Contract = new web3.eth.Contract(nftContract.abi, nftContract.address);
             const encodedFunctionData = web3Contract.methods
               .approve(marketContract.address, nft.tokenId).encodeABI();
-            const gas = await Promise.all([web3.eth.getGasPrice()]);
-            const gasPrice = web3.utils.numberToHex(gas[0]);
-            resolve(this._sendTransaction(gasPrice, "0x0", nft.contractAddress, nft.chainId, encodedFunctionData))
+
+            resolve(this._sendTransaction("0x0", nft.contractAddress, nft.chainId, encodedFunctionData))
           }
           else {
             reject(new Error("No Active Network. Make sure your wallet is connnected."))
@@ -397,9 +388,8 @@ export class ContractsService {
             const web3Contract = new web3.eth.Contract(nftContract.abi, nftContract.address);
             const encodedFunctionData = web3Contract.methods
               .setApprovalForAll(marketContract.address, true).encodeABI();
-            const gas = await Promise.all([web3.eth.getGasPrice()]);
-            const gasPrice = web3.utils.numberToHex(gas[0]);
-            resolve(this._sendTransaction(gasPrice, "0x0", nft.contractAddress, nft.chainId, encodedFunctionData))
+
+            resolve(this._sendTransaction("0x0", nft.contractAddress, nft.chainId, encodedFunctionData))
           }
           else {
             reject(new Error("No Active Network. Make sure your wallet is connnected."))
@@ -429,17 +419,11 @@ export class ContractsService {
     const coinContract = getContract(this.userWalletNetworkId, coin);
     const coinWeb3 = new web3.eth.Contract(coinContract.abi, coinContract.address);
     return new Promise(async (resolve, reject) => {
-      Promise.all(
-        [coinWeb3.methods
-          .increaseAllowance(market.address, amount)
-          .estimateGas({ from: this._wallet.account }),
-        coinWeb3.methods
-          .increaseAllowance(market.address, amount)
-          .encodeABI()])
-        .then((gasAndData) => {
-          console.log(" _increaseAllocation");
-          resolve(this._requestAllocationFromContract(gasAndData, coinContract.address));
-        });
+      const data = coinWeb3.methods
+        .increaseAllowance(market.address, amount)
+        .encodeABI()
+      resolve(this._requestAllocationFromContract(data, coinContract.address));
+
     });
   }
 
@@ -464,6 +448,8 @@ export class ContractsService {
     });
 
   }
+
+
 
   private _setExactAllocation(coin: string, nft: NFT, price: string, web3: Web3): Promise<string> {
     if (!this.userWalletNetworkId) {
@@ -500,20 +486,16 @@ export class ContractsService {
     });
   }
 
-  private _requestAllocationFromContract(gasAndData: string[], toAddress: string): Promise<string> {
-    if (gasAndData[0] && gasAndData[1]) {
-      console.log("gas variable is ", gasAndData[0]);
-      return this._sendTransaction(gasAndData[0].toString(), '0x0', toAddress, this.userWalletNetworkId!, gasAndData[1]);
-    }
-    else {
-      return Promise.reject(new Error("wallet error"));
-    }
+  private _requestAllocationFromContract(data:any, toAddress: string): Promise<string> {
+    return this._sendTransaction('0x0', toAddress, this.userWalletNetworkId!, data);
   }
-  private async _sendTransaction(gas: string, valueInHex: string,
+
+  private async _sendTransaction(valueInHex: string,
     to: string, chainId: number, data: any) {
 
     const transactionParameters = {
-      gas: gas,
+      gas: "300000",
+      gasPrice:"50",
       value: valueInHex,
       to: to,
       from: this._wallet.account,

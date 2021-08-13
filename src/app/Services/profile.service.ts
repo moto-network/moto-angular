@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { take } from 'rxjs/operators';
@@ -19,7 +20,7 @@ export class ProfileService {
   nft: FileNFT | null = null;
   constructor(private _nftManager: NFTManagerService, private _wallet: WalletService,
     private _remote: RemoteDataService, private auth: AuthenticationService,
-    private _router: Router) {
+    private _router: Router, public snackBar:MatSnackBar) {
   }
 
   getUserAccountToken(): Promise<string | undefined> {
@@ -45,13 +46,15 @@ export class ProfileService {
                   this._wallet.getNetwork()
                     .subscribe((networkId) => {
                       if (networkId) {
+                        this.openSnackBar("Preparing Login Signature...", 3000, false);
                         this._wallet.getLoginSignature(account, nonce, networkId)
                           .then((sig) => {
                             if (sig) {
+                              this.openSnackBar("Verifying Signature ..", 3000, false);
                               this._remote.verifySignature(account, nonce, networkId, sig)
                                 .subscribe((token) => {
                                   if (token) {
-                                    console.log("toooken is ", token);
+                                    this.openSnackBar("Signature Accepted", 2000, false);
                                     resolve(this.auth.walletSignIn(token))
                         
                                   }
@@ -101,6 +104,14 @@ export class ProfileService {
           this.nftCollection = collection;
         }
       });
+  }
+
+  openSnackBar(message: string, duration: number = 3000, error: boolean = true) {
+    const colorClass = error ? 'snackbar-error' : 'snackbar-info';
+    this.snackBar.open(message, "", {
+      duration: duration,
+      panelClass: [colorClass]
+    });
   }
 
   getNFTCollection(): Observable<NFTCollection | null> {

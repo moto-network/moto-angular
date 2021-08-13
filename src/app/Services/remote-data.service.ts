@@ -52,15 +52,12 @@ export class RemoteDataService {
       .pipe(take(1), map(res => res.token));
   }
 
-  public uploadFile(nft: NFT, file: File) {
+  public uploadFile(nft: NFT, file: File) :Observable<boolean>{
     const formData = new FormData();
     formData.append('nft', JSON.stringify(nft));
     formData.append('file', file);
 
-    this.http.post<any>(UPLOAD_NFT_URL, formData).subscribe(
-      (res) => console.log(res),
-      (err) => console.log(err)
-    );
+    return this.http.post<any>(UPLOAD_NFT_URL, formData).pipe(take(1));
   }
 
   public updateListingDB(nft: NFT): Promise<Listing> {
@@ -106,7 +103,7 @@ export class RemoteDataService {
 
   generateDownloadLink(nft: NFT, userToken: string): Observable<string> {
     const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
+      'Content-Type':"multipart/form-data",
       'Authorization': `Bearer ${userToken}`
     })
     const formData = new FormData();

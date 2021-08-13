@@ -64,14 +64,6 @@ export class LoginComponent implements OnInit {
 
 
   ngAfterViewInit(): void {
-    this.loggedInIcon = document.getElementById("loggedInIcon");
-    this.loggedInIcon.style.display = "none";
-    this.animation = anime({
-      targets: "#loggedInIcon",
-      color: ['#e31b23', '#4BB543', '#FFD700', '#46c3d1'],
-      duration: 4000,
-      autoplay: true,
-      loop: true
-    });
+
   }
 }

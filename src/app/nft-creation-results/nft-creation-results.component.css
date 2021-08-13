@@ -45,11 +45,9 @@ a{
 
 .row-box{
   width:400px;
+  padding:8px;
 }
 
-.data{
-
-}
 
 #success-icon{
   font-size:2rem;

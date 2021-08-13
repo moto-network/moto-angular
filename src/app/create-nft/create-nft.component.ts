@@ -13,6 +13,8 @@ import { Observable, Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { LoginComponent } from '../login/login.component';
 import { UniversalDialogComponent } from '../universal-dialog/universal-dialog.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { TransactionsService } from '../Services/transactions.service';
 
 @Component({
   selector: 'app-create-nft',
@@ -50,7 +52,8 @@ export class CreateNFTComponent implements OnInit {
   constructor(private _walletService: WalletService,
     private nftManager: NFTManagerService, private router: Router,
     private fileManager: FileManagerService,
-    private profile:ProfileService, private dialog:MatDialog) {
+    private _profile: ProfileService, private dialog: MatDialog,
+    public snackBar: MatSnackBar, private _transactions:TransactionsService) {
 
   }
 
@@ -82,8 +85,10 @@ export class CreateNFTComponent implements OnInit {
    * for the UI button if there is no account
    */
   public initAccount(): void {
-    this.dialog.open(LoginComponent, {height:"400px", width:"400px"});
+    this.dialog.open(LoginComponent, {height:"500px", width:"400px"});
   }
+
+
 
   /**
    * this is called if 
@@ -106,20 +111,38 @@ export class CreateNFTComponent implements OnInit {
     this.nftManager.mintNFT(nft)//add a please wait thing
       .then((transactionHash: string) => {
         if (transactionHash && nft) {
+          this._profile.openSnackBar("Transaction Hash Created, uploading file now.", 4000,false);
           console.log("CreateNFT: transactionHash ", transactionHash);
-          if (this.file) {
-            this.nftManager.uploadNFT(nft, this.file);
-          }
-          this.loading = false;
-          this.router.navigate(['nft-results']);
+          this._transactions.verifyTransactionHash(nft, transactionHash)
+            .then((success) => {
+              if (success) {
+                if (this.file) {
+                  this.nftManager.uploadNFT(nft, this.file)
+                    .subscribe((success: boolean) => {
+                      console.log("status is ", success);
+                      if (success) {
+                        this.loading = false;
+                        this.router.navigate(['nft-results']);
+                      }
+                    });
+                }
+                
+              }
+              else {
+                this.loading = false;
+                this._profile.openSnackBar("something went wrong");
+              }
+            })
+            .catch((err) => {
+              this._profile.openSnackBar(err.message);
+            });
+         
+          
         }
       })
       .catch((err: any) => {
-        console.log(err);
-        if (err.code == -32603) {
-          alert("You need to switch to proper chain");
-
-        }
+        this._profile.openSnackBar(err.message);
+        this.loading = false;
       });
   }
 
