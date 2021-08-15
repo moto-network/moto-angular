@@ -3,7 +3,7 @@ import { WalletService } from './BlockchainServices/wallet.service';
 import { ContractsService } from './BlockchainServices/contracts.service';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { CryptoService } from './crypto.service';
-import { FileNFT, ListingNFT, NFT, NFTCollection } from "src/declaration";
+import { Account, FileNFT, ListingNFT, NFT, NFTCollection } from "src/declaration";
 import { getContract, getProvider } from "src/app.config";
 import { RemoteDataService } from './remote-data.service';
 
@@ -57,10 +57,10 @@ export class NFTManagerService {//merge this wit the other NFTManager or wahteve
     return this._remote.generateDownloadLink(nft, userIDToken)
   }
 
-  mintNFT(nft: NFT): Promise<string> {
+  mintNFT(account:Account, nft: NFT): Promise<string> {
     return new Promise((resolve, reject) => {
       if (this._validNFT(nft)) {
-        this._contracts.createNFT(nft)
+        this._contracts.createNFT(account, nft)
           .then((transactionHash) => {
             console.log("transaction hash is", transactionHash);
             this.lastSuccessfulTransaction = transactionHash;

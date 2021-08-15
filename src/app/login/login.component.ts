@@ -39,8 +39,8 @@ export class LoginComponent implements OnInit {
   openMetaMask(): void {
     this.loading = true;
     this._profile.login()
-      .then((result) => {
-        
+      .subscribe((result) => {
+        console.log("login resullt", result);
         if (result) {
           if (this.matDialogRef) {
             this.loading = false;

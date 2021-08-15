@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subscription } from 'rxjs';
-import { FileNFT, Listing, NFT, NFTCollection } from 'src/declaration';
+import { Account, FileNFT, Listing, NFT, NFTCollection } from 'src/declaration';
 import { faDownload, faEye, faUserCircle, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { WalletService } from '../Services/BlockchainServices/wallet.service';
 import { MarketService } from '../Services/market.service';
@@ -27,7 +27,7 @@ export class UserDashComponent implements OnInit, OnDestroy {
   nftSub: Subscription | null = null;
   nftCollection: NFTCollection = {};
   nftCollectionSub: Subscription | null = null;
-  account: string | null = null;
+  account: Account | null = null;
   accountSub: Subscription | null = null;
   motoBalance: string = "";
   motoNFTBalance: string = "";
@@ -40,27 +40,39 @@ export class UserDashComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.loading = true;
-    this.getLatestListing();
-    this.getAccount();
-    this.getBalances();
-    setTimeout(() => {this.loading = false }, 5000);
+    this.accountSub =  this._wallet.getAccount()
+      .subscribe((account) => {
+        this.loading = true;
+        if (account) {
+//          this.getLatestListing();
+          this.getBalances(account);
+          setTimeout(() => { this.loading = false }, 5000);
+
+        }
+        this._nftManager.getNFTs("owner", account.address)
+          .subscribe((nfts) => {
+            if (nfts) {
+              this.nftCollection = nfts;
+            }
+          })
+       })
+    
   }
 
-  getBalances(): void {
-    this._market.getCoinBalance()
+  getBalances(account:Account): void {
+    this._market.getCoinBalance(account)
       .then((balance) => {
         this.motoBalance = balance;
       })
       .catch((err) => {
-        this.openSnackBar(err.message);
+        this._profile.openSnackBar(err.message);
       });
-    this._market.getNFTBalance()
+    this._market.getNFTBalance(account)
       .then((balance) => {
         this.motoNFTBalance = balance;
       })
       .catch((err) => {
-        this.openSnackBar(err.message);
+        this._profile.openSnackBar(err.message);
       });
   }
 
@@ -79,22 +91,7 @@ export class UserDashComponent implements OnInit, OnDestroy {
       })
   }
 
-  getAccount(): void {
-    this.accountSub = this._wallet.listenForAccount()
-      .subscribe((account) => {
-        if (account) {
-          this.account = account;
-          this.nftCollectionSub = this._nftManager.getNFTs("owner", account)
-            .subscribe((collection: NFTCollection | null) => {
-              if (collection) {
-                this.loading = false;
-                this.nftCollection = collection;
-              }
-            });
-
-        }
-      });
-  }
+  
 
   ngOnDestroy(): void {
     this.listingSub?.unsubscribe();
@@ -108,13 +105,6 @@ export class UserDashComponent implements OnInit, OnDestroy {
     else {
       return "";
     }
-  }
-
-  openSnackBar(message: string, duration: number = 3000) {
-    this.snackBar.open(message, "", {
-      duration: duration,
-      panelClass: ['snackbar']
-    });
   }
 
   numberWithSpaces(bigNum: string) {
@@ -154,7 +144,7 @@ export class UserDashComponent implements OnInit, OnDestroy {
 
   goToProfile() {
     if (this.account) {
-      this._profile.initProfile(this.account);
+      this._profile.initProfile(this.account.address);
       this._router.navigate(['profile']);
     }
   }

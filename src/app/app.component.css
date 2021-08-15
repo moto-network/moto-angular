@@ -64,7 +64,7 @@ height:100%;
 }
 
 .logged-in{
-  color:green;
+  color:var(--moto-pink);
 }
 
 #top-bar{

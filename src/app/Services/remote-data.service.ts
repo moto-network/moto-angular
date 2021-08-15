@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FileNFT, NFT, NFTCollection, Listing as Listing } from "src/declaration";
+import { FileNFT, NFT, NFTCollection, Listing as Listing, Account } from "src/declaration";
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { CREATE_ORDER_URL,FINALIZE_ORDER,GEN_LINK, GET_NONCE_URL, UPLOAD_NFT_URL, VERIFY_SIG_URL } from "src/app.config";
@@ -35,18 +35,18 @@ export class RemoteDataService {
     }
   }
 
-  public getNonce(account: string): Observable<string | undefined> {
+  public getNonce(account: Account): Observable<string | undefined> {
     const formData = new FormData();
-    formData.append('account', account);
+    formData.append('account', account.address);
     return this.http.post<any>(GET_NONCE_URL, formData)
       .pipe(take(1),map(response => response.nonce));
   }
 
-  public verifySignature(account: string, nonce: string, chainId: number, sig: string):Observable<string> {
+  public verifySignature(account: Account, nonce: string, sig: string):Observable<string> {
     const formData = new FormData();
-    formData.append('account', account);
+    formData.append('account', account.address);
     formData.append('nonce', nonce);
-    formData.append('chainId', chainId.toString());
+    formData.append('chainId', account.network.toString());
     formData.append('signature', sig);
     return this.http.post<any>(VERIFY_SIG_URL, formData)
       .pipe(take(1), map(res => res.token));

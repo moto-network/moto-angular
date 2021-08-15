@@ -4,7 +4,7 @@ import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { SignUpComponent } from './sign-up/sign-up.component';
 import { AuthGuard } from './auth.guard';
-import { AccountComponent } from './account/account.component';
+
 import { OnRampComponent } from './on-ramp/on-ramp.component';
 import { CreateNFTComponent } from './create-nft/create-nft.component';
 import { DiscoverComponent } from './discover/discover.component';
@@ -17,7 +17,6 @@ import { UserDashComponent } from './user-dash/user-dash.component';
 const routes: Routes = [{ path: "", component: HomeComponent },
 { path: "login", component: LoginComponent },
 { path: "signup", component: SignUpComponent },
-{ path: "account", component: AccountComponent,  },
 { path: "create", component: CreateNFTComponent },
 { path: "discover", component: DiscoverComponent },
 { path: "nft", component: DisplayNFTComponent },

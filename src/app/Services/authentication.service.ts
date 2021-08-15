@@ -39,6 +39,7 @@ export class AuthenticationService {
   }
   
   walletSignIn(token: string) {
+    console.log("token is ", token);
     return this.afAuth.signInWithCustomToken(token)
   }
 

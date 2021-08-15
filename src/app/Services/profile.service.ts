@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { take } from 'rxjs/operators';
-import { FileNFT, NFT, NFTCollection } from 'src/declaration';
+import { BehaviorSubject, combineLatest, from, iif, Observable, Subject, throwError } from 'rxjs';
+import { filter, flatMap, map, mergeMap, take } from 'rxjs/operators';
+import { Account, FileNFT, NFT, NFTCollection, TransactionReceipt } from 'src/declaration';
 import { AuthenticationService } from './authentication.service';
 import { WalletService } from './BlockchainServices/wallet.service';
 import { NFTManagerService } from './nft-manager.service';
 import { RemoteDataService } from './remote-data.service';
+import { TransactionsService } from './transactions.service';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +21,7 @@ export class ProfileService {
   nft: FileNFT | null = null;
   constructor(private _nftManager: NFTManagerService, private _wallet: WalletService,
     private _remote: RemoteDataService, private auth: AuthenticationService,
-    private _router: Router, public snackBar:MatSnackBar) {
+    private _router: Router, public snackBar: MatSnackBar) {
   }
 
   getUserAccountToken(): Promise<string | undefined> {
@@ -33,46 +34,15 @@ export class ProfileService {
       })
   }
 
-  login() :Promise<any>{
-    return new Promise((resolve, reject) => {
-      this._wallet.initWallet()
-        .subscribe((account: string | null) => {
-          if (account) {
-
-            this._remote.getNonce(account)
-              .subscribe((nonce) => {
-                console.log("nonce is ", nonce);
-                if (nonce) {
-                  this._wallet.getNetwork()
-                    .subscribe((networkId) => {
-                      if (networkId) {
-                        this.openSnackBar("Preparing Login Signature...", 3000, false);
-                        this._wallet.getLoginSignature(account, nonce, networkId)
-                          .then((sig) => {
-                            if (sig) {
-                              this.openSnackBar("Verifying Signature ..", 3000, false);
-                              this._remote.verifySignature(account, nonce, networkId, sig)
-                                .subscribe((token) => {
-                                  if (token) {
-                                    this.openSnackBar("Signature Accepted", 2000, false);
-                                    resolve(this.auth.walletSignIn(token))
-                        
-                                  }
-                                  else {
-                                    reject(new Error('Login Error'));
-                                  }
-                                });
-                            }
-                          })
-                      }
-                    })
-                }
-              });
-
-          }
-        });
-    });
-
+  login(): Observable<boolean> {
+    return from(this._wallet.initWallet())
+      .pipe(
+        filter(status => status == true),
+        mergeMap(() => this._wallet.getAccount()),
+        mergeMap(account => from(this.getUserToken(account))),
+        mergeMap(token => { return from(this.auth.walletSignIn(token)) }),
+        map(user => { console.log("user", user); return user ? true : false })
+      );
   }
 
   getDownloadLink(nft: NFT): Promise<string | void> {
@@ -106,12 +76,16 @@ export class ProfileService {
       });
   }
 
-  openSnackBar(message: string, duration: number = 3000, error: boolean = true) {
+  openSnackBar(message: string, duration: number = 5000, error: boolean = true) {
     const colorClass = error ? 'snackbar-error' : 'snackbar-info';
     this.snackBar.open(message, "", {
       duration: duration,
       panelClass: [colorClass]
     });
+  }
+
+  notifyAboutTransaction(nft: NFT, receipt:Required<TransactionReceipt>) {
+
   }
 
   getNFTCollection(): Observable<NFTCollection | null> {
@@ -139,6 +113,15 @@ export class ProfileService {
       return this.nft;
     }
     return null;
+  }
+
+  private async getUserToken(account: Account): Promise<string> {
+    const nonce: string | undefined = await this._remote.getNonce(account)
+      .pipe(filter(nonce => nonce != null && typeof nonce !== "undefined"))
+      .toPromise();
+    const signature: string = await this._wallet.getLoginSignature(account, nonce!);
+    return this._remote
+      .verifySignature(account, nonce!, signature).toPromise();
   }
 
   private _getRemoteNFTs(address: string): Observable<NFTCollection> {

@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 
 import { BehaviorSubject, Observable } from 'rxjs';
 import { getContract } from 'src/app.config';
-import { NFT, Listing as Listing, FileNFT, ListingNFT } from 'src/declaration';
+import { NFT, Listing as Listing, FileNFT, ListingNFT, Account } from 'src/declaration';
 import { ContractsService } from './BlockchainServices/contracts.service';
 import { RemoteDataService } from './remote-data.service';
 import { BigNumber } from "bignumber.js";
@@ -38,12 +38,12 @@ export class MarketService {
     return this.listingObservable;
   }
 
-  getCoinBalance() :Promise<string>{
-    return this._contracts.getCoinBalance();
+  getCoinBalance(account:Account) :Promise<string>{
+    return this._contracts.getCoinBalance(account);
   }
 
-  getNFTBalance(): Promise<string> {
-    return this._contracts.getMotoNFTBalance();
+  getNFTBalance(account:Account): Promise<string> {
+    return this._contracts.getMotoNFTBalance(account);
   }
 
   getAllowance(): Promise<string> {

@@ -11,7 +11,7 @@ import { WalletService } from './Services/BlockchainServices/wallet.service';
 import { NFTManagerService } from './Services/nft-manager.service';
 import { ProfileService } from './Services/profile.service';
 import { SearchService } from './Services/search.service';
-import { SearchResults } from "src/declaration";
+import { Account, SearchResults } from "src/declaration";
 declare var anime: any;
 
 @Component({
@@ -46,6 +46,7 @@ export class AppComponent {
   searchForm: FormGroup = new FormGroup({
     searchInput: new FormControl('')
   });
+  account: Account | null = null;
   constructor(private _auth: AuthenticationService,
     private _wallet: WalletService,
     private _router: Router, private _nftManager: NFTManagerService,
@@ -58,12 +59,12 @@ export class AppComponent {
     this._auth.afAuth.authState.subscribe((user) => {
       this.changeActiveUserState();
     });
-    this._wallet.listenForAccount().subscribe((remoteAddress) => {
-      this.address = remoteAddress;
-      
-      if (remoteAddress) {
+    this._wallet.getAccount()
+      .subscribe((account) => {
+
+        if (account) {
+          this.account = account;
         this.userIconLink = "/user-dashboard";
-        this.topBarFlash.play();
       }
     });
   }

@@ -2,12 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { faArrowAltCircleRight, faCaretSquareUp, faCog } from "@fortawesome/free-solid-svg-icons";
-import {  getContractAddress, getProvider } from 'src/app.config';
+import { getContractAddress, getProvider } from 'src/app.config';
 import { WalletService } from 'src/app/Services/BlockchainServices\
 /wallet.service';
 import { FileManagerService } from 'src/app/Services/file-manager.service';
 import { NFTManagerService } from '../Services/nft-manager.service';
-import { NFT } from 'src/declaration';
+import { Account, NFT } from 'src/declaration';
 import { ProfileService } from '../Services/profile.service';
 import { Observable, Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
@@ -35,7 +35,7 @@ export class CreateNFTComponent implements OnInit {
 
   haveFile: boolean = false;
   filename: string = "";
-  account: string | null = null;
+  account: Account | null = null;
   nftForm: FormGroup = new FormGroup({
     name: new FormControl(''),
     owner: new FormControl('', Validators.required),
@@ -43,7 +43,6 @@ export class CreateNFTComponent implements OnInit {
     file: new FormControl('', Validators.required)
   });
 
-  chainId: number | null = null;
   file: File | null = null;
   nft: any = {};
   loading: boolean = false;
@@ -53,28 +52,21 @@ export class CreateNFTComponent implements OnInit {
     private nftManager: NFTManagerService, private router: Router,
     private fileManager: FileManagerService,
     private _profile: ProfileService, private dialog: MatDialog,
-    public snackBar: MatSnackBar, private _transactions:TransactionsService) {
+    public snackBar: MatSnackBar, private _transactions: TransactionsService) {
 
   }
 
   ngOnInit(): void {
-    this.accountSubscription =  this._walletService.listenForAccount()
+    this.accountSubscription = this._walletService.getAccount()
       .subscribe((account) => {
-      if (account) {
-        this.account = account;
-        this.nftForm.controls['owner'].setValue(account);
-      }
-    });
-    this.networkSubscription = this._walletService.getNetwork()
-      .subscribe((currentNetwork) => {
-      this.chainId = currentNetwork;
-      if (currentNetwork) {
-        if (getProvider(currentNetwork)) {
-          this.nftForm.controls['chainId'].setValue(currentNetwork.toString());
+        if (account) {
+          this.account = account;
+          this.nftForm.controls['owner'].setValue(account.address);
+          this.nftForm.controls['chainId'].setValue(account.network.toString());
           this.isValidForm();
         }
-      }
-    });
+      });
+
   }
 
   ngOnDestroy(): void {
@@ -85,7 +77,7 @@ export class CreateNFTComponent implements OnInit {
    * for the UI button if there is no account
    */
   public initAccount(): void {
-    this.dialog.open(LoginComponent, {height:"500px", width:"400px"});
+    this.dialog.open(LoginComponent, { height: "500px", width: "400px" });
   }
 
 
@@ -100,44 +92,49 @@ export class CreateNFTComponent implements OnInit {
     this.nft.owner = this.nftForm.get('owner')?.value;
     this.nft.chainId = parseInt(this.nftForm.get('chainId')?.value);
     this.nft.tokenId = this.generateTokenId();
-    this.nft.creator = this._walletService.account;
+    this.nft.creator = this.account;
     this.nft.contractAddress = getContractAddress(this.nft.chainId, "nft");
-
-    this.mint(this.nft);
+    if (this.account) {
+      this.mint(this.account, this.nft);
+    }
   }
 
-  private mint(nft: NFT) {
+  private mint(account: Account, nft: NFT) {
+  
     this.loading = true;
-    this.nftManager.mintNFT(nft)//add a please wait thing
+    this.nftManager.mintNFT(account, nft)
       .then((transactionHash: string) => {
-        if (transactionHash && nft) {
-          this._profile.openSnackBar("Transaction Hash Created, uploading file now.", 4000,false);
+        if (transactionHash) {
+          this._profile.openSnackBar("Transaction Hash Created: checking transaction on chain", 6000, false);
           console.log("CreateNFT: transactionHash ", transactionHash);
-          this._transactions.verifyTransactionHash(nft, transactionHash)
-            .then((success) => {
-              if (success) {
+          this._transactions.getTransactionStatus(nft, transactionHash)
+            .then((transactionInBlock) => {
+              if (transactionInBlock) {
                 if (this.file) {
+                  this._profile.openSnackBar("Transaction Confirmed: uploading file now", 6000, false);
                   this.nftManager.uploadNFT(nft, this.file)
-                    .subscribe((success: boolean) => {
-                      console.log("status is ", success);
-                      if (success) {
+                    .subscribe((fileUploaded: boolean) => {
+                      console.log("status is ", fileUploaded);
+                      if (fileUploaded) {
+                        this._profile.openSnackBar("All Done.");
                         this.loading = false;
                         this.router.navigate(['nft-results']);
                       }
                     });
                 }
-                
               }
               else {
                 this.loading = false;
-                this._profile.openSnackBar("something went wrong");
+                this._transactions.waitForTransaction(this.nft, this.file!, transactionHash);
+                this._profile.openSnackBar("Transaction Still Pending: You can navigate away from this page", 8000, false);
               }
             })
             .catch((err) => {
+
               this._profile.openSnackBar(err.message);
             });
-         
-          
+
+
         }
       })
       .catch((err: any) => {
@@ -198,7 +195,7 @@ export class CreateNFTComponent implements OnInit {
       else {
         this.errorMessage = "invalid address";
         return false;
-        
+
       }
     }
     else {
@@ -226,10 +223,10 @@ export class CreateNFTComponent implements OnInit {
    * walletChain == formChain
    * @returns {boolean}
    */
-  private validChain(): boolean { 
+  private validChain(): boolean {
     let formChainId: number = parseInt(this.nftForm.get('chainId')?.value);
     if (this.nft) {
-      if (this.chainId == formChainId) {
+      if (this.account && this.account.network == formChainId) {
         console.log("is truee");
         return true;
       }

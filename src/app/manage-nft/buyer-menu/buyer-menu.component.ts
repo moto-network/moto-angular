@@ -54,20 +54,24 @@ export class BuyerMenuComponent implements OnInit {
   }
   
   initAccountData(): void {
-    this._market.getCoinBalance()
-      .then((balance) => {
-        if (balance) {
-          console.log("coin balance is ", balance);
-          this.motoBalance = new BigNumber(balance);
-          if (this.motoBalance.gte(this.priceInSubUnits)) {
-            this.getAvailableAllowance();
-          }
-        }
-      })
-      .catch((err) => {
-        console.log("err", err);
-        this.openSnackBar(err.message);
-      });
+    this._wallet.getAccount()
+      .subscribe((account) => {
+        this._market.getCoinBalance(account)
+          .then((balance) => {
+            if (balance) {
+              console.log("coin balance is ", balance);
+              this.motoBalance = new BigNumber(balance);
+              if (this.motoBalance.gte(this.priceInSubUnits)) {
+                this.getAvailableAllowance();
+              }
+            }
+          })
+          .catch((err) => {
+            console.log("err", err);
+            this.openSnackBar(err.message);
+          });
+       });
+    
   }
 
   getAvailableAllowance():void {

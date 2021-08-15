@@ -40,6 +40,11 @@ export interface Listing {
   buyer?: string;
 }
 
+export interface Account {
+  address: string;
+  network: number;
+}
+
 export type ListingCollection = {
   [id: string]: Listing;
 }
@@ -55,6 +60,18 @@ export type LocalSession = {
 
 export type SessionData = {
   [dataId: string]: any;
+}
+
+export interface TransactionReceipt {
+  status: boolean;
+  transactionHash: string;
+  transactionIndex?: number;
+  blockHash?: string;
+  blockNumber?: number;
+  contractAddress?: string;
+  cumulativeGasUsed?: number;
+  gasUsed?: number;
+  logs?:any[] //array of logs ..change
 }
 
 

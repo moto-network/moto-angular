@@ -1,5 +1,10 @@
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, combineLatest, from, Observable, Subject } from 'rxjs';
+import { filter, map, startWith, switchMap, take } from 'rxjs/operators';
+
+import { Account } from 'src/declaration';
+import { RemoteDataService } from '../remote-data.service';
 const config = require("../../../app.config");
 const WAValidator = require('crypto-wallet-address-validator');
 const secondaryValidator = require("wallet-address-validator");
@@ -8,61 +13,64 @@ declare let window: any;
 
 @Injectable({
   providedIn: 'root'
-})
+})//startWith(from(this._requestAccount()))  from(this._requestAccount());
 export class WalletService {
-
-  public accountObservable: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
-  public account: any | null = null;
+  public addressObservable: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
   private _walletInterface: any;
   public networkObservable: BehaviorSubject<number | null> = new BehaviorSubject<number | null>(null);
-  public chainId: number | null = null;
+  public AccountObservable: BehaviorSubject<Account | null> = new BehaviorSubject<Account | null>(null);
+  constructor(private _remote: RemoteDataService) {
 
-  constructor() {
   }
 
-  initWallet(): Observable<string | null> {
-    this._getWalletInterface();
-    return this.accountObservable;
-  }
-
-  hasBrowserProvider(): boolean {
-    return (window.ethereum) ? true : false;
-  }
-
-  /**
-   * if no account sends a request to an inteface to get an account
-   * @returns observabe
-   */
-  getAccount(): Observable<string | null> {
-    if (!this.account) {
-      this.initWallet();
+  async initWallet(): Promise<boolean> {
+    let interfaceStatus: boolean = await this._resolveWalletInterface();
+    console.log("interface status", interfaceStatus);
+    if (interfaceStatus) {
+      return this._requestAccount();
     }
-    return this.accountObservable;
+    return interfaceStatus;
   }
 
   /**
    * does not request an intefface
    * @returns observabe 
    */
-  listenForAccount(): Observable<string | null> {
-    return this.accountObservable;
+  getAccount(): Observable<Account> {
+    return combineLatest([this.getAddress(), this.getNetwork()])
+      .pipe(filter(value => value[0] != null && value[1] != null),
+        map((value) => {
+          return { "address": value[0], "network": value![1] } as Account;
+        }))
+
   }
+
+  listenForAccount(): Observable<string | null> {
+    return this.addressObservable;
+   }
 
   getNetwork(): Observable<number | null> {
     return this.networkObservable;
   }
 
-  sendTransaction(transaction: any): Promise<any> {
-    console.table(transaction);
-
-    return this._walletInterface.request({
-      method: 'eth_sendTransaction',
-      params: [transaction],
-    });
+  getAddress(): Observable<string | null> {
+    return this.addressObservable;
   }
-
-  convertToDecimalPrice(amount: string, currency: string) {
-    //to do
+  
+  sendTransaction(transaction: any): Promise<string> {
+    return new Promise<string>((resolve, reject) => {
+      if (!this._walletInterface) {
+        reject(new Error("No Wallet Detected."));
+      }
+      else {
+        console.table(transaction);
+        resolve(this._walletInterface.request({
+          method: 'eth_sendTransaction',
+          params: [transaction],
+        }));
+      }
+    });
+    
   }
 
   isValidBTCaddress(address: string, network: string): boolean {
@@ -73,34 +81,8 @@ export class WalletService {
     return secondaryValidator.validate(address, network);
   }
 
-  private _getWalletInterface() {
-    //do a popup later so they can decide between ethereum
-    if (window.ethereum) {
-      this._walletInterface = window.ethereum;//typify this.
-      this._requestAccount();
-      this._walletInterface.on('chainChanged', (chainId: any) => {
-        console.log("network id ", parseInt(chainId, 16));
-        this.networkObservable.next(parseInt(chainId, 16));
-      });
-    }
-  }
-
-  private _requestAccount(): void {
-    this._walletInterface.request({ method: 'eth_requestAccounts' })
-      .then((accounts: string[]) => {
-        this.account = accounts[0];
-        console.log("account observable is about to send ", this.account);
-        this.accountObservable.next(this.account);
-        this.chainId = this._walletInterface.networkVersion;
-        this.networkObservable.next(this._walletInterface.networkVersion);
-      })
-      .catch((err: any) => {
-        console.log("WalletService:_requestionBrowserAccount", err);
-      });
-  }
-
-  getLoginSignature(account: string, nonce: string, chainId: number): Promise<string> {
-    let parameters = [account, this.prepSignatureData(account, nonce, chainId)];
+  getLoginSignature(account: Account, nonce: string): Promise<string> {
+    let parameters = [account.address, this.prepSignatureData(account, nonce)];
     return this._walletInterface.request({ method: "eth_signTypedData_v4", params: parameters })
       .then((result: any) => {
         if (result) {
@@ -116,14 +98,53 @@ export class WalletService {
       });
 
   }
+  
+  private _resolveWalletInterface(): Promise<boolean> {
+    //do a popup later so they can decide between ethereum
+    if (window.ethereum) {
+      this._initWalletInterface(window.ethereum);
+      return Promise.resolve(true);
+    }
+    else {
+      return Promise.resolve(false);
+    }
+  }
 
-  private prepSignatureData(userAccount: string, nonce: string, chainId: number) {
+  private _initWalletInterface(walletInterface: any) {
+    this._walletInterface = walletInterface;//typify this.
+    this._walletInterface.on('chainChanged', (chainId: any) => {
+      console.log("network id ", parseInt(chainId, 16));
+      this.networkObservable.next(parseInt(chainId, 16));
+    });
+    this._walletInterface.on('accountsChanged', (accounts: string[]) => {
+      this.addressObservable.next(accounts[0]);
+    });
+  }
+
+  private _requestAccount(): Promise<boolean> {
+    console.log("requestying ");
+    if (!this._walletInterface) {
+      return Promise.reject(new Error("no interface"));
+    }
+    return this._walletInterface.request({ method: 'eth_requestAccounts' })
+      .then((accounts: string[]) => {
+        console.log('getting accocunt ', accounts[0]);
+        this.networkObservable.next(parseInt(this._walletInterface.chainId, 16));
+        this.addressObservable.next(accounts[0])
+        return true;
+      })
+      .catch((err: any) => {
+        return Promise.reject(err);
+      });
+  }
+
+  private prepSignatureData(account: Account, nonce: string) {
 
     let data = {
       "domain": {
         name: "Moto Network",
         version: "3",
-        chainId: chainId
+        chainId: account.network
       },
       "types": {
         "EIP712Domain": [
@@ -138,7 +159,7 @@ export class WalletService {
         ]
       },
       "primaryType": "Identity",
-      "message": { account: userAccount, nonce: nonce, chainId: chainId }
+      "message": { account: account.address, nonce: nonce, chainId: account.network }
     };
     console.log("signature data prepared ", data);
     return JSON.stringify(data);

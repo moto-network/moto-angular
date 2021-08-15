@@ -16,7 +16,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SignUpComponent } from './sign-up/sign-up.component';
 import { ThankYouComponent } from './thank-you/thank-you.component';
 import { MatDialogModule } from '@angular/material/dialog';
-import { AccountComponent } from './account/account.component';
+
 import {DialogModule} from "primeng/dialog";
 
 import { OnRampComponent } from './on-ramp/on-ramp.component';
@@ -42,7 +42,7 @@ import { MarketComponent } from './market/market.component';
     HomeComponent,
     SignUpComponent,
     ThankYouComponent,
-    AccountComponent,
+
     OnRampComponent,
     NotFoundComponent,
     ProfileComponent,
