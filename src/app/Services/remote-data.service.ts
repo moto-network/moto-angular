@@ -102,16 +102,19 @@ export class RemoteDataService {
   }
 
   generateDownloadLink(nft: NFT, userToken: string): Observable<string> {
+    console.log("user tok", userToken);
     const headers = new HttpHeaders({
       'Content-Type':"multipart/form-data",
       'Authorization': `Bearer ${userToken}`
     })
+    console.log(headers);
     const formData = new FormData();
     formData.append('nft', JSON.stringify(nft));
     return this.http.post<any>(GEN_LINK, formData, { headers: headers })
       .pipe(take(1),
         map((arrayBuffer) => {
           var enc = new TextDecoder("utf-8");
+          console.log("llink ", enc.decode(arrayBuffer));
           return enc.decode(arrayBuffer);
         }))
       

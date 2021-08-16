@@ -25,13 +25,21 @@ export class ProfileService {
   }
 
   getUserAccountToken(): Promise<string | undefined> {
-    return this.auth.currentUser()
-      .then((currentUser) => {
-        return currentUser?.getIdToken(true)
-      })
-      .then((token) => {
-        return token;
-      })
+    return new Promise((resolve, reject) => {
+      this.auth.currentUser()
+        .then((currentUser) => {
+          return currentUser?.getIdToken(true)
+        })
+        .then((token) => {
+          if (token) {
+            resolve(token);
+          }
+          else {
+            reject(new Error("No token"));
+          }
+        })
+    });
+
   }
 
   login(): Observable<boolean> {
@@ -53,7 +61,7 @@ export class ProfileService {
         }),
         map(user => {
           this.openSnackBar("All done.", 3000, false);
-           return user ? true : false
+          return user ? true : false
         })
       );
   }
