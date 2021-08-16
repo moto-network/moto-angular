@@ -10,7 +10,7 @@ import { NFTManagerService } from './Services/nft-manager.service';
 })
 export class OnlyOwnerGuard implements CanActivateChild {
   constructor(private _wallet: WalletService,private  _nftManager: NFTManagerService) {
-    this._wallet.listenForAccount().subscribe((account:string | null) => {
+    this._wallet.listenForAddress().subscribe((account:string | null) => {
       if (account) {
         this.account = account;
       }

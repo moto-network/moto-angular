@@ -41,7 +41,7 @@ export class InfoComponent implements OnInit {
   });
   scalingAnimation: any = null;
   ngOnInit(): void {
-    this._wallet.listenForAccount()
+    this._wallet.listenForAddress()
       .subscribe((account) => {
         if (account) {
           this.account = account;

@@ -37,7 +37,7 @@ export class ManageNftComponent implements OnInit, OnDestroy{
  * 
  */
   ngOnInit(): void {
-    this.walletSub = this._wallet.listenForAccount()
+    this.walletSub = this._wallet.listenForAddress()
       .subscribe((account) => {
         
       });

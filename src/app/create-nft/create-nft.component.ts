@@ -92,7 +92,7 @@ export class CreateNFTComponent implements OnInit {
     this.nft.owner = this.nftForm.get('owner')?.value;
     this.nft.chainId = parseInt(this.nftForm.get('chainId')?.value);
     this.nft.tokenId = this.generateTokenId();
-    this.nft.creator = this.account;
+    this.nft.creator = this.account?.address;
     this.nft.contractAddress = getContractAddress(this.nft.chainId, "nft");
     if (this.account) {
       this.mint(this.account, this.nft);
@@ -100,37 +100,37 @@ export class CreateNFTComponent implements OnInit {
   }
 
   private mint(account: Account, nft: NFT) {
-  
-    this.loading = true;
+    
     this.nftManager.mintNFT(account, nft)
       .then((transactionHash: string) => {
         if (transactionHash) {
           this._profile.openSnackBar("Transaction Hash Created: checking transaction on chain", 6000, false);
           console.log("CreateNFT: transactionHash ", transactionHash);
-          this._transactions.getTransactionStatus(nft, transactionHash)
-            .then((transactionInBlock) => {
-              if (transactionInBlock) {
+          this._transactions.getTransactionStatus(nft, transactionHash, this.file!)
+            .then((receiptAndConfirmed) => {//only transactions with receipts output here
+              if (receiptAndConfirmed) {
                 if (this.file) {
                   this._profile.openSnackBar("Transaction Confirmed: uploading file now", 6000, false);
                   this.nftManager.uploadNFT(nft, this.file)
                     .subscribe((fileUploaded: boolean) => {
                       console.log("status is ", fileUploaded);
                       if (fileUploaded) {
-                        this._profile.openSnackBar("All Done.");
+                        this._profile.openSnackBar("All Done.", 4000, false);
                         this.loading = false;
                         this.router.navigate(['nft-results']);
                       }
                     });
                 }
               }
-              else {
+              else {//no receipt
                 this.loading = false;
-                this._transactions.waitForTransaction(this.nft, this.file!, transactionHash);
+                this._transactions.waitForUnconfirmed(this.nft,transactionHash, this.file!);
                 this._profile.openSnackBar("Transaction Still Pending: You can navigate away from this page", 8000, false);
               }
             })
             .catch((err) => {
-
+              //0xea02ea7b31bb69370017f68869d2bf95dc25d9272c19e413c1c1cd276630f0ac
+              
               this._profile.openSnackBar(err.message);
             });
 

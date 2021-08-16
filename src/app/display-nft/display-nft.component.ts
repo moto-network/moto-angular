@@ -3,7 +3,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { faArrowLeft, faFireAlt, faGift, faMoneyBill } from '@fortawesome/free-solid-svg-icons';
 import { NFTManagerService } from '../Services/nft-manager.service';
-import { FileNFT, ListingNFT } from 'src/declaration';
+import { Account, FileNFT, ListingNFT } from 'src/declaration';
 import { ProfileService } from '../Services/profile.service';
 import { getNetworkName } from 'src/app.config';
 import { WalletService } from '../Services/BlockchainServices/wallet.service';
@@ -24,7 +24,7 @@ export class DisplayNFTComponent implements OnInit, OnDestroy {
   burn: any = faFireAlt;
   give: any = faGift;
   sell: any = faMoneyBill;
-  account: string | null = null
+  account: Account | null = null
   nftOwner: string | null = null;
   nft: FileNFT & Partial<ListingNFT> = {
     "tokenId": "0x0000000000000",
@@ -62,14 +62,10 @@ export class DisplayNFTComponent implements OnInit, OnDestroy {
         }
       });
 
-    this._wallet.listenForAccount()
+    this._wallet.getAccount()
       .subscribe((account) => {
-
-        if (account) {
-          console.log("display account is ", account);
-          this.account = account;
-        }
-      });
+        this.account = account;
+       });
   }
 
   sellNFT() {
@@ -143,8 +139,8 @@ export class DisplayNFTComponent implements OnInit, OnDestroy {
     let isOwner: boolean = false
 
     if (this.account && this.nftOwner) {
-      console.log('is owner ', (this.account.toUpperCase() == this.nftOwner.toUpperCase()));
-      return (this.account.toUpperCase() == this.nftOwner.toUpperCase());
+      console.log('is owner ', (this.account.address.toUpperCase() == this.nftOwner.toUpperCase()));
+      return (this.account.address.toUpperCase() == this.nftOwner.toUpperCase());
     }
     return false;
   }

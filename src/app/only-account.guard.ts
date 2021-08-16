@@ -9,7 +9,7 @@ import { WalletService } from './Services/BlockchainServices/wallet.service';
 })
 export class OnlyAccountGuard implements CanLoad {
   constructor(private _wallet: WalletService, private _router:Router) {
-    this._wallet.listenForAccount()
+    this._wallet.listenForAddress()
       .subscribe((account) => {
         if (account) {
           this.account = account;

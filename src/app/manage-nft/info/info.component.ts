@@ -40,7 +40,7 @@ export class InfoComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    this._wallet.listenForAccount()
+    this._wallet.listenForAddress()
       .subscribe((account) => {
         if (account) {
           this.account = account;

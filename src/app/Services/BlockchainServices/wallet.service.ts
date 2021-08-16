@@ -1,7 +1,7 @@
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, combineLatest, from, Observable, Subject } from 'rxjs';
-import { filter, map, startWith, switchMap, take } from 'rxjs/operators';
+import { filter, map, mergeMap, startWith, switchMap, take } from 'rxjs/operators';
 
 import { Account } from 'src/declaration';
 import { RemoteDataService } from '../remote-data.service';
@@ -45,8 +45,12 @@ export class WalletService {
 
   }
 
-  listenForAccount(): Observable<string | null> {
-    return this.addressObservable;
+  listenForAddress(): Observable<string | null> {
+    return this.addressObservable
+      .pipe(
+       
+        
+      )
    }
 
   getNetwork(): Observable<number | null> {

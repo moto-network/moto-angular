@@ -35,13 +35,26 @@ export class ProfileService {
   }
 
   login(): Observable<boolean> {
+    this.openSnackBar("Preparing Login Procedure", 3000, false);
     return from(this._wallet.initWallet())
       .pipe(
         filter(status => status == true),
-        mergeMap(() => this._wallet.getAccount()),
-        mergeMap(account => from(this.getUserToken(account))),
-        mergeMap(token => { return from(this.auth.walletSignIn(token)) }),
-        map(user => { console.log("user", user); return user ? true : false })
+        mergeMap(() => {
+          this.openSnackBar("Preparing Wallet", 3000, false);
+          return this._wallet.getAccount()
+        }),
+        mergeMap(account => {
+          this.openSnackBar("Communicating with Remote server", 3500, false);
+          return from(this.getUserToken(account))
+        }),
+        mergeMap(token => {
+          this.openSnackBar("User Token received.", 3000, false);
+          return from(this.auth.walletSignIn(token))
+        }),
+        map(user => {
+          this.openSnackBar("All done.", 3000, false);
+           return user ? true : false
+        })
       );
   }
 
@@ -84,8 +97,8 @@ export class ProfileService {
     });
   }
 
-  notifyAboutTransaction(nft: NFT, receipt:Required<TransactionReceipt>) {
-
+  notifyAboutTransaction(nft: NFT) {
+    this.openSnackBar("Transaction Confirmed.", 4000, false);
   }
 
   getNFTCollection(): Observable<NFTCollection | null> {
