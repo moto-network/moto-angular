@@ -20,7 +20,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import {DialogModule} from "primeng/dialog";
 
 import { OnRampComponent } from './on-ramp/on-ramp.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { ProfileComponent } from './profile/profile.component';
 import { CreateNFTComponent } from './create-nft/create-nft.component';
@@ -34,6 +34,7 @@ import { UserDashComponent } from './user-dash/user-dash.component';
 import { UniversalDialogComponent } from './universal-dialog/universal-dialog.component';
 import { DownloadLinkDialogComponent } from './download-link-dialog/download-link-dialog.component';
 import { MarketComponent } from './market/market.component';
+import { AuthInterceptorInterceptor } from './auth-interceptor.interceptor';
 
 @NgModule({
   declarations: [
@@ -71,7 +72,8 @@ import { MarketComponent } from './market/market.component';
     MatSnackBarModule
   ],
   exports:[FontAwesomeModule],
-  providers: [AuthenticationService,SearchService,ProfileService],
+  providers: [AuthenticationService, SearchService, ProfileService,
+    { provide: HTTP_INTERCEPTORS, useClass:AuthInterceptorInterceptor , multi:true}],
   bootstrap: [AppComponent]
 })
 export class AppModule {
