@@ -27,7 +27,7 @@ export class DownloadLinkDialogComponent implements OnInit, OnDestroy {
   }
 
   download() {
-    
+    this.matDialogRef.close();
   }
 
   

@@ -130,8 +130,9 @@ export class UserDashComponent implements OnInit, OnDestroy {
     this._profile.getDownloadLink(nft)
       .then((link) => {
         if (link) {
+          console.log("link is", link);
           this.dialog.open(DownloadLinkDialogComponent,
-            { data: { link: link } });
+            { data: { link: link.link } });
         }
       });
 

@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { NFTManagerService } from 'moto-angular/src/app/Services/nft-manager.service';
 
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { getProvider } from 'src/app.config';
 import { NFT, TransactionReceipt } from 'src/declaration';
 import Web3 from "web3";
@@ -37,6 +37,7 @@ export class TransactionsService {
   }
 
   async getTransactionStatus(nft: NFT, transactionHash: string, file: File): Promise<boolean> {
+    const transactionSubject = new Subject();
     return new Promise((resolve, reject) => {
       this.getTransactionReceipt(nft, transactionHash)
         .then((receipt: TransactionReceipt | null) => {
@@ -76,7 +77,7 @@ export class TransactionsService {
         if (receipt.status) {
           this._profile.openSnackBar("Transaction Receipt Received.")
           this.confirmTransaction(unconfirmed);
-
+          clearInterval(this.interval);
         }
         else {
           console.log("background transaction checking..");
@@ -84,7 +85,7 @@ export class TransactionsService {
       });
     }
 
-      , 10 * 1000);
+      , 3 * 1000);
   }
 
   private storeUnconfirmed(nft: NFT, hash: string, file: File) {

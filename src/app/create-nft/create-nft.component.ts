@@ -45,6 +45,7 @@ export class CreateNFTComponent implements OnInit {
 
   file: File | null = null;
   nft: any = {};
+  visible: boolean = true;
   loading: boolean = false;
   networkSubscription: Subscription | null = null;
   accountSubscription: Subscription | null = null;
@@ -125,7 +126,7 @@ export class CreateNFTComponent implements OnInit {
               else {//no receipt
                 this.loading = false;
                 this._transactions.waitForUnconfirmed(this.nft,transactionHash, this.file!);
-                this._profile.openSnackBar("Transaction Still Pending: You can navigate away from this page", 8000, false);
+                this._profile.openSnackBar("Transaction Still Pending: You can navigate away from this page", 6000, false);
               }
             })
             .catch((err) => {

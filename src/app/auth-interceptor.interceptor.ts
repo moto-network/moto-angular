@@ -24,7 +24,10 @@ export class AuthInterceptorInterceptor implements HttpInterceptor {
             return token;
           }),
           map(userToken => request.clone({ setHeaders: { Authorization: `Bearer ${userToken}` } })),
-          mergeMap(request => next.handle(request))
+          mergeMap(request => {
+            console.log(request);
+            return next.handle(request)
+          })
       )
     }
     else {

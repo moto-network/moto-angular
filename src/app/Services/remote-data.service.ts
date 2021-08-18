@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { FileNFT, NFT, NFTCollection, Listing as Listing, Account } from "src/declaration";
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { CREATE_ORDER_URL,FINALIZE_ORDER,GEN_LINK, GET_NONCE_URL, UPLOAD_NFT_URL, VERIFY_SIG_URL } from "src/app.config";
+import { CREATE_ORDER_URL, FINALIZE_ORDER, GEN_LINK, GET_NONCE_URL, UPLOAD_NFT_URL, VERIFY_SIG_URL } from "src/app.config";
 import { Observable, Subject } from 'rxjs';
 import { ChinaDataService } from './china-data.service';
 import { map, take } from 'rxjs/operators';
@@ -39,10 +39,10 @@ export class RemoteDataService {
     const formData = new FormData();
     formData.append('account', account.address);
     return this.http.post<any>(GET_NONCE_URL, formData)
-      .pipe(take(1),map(response => response.nonce));
+      .pipe(take(1), map(response => response.nonce));
   }
 
-  public verifySignature(account: Account, nonce: string, sig: string):Observable<string> {
+  public verifySignature(account: Account, nonce: string, sig: string): Observable<string> {
     const formData = new FormData();
     formData.append('account', account.address);
     formData.append('nonce', nonce);
@@ -52,7 +52,7 @@ export class RemoteDataService {
       .pipe(take(1), map(res => res.token));
   }
 
-  public uploadFile(nft: NFT, file: File) :Observable<boolean>{
+  public uploadFile(nft: NFT, file: File): Observable<boolean> {
     const formData = new FormData();
     formData.append('nft', JSON.stringify(nft));
     formData.append('file', file);
@@ -76,7 +76,7 @@ export class RemoteDataService {
 
   }
 
-  public finalizeOrder(nft: NFT): Observable<Listing>{
+  public finalizeOrder(nft: NFT): Observable<Listing> {
     const formData = new FormData();
     formData.append('nft', JSON.stringify(nft));
     return this.http.post<any>(FINALIZE_ORDER, formData)
@@ -108,14 +108,9 @@ export class RemoteDataService {
     return this.http.post<any>(GEN_LINK, formData, {
       headers: new HttpHeaders({
         'Authorization': 'Bearer ' + userToken
-      })})
-      .pipe(take(1),
-        map((arrayBuffer) => {
-          var enc = new TextDecoder("utf-8");
-          console.log("llink ", enc.decode(arrayBuffer));
-          return enc.decode(arrayBuffer);
-        }))
-      
+      })
+    })
+      .pipe(take(1));
   }
 
   public getNFTs(searchParameter: string, searchValue: string): Observable<NFTCollection | null> {
