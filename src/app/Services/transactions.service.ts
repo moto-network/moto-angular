@@ -3,7 +3,8 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { NFTManagerService } from 'moto-angular/src/app/Services/nft-manager.service';
 
-import { Observable, Subject } from 'rxjs';
+import { BehaviorSubject, from, merge, Observable, Subject } from 'rxjs';
+import { mergeMap, startWith } from 'rxjs/operators';
 import { getProvider } from 'src/app.config';
 import { NFT, TransactionReceipt } from 'src/declaration';
 import Web3 from "web3";
@@ -25,6 +26,7 @@ export class TransactionsService {
   file: File | null = null;
   nft: NFT | null = null;
   interval: any | null = null;
+  transactionSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   constructor(private _db: AngularFirestore, private _profile: ProfileService, private _nftManager: NFTManagerService) {
 
   }
@@ -36,9 +38,9 @@ export class TransactionsService {
     return results;
   }
 
-  async getTransactionStatus(nft: NFT, transactionHash: string, file: File): Promise<boolean> {
-    const transactionSubject = new Subject();
-    return new Promise((resolve, reject) => {
+  getTransactionStatus(nft: NFT, transactionHash: string, file: File): Observable<boolean> {
+    
+    const promise = new Promise<boolean>((resolve, reject) => {
       this.getTransactionReceipt(nft, transactionHash)
         .then((receipt: TransactionReceipt | null) => {
           if (receipt) {
@@ -52,6 +54,8 @@ export class TransactionsService {
           reject(err);
         })
     });
+
+    return merge(this.transactionSubject, from(promise));
   }
 
 
@@ -61,7 +65,7 @@ export class TransactionsService {
     console.log("gonna check transaction status in the background");
     this.updateUnconfirmed();
   }
-
+  
   private updateUnconfirmed(unconfirmed?: UnconfirmedTransaction) {
     clearInterval(this.interval);
     if (unconfirmed) {
@@ -70,14 +74,17 @@ export class TransactionsService {
         this.unconfirmedTransactions.splice(index, 1);
       }
     }
-    setInterval(async () => {
+    this.interval = setInterval(async () => {
 
       this.unconfirmedTransactions.forEach(async (unconfirmed) => {
         let receipt: TransactionReceipt = await this.getTransactionReceipt(unconfirmed.nft, unconfirmed.hash) as TransactionReceipt;
-        if (receipt.status) {
-          this._profile.openSnackBar("Transaction Receipt Received.")
-          this.confirmTransaction(unconfirmed);
-          clearInterval(this.interval);
+        if (receipt != null) {
+          if (receipt.status) {
+            this._profile.openSnackBar("Transaction Receipt Received.")
+            this.confirmTransaction(unconfirmed);
+            clearInterval(this.interval);
+          }
+     
         }
         else {
           console.log("background transaction checking..");
@@ -111,10 +118,11 @@ export class TransactionsService {
 
   private confirmTransaction(unconfirmed: UnconfirmedTransaction) {
     const index = this.unconfirmedTransactions.indexOf(unconfirmed);
-
+    clearInterval(this.interval)
     const nft = this.unconfirmedTransactions[index].nft;
     const file = this.unconfirmedTransactions[index].file
     this._profile.notifyAboutTransaction(nft);
+    this.transactionSubject.next(true);
     const uploadSub = this._nftManager.uploadNFT(nft, file).subscribe((status) => {
       if (status) {
         this.updateUnconfirmed(unconfirmed);

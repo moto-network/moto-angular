@@ -2,6 +2,8 @@ import { Component, ComponentFactoryResolver, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { ProfileService } from 'moto-angular/src/app/Services/profile.service';
+import { TransactionsService } from 'moto-angular/src/app/Services/transactions.service';
 import { getContract, getNetwork } from 'src/app.config';
 import { WalletService } from 'src/app/Services/BlockchainServices/wallet.service';
 import { MarketService } from 'src/app/Services/market.service';
@@ -16,7 +18,8 @@ declare var anime:any;
 export class InfoComponent implements OnInit {
 
   constructor(private _wallet: WalletService, private _nftManager: NFTManagerService,
-    private _router: Router, private _market: MarketService, public snackBar: MatSnackBar) { }
+    private _router: Router, private _market: MarketService,
+  private _profile:ProfileService, private _transactions:TransactionsService) { }
   nft: NFT & Partial<ListingNFT> = {
     name: "Nothing To Show",
     tokenId: "0x0000000",
@@ -95,6 +98,7 @@ export class InfoComponent implements OnInit {
       this._market.addToMarket(this.nft, this.price)
         .then((transactionHash) => {
           if (transactionHash) {
+            this._transactions.getTransac
             this._market.updateListingDB(this.nft)
               .then((listing) => {
                 console.log("listing", listing);
@@ -103,19 +107,19 @@ export class InfoComponent implements OnInit {
                   this._router.navigate(['manage-nft', 'listing-management']);
                 }
                 else {
-                  this.openSnackBar("something went wrong", 3000);
+                  this._profile.openSnackBar("something went wrong", 3000);
                 }
               });
           }
         })
         .catch((err) => {
           if (err) {
-            this.openSnackBar(err.messsage, 3000);
+            this._profile.openSnackBar(err.messsage, 3000);
           }
         });
     }
     else {
-      this.openSnackBar("Missing Price", 3000);
+      this._profile.openSnackBar("Missing Price", 3000);
     }
     
   }
@@ -168,7 +172,7 @@ export class InfoComponent implements OnInit {
       this._market.requestSinglePermission(this.nft)
         .then((result: string) => {
           if (result) {
-            this.openSnackBar("Permission Granted");
+            this._profile.openSnackBar("Permission Granted");
             this.allowOne = true;
             this.yellowLight = true;
           }
@@ -181,7 +185,7 @@ export class InfoComponent implements OnInit {
       this._market.grantTotalPermission(this.nft)
         .then((result: string) => {
           if (result) {
-            this.openSnackBar("Permission Granted");
+            this._profile.openSnackBar("Permission Granted",2000, false);
             this.allowAll = true;
             this.allowOne = true;
             this.yellowLight = true;
@@ -197,12 +201,7 @@ export class InfoComponent implements OnInit {
     }
   }
 
-  openSnackBar(message: string, duration: number = 3000) {
-    this.snackBar.open(message, "", {
-      duration: duration,
-    });
-  }
-
+  
   isOwner(): boolean {
     if (this.nft && this.account) {
 
@@ -222,7 +221,7 @@ export class InfoComponent implements OnInit {
     }
     else {
       this.lock();
-      this.openSnackBar("price should be a number greater than zero", 5000);
+      this._profile.openSnackBar("price should be a number greater than zero", 5000);
     }
   }
 

@@ -49,6 +49,7 @@ export class CreateNFTComponent implements OnInit {
   loading: boolean = false;
   networkSubscription: Subscription | null = null;
   accountSubscription: Subscription | null = null;
+  transactionSub: Subscription | null = null;
   constructor(private _walletService: WalletService,
     private nftManager: NFTManagerService, private router: Router,
     private fileManager: FileManagerService,
@@ -73,6 +74,7 @@ export class CreateNFTComponent implements OnInit {
   ngOnDestroy(): void {
     this.networkSubscription?.unsubscribe();
     this.accountSubscription?.unsubscribe();
+    this.transactionSub?.unsubscribe();
   }
   /**
    * for the UI button if there is no account
@@ -105,37 +107,21 @@ export class CreateNFTComponent implements OnInit {
     this.nftManager.mintNFT(account, nft)
       .then((transactionHash: string) => {
         if (transactionHash) {
+          this.visible = false;
           this._profile.openSnackBar("Transaction Hash Created: checking transaction on chain", 6000, false);
           console.log("CreateNFT: transactionHash ", transactionHash);
-          this._transactions.getTransactionStatus(nft, transactionHash, this.file!)
-            .then((receiptAndConfirmed) => {//only transactions with receipts output here
+          this.transactionSub = this._transactions.getTransactionStatus(nft, transactionHash, this.file!)
+            .subscribe((receiptAndConfirmed) => {//only transactions with receipts output here
               if (receiptAndConfirmed) {
-                if (this.file) {
-                  this._profile.openSnackBar("Transaction Confirmed: uploading file now", 6000, false);
-                  this.nftManager.uploadNFT(nft, this.file)
-                    .subscribe((fileUploaded: boolean) => {
-                      console.log("status is ", fileUploaded);
-                      if (fileUploaded) {
-                        this._profile.openSnackBar("All Done.", 4000, false);
-                        this.loading = false;
-                        this.router.navigate(['nft-results']);
-                      }
-                    });
-                }
+                this.loading = false;
+                this.router.navigate(['nft-results']);
               }
               else {//no receipt
                 this.loading = false;
-                this._transactions.waitForUnconfirmed(this.nft,transactionHash, this.file!);
+                this._transactions.waitForUnconfirmed(this.nft, transactionHash, this.file!);
                 this._profile.openSnackBar("Transaction Still Pending: You can navigate away from this page", 6000, false);
               }
-            })
-            .catch((err) => {
-              //0xea02ea7b31bb69370017f68869d2bf95dc25d9272c19e413c1c1cd276630f0ac
-              
-              this._profile.openSnackBar(err.message);
             });
-
-
         }
       })
       .catch((err: any) => {

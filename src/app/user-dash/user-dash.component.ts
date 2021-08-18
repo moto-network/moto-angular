@@ -127,6 +127,7 @@ export class UserDashComponent implements OnInit, OnDestroy {
   }
 
   downloadNFT(nft: FileNFT): void {
+    this._nftManager.setNFT(nft);
     this._profile.getDownloadLink(nft)
       .then((link) => {
         if (link) {
