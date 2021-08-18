@@ -1,7 +1,7 @@
 import { keyframes } from '@angular/animations';
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { NFTManagerService } from 'moto-angular/src/app/Services/nft-manager.service';
+import { NFTManagerService } from './nft-manager.service';
 
 import { BehaviorSubject, from, merge, Observable, Subject } from 'rxjs';
 import { mergeMap, startWith } from 'rxjs/operators';
@@ -13,7 +13,7 @@ import { ProfileService } from './profile.service';
 interface UnconfirmedTransaction {
   hash: string;
   nft: NFT;
-  file: File;
+  file?: File;
 }
 
 @Injectable({
@@ -38,7 +38,7 @@ export class TransactionsService {
     return results;
   }
 
-  getTransactionStatus(nft: NFT, transactionHash: string, file: File): Observable<boolean> {
+  public getTransactionStatus(nft: NFT, transactionHash: string, file?: File): Observable<boolean> {
     
     const promise = new Promise<boolean>((resolve, reject) => {
       this.getTransactionReceipt(nft, transactionHash)
@@ -60,7 +60,7 @@ export class TransactionsService {
 
 
 
-  waitForUnconfirmed(nft: NFT, hash: any, file: File) {
+  waitForUnconfirmed(nft: NFT, hash: any, file?: File) {
     this.storeUnconfirmed(nft, hash, file);
     console.log("gonna check transaction status in the background");
     this.updateUnconfirmed();
@@ -95,7 +95,7 @@ export class TransactionsService {
       , 3 * 1000);
   }
 
-  private storeUnconfirmed(nft: NFT, hash: string, file: File) {
+  private storeUnconfirmed(nft: NFT, hash: string, file?: File) {
     this.unconfirmedTransactions.push({ "nft": nft, "file": file, "hash": hash } as UnconfirmedTransaction);
   }
 
@@ -123,13 +123,16 @@ export class TransactionsService {
     const file = this.unconfirmedTransactions[index].file
     this._profile.notifyAboutTransaction(nft);
     this.transactionSubject.next(true);
-    const uploadSub = this._nftManager.uploadNFT(nft, file).subscribe((status) => {
-      if (status) {
-        this.updateUnconfirmed(unconfirmed);
-        this._profile.openSnackBar("File uploaded.", 3000, false);
-        uploadSub.unsubscribe();
-      }
-    })
+    if (file) {
+      const uploadSub = this._nftManager.uploadNFT(nft, file).subscribe((status) => {
+        if (status) {
+          this.updateUnconfirmed(unconfirmed);
+          this._profile.openSnackBar("File uploaded.", 3000, false);
+          uploadSub.unsubscribe();
+        }
+      });
+    }
+  
 
   }
 }

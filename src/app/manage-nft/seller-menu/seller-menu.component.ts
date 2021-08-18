@@ -2,12 +2,14 @@ import { Component, ComponentFactoryResolver, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { ProfileService } from 'moto-angular/src/app/Services/profile.service';
-import { TransactionsService } from 'moto-angular/src/app/Services/transactions.service';
+import { ProfileService } from 'src/app/Services/profile.service';
+import { Subscription } from 'rxjs';
+
 import { getContract, getNetwork } from 'src/app.config';
 import { WalletService } from 'src/app/Services/BlockchainServices/wallet.service';
 import { MarketService } from 'src/app/Services/market.service';
 import { NFTManagerService } from 'src/app/Services/nft-manager.service';
+import { TransactionsService } from 'src/app/Services/transactions.service';
 import { FileNFT, ListingNFT, NFT } from 'src/declaration';
 declare var anime:any;
 @Component({
@@ -15,7 +17,7 @@ declare var anime:any;
   templateUrl: './seller-menu.component.html',
   styleUrls: ['./seller-menu.component.css']
 })
-export class InfoComponent implements OnInit {
+export class SellerMenuComponent implements OnInit {
 
   constructor(private _wallet: WalletService, private _nftManager: NFTManagerService,
     private _router: Router, private _market: MarketService,
@@ -29,6 +31,7 @@ export class InfoComponent implements OnInit {
     contentHash: "0x000000",
     contractAddress: "0x0000000"
   };
+  updating: boolean = false;
   price: string = "";
   messageForUser: string = "";
   marketPermission: boolean = false;
@@ -37,6 +40,7 @@ export class InfoComponent implements OnInit {
   haveNFT: boolean = false;
   readyForMarket: boolean = false;
   allowOne: boolean = false;
+  tranSub: Subscription | null = null;
   allowAll: boolean = false;
   yellowLight: boolean = false;
   sellingForm: FormGroup = new FormGroup({
@@ -98,18 +102,24 @@ export class InfoComponent implements OnInit {
       this._market.addToMarket(this.nft, this.price)
         .then((transactionHash) => {
           if (transactionHash) {
-            this._transactions.getTransac
-            this._market.updateListingDB(this.nft)
-              .then((listing) => {
-                console.log("listing", listing);
-                if (listing) {
-                  this._market.setListing(listing);
-                  this._router.navigate(['manage-nft', 'listing-management']);
+            this.updating = true;
+            this.tranSub = this._transactions.getTransactionStatus(this.nft, transactionHash)
+              .subscribe((status) => {
+                if (status) {
+                  this._market.updateListingDB(this.nft)
+                    .then((listing) => {
+                      console.log("listing", listing);
+                      if (listing) {
+                        this._market.setListing(listing);
+                        this._router.navigate(['manage-nft', 'listing-management']);
+                        this.stopAnimations();
+                      }
+                      else {
+                        this._profile.openSnackBar("something went wrong", 3000);
+                      }
+                    });
                 }
-                else {
-                  this._profile.openSnackBar("something went wrong", 3000);
-                }
-              });
+              }); 
           }
         })
         .catch((err) => {
@@ -129,21 +139,16 @@ export class InfoComponent implements OnInit {
     if (sellbutton) {
       console.log("sellbutton found")
       sellbutton.style.pointerEvents = "none";
+      sellbutton.style.visibility="hidden";
     }
-
-    this.scalingAnimation.play();
   }
 
   stopAnimations() {
     let sellbutton = document.getElementById("sell-button");
-    if ( this.scalingAnimation) {
-      this.scalingAnimation.reset();
-      this.scalingAnimation.stop();
-    }
-    if (sellbutton) {
+    if ( sellbutton) {
       sellbutton.style.pointerEvents = "all";
+      sellbutton.style.visibility = "visible";
     }
-
   }
 
   checkSinglePermission(nft: NFT): void {

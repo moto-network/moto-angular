@@ -5,9 +5,9 @@ import {
   HttpEvent,
   HttpInterceptor
 } from '@angular/common/http';
-import { from, Observable, of } from 'rxjs';
+import { from, Observable } from 'rxjs';
 import { GEN_LINK } from 'src/app.config';
-import { ProfileService } from 'moto-angular/src/app/Services/profile.service';
+import { ProfileService } from './Services/profile.service';
 import { filter, map, mergeMap } from 'rxjs/operators';
 
 @Injectable()

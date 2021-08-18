@@ -66,7 +66,7 @@ export class RemoteDataService {
       formData.append('nft', JSON.stringify(nft));
       this.http.post<any>(CREATE_ORDER_URL, formData)
         .subscribe((response) => {
-          console.log("response", response);
+          console.log("udate listing db response", response);
           if (response) {
             resolve(response as Listing);
           }

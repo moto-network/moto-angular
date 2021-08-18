@@ -142,10 +142,10 @@ export function getNetworkName(chainId: number): string {
 }
 
 export const UPLOAD_NFT_URL: string = "https://us-central1-motonetwork.cloudfunctions.net/uploadNFT";
-export const CREATE_ORDER_URL: string = "https://us-central1-motonetwork.cloudfunctions.net/orderCreated";
+export const CREATE_ORDER_URL: string = "http://localhost:5001/motonetwork/us-central1/orderCreated";
 export const GET_NONCE_URL: string = "https://us-central1-motonetwork.cloudfunctions.net/getNonce";
 export const VERIFY_SIG_URL: string = "https://us-central1-motonetwork.cloudfunctions.net/verifySignature";
 export const GEN_LINK: string = "http://localhost:5001/motonetwork/us-central1/generateFileLink";
-export const FINALIZE_ORDER: string = "https://us-central1-motonetwork.cloudfunctions.net/finalizeBuyOrder";
+export const FINALIZE_ORDER: string = "http://localhost:5001/motonetwork/us-central1/finalizeBuyOrder";
 
 

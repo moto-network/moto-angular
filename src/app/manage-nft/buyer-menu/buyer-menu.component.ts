@@ -6,9 +6,11 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import BigNumber from 'bignumber.js';
 
+
 import { WalletService } from 'src/app/Services/BlockchainServices/wallet.service';
 import { MarketService } from 'src/app/Services/market.service';
 import { NFTManagerService } from 'src/app/Services/nft-manager.service';
+import { ProfileService } from 'src/app/Services/profile.service';
 import { SimpleMessageDialogComponent } from 'src/app/simple-message-dialog/simple-message-dialog.component';
 import { FileNFT, Listing, ListingNFT, NFT } from 'src/declaration';
 @Component({
@@ -27,7 +29,8 @@ export class BuyerMenuComponent implements OnInit {
   //numberWithSpaces(getFormattedPrice('229834792384'))
   constructor(private _market: MarketService,
     private _nftMananger: NFTManagerService, private _router: Router,
-  public snackBar: MatSnackBar, public dialog:MatDialog, private _wallet:WalletService) { }
+    public snackBar: MatSnackBar, public dialog: MatDialog, private _wallet: WalletService,
+  private _profile:ProfileService) { }
 
   ngOnInit(): void {
     this._nftMananger.getNFT<ListingNFT & FileNFT>()
@@ -68,7 +71,7 @@ export class BuyerMenuComponent implements OnInit {
           })
           .catch((err) => {
             console.log("err", err);
-            this.openSnackBar(err.message);
+            this._profile.openSnackBar(err.message, 3000);
           });
        });
     
@@ -84,7 +87,7 @@ export class BuyerMenuComponent implements OnInit {
       })
       .catch((err) => {
         console.log("err", err);
-        this.openSnackBar(err.message);
+        this._profile.openSnackBar(err.message, 3000);
       });
   }
 
@@ -94,10 +97,13 @@ export class BuyerMenuComponent implements OnInit {
     if (this.nft) {
       this._market.approveExactAmount('moto', this.nft, this.priceInSubUnits.toString())
         .then((approvedAmount) => {
+          console.log("approved amount from contract ", approvedAmount);
           this.approvedAmount = new BigNumber(approvedAmount);
+          console.log("approved amount from Big NUMbe ",this.approvedAmount);
           const formattedAmount = this.getFormattedPrice(approvedAmount.toString());
+          console.log("formattedAmount ", formattedAmount);
           const message = formattedAmount + " has been approved.";
-          this.openSnackBar(message);
+          this._profile.openSnackBar(message, 4000, false);
         })
         .catch((err) => {
           this.openDialog("Allocation Error", err.message);
@@ -146,10 +152,5 @@ export class BuyerMenuComponent implements OnInit {
     return this.motoBalance.lt(this.priceInSubUnits);
   }
 
-  openSnackBar(message: string, duration: number = 3000) {
-    this.snackBar.open(message, "", {
-      duration: duration,
-      panelClass:['snackbar']
-    });
-  }
+  
 }

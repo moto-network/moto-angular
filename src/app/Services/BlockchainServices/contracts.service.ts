@@ -411,7 +411,7 @@ export class ContractsService {
       const market = getContract(this.userAccount?.network!!, "market");
       const coinContract = getContract(this.userAccount?.network!!, coin);
       const coinWeb3 = new web3.eth.Contract(coinContract.abi, coinContract.address);
-      resolve(coinWeb3.methods.allowance(this.userAccount, market.address).call());
+      resolve(coinWeb3.methods.allowance(this.userAccount?.address, market.address).call());
     });
 
   }
