@@ -20,11 +20,12 @@
   </div>
 </div>
 
-<div id="nfts-table">
+<div id="nfts-table" *ngIf="nftCollection">
   <div class="nft-table-row box-shadow" *ngFor="let tokenId of ProfileNFTs">
     <img src={{nftCollection[tokenId].smImg}} class="table-row-img box-shadow" (click)="goToNFT(nftCollection[tokenId])">
     <h3 class="moto-title">{{nftCollection[tokenId].name}}</h3>
     <div>
+      <img src = "../../assets/market_icon.png" *ngIf="">
       <button class="moto-button" id="display-nft-button" (click)="goToNFT(nftCollection[tokenId])">
         <fa-icon [icon]="view"></fa-icon>
       </button>

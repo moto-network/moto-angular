@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 
 import { ProfileService } from 'src/app/Services/profile.service';
 import { SessionManagerService } from 'src/app/Services/session-manager.service';
-import { FileNFT, NFTCollection } from 'src/declaration';
+import { FileNFT, ListingNFT, NFTCollection } from 'src/declaration';
 
 declare var anime: any;
 
@@ -14,8 +14,8 @@ declare var anime: any;
   styleUrls: ['./gallery.component.css']
 })
 export class GalleryComponent implements OnInit {
-  nftCollection: NFTCollection = {};
-  nftDisplayCollection: NFTCollection = {};
+  nftCollection: NFTCollection<FileNFT> = {};
+  nftDisplayCollection: NFTCollection<FileNFT> = {};
   nftGallery: FileNFT[] = [];
   address: string | null = null;
   loadingAnimation: any = null;
@@ -48,7 +48,7 @@ export class GalleryComponent implements OnInit {
     }
   }
 
-  private localLoad(nftCollection:NFTCollection) :void{
+  private localLoad(nftCollection:NFTCollection<FileNFT>) :void{
     console.log("lcoaal calleld");
     this.nftCollection = nftCollection;
     if (this._sessionManager.get("moto_profile_scrollTop")) {
@@ -62,7 +62,7 @@ export class GalleryComponent implements OnInit {
   private remoteLoad() {
 
     this._profileManager.getNFTCollection()
-      .subscribe((nftCollection: NFTCollection | null) => {
+      .subscribe((nftCollection: NFTCollection<FileNFT & Partial<ListingNFT>> | null) => {
         if (nftCollection) {
           this.nftCollection = nftCollection;
           this.loadingAnimation.pause();

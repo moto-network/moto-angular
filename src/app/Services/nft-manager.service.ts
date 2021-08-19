@@ -15,7 +15,7 @@ export class NFTManagerService {//merge this wit the other NFTManager or wahteve
   nft: NFT | null = null;
   currentFee: number | null = null;
   currentNetwork: number | null = null;
-  nftCollection: NFTCollection | null = null;
+  nftCollection: NFTCollection<NFT> | null = null;
   lastSuccessfulTransaction = "";
   testnft: FileNFT = {
     "creator": "0xDcb982dEa4C22aBE650c12a1678537a3e8Ddd30D",
@@ -91,15 +91,14 @@ export class NFTManagerService {//merge this wit the other NFTManager or wahteve
     return nftObservable;
   }
 
-  getNFTs(parameters?: string, value?: string): Observable<NFTCollection | null> {
-    const nftObservable: Subject<NFTCollection> = new Subject<NFTCollection>();
+  getNFTs<NFTType extends NFT>(parameters?: string, value?: string): Observable<NFTCollection<NFTType> | null> {
+    const nftObservable: Subject<NFTCollection<NFTType>> = new Subject<NFTCollection<NFTType>>();
     if (parameters && value) {
-      return this._getNFTs(parameters, value);
+      return this._getNFTs<NFTType>(parameters, value);
     }
     else {
       if (this.nftCollection) {
-        console.log("have nft collection");
-        nftObservable.next(this.nftCollection);
+        nftObservable.next(this.nftCollection as NFTCollection <NFTType>);
         return nftObservable;
       }
       else {
@@ -107,8 +106,8 @@ export class NFTManagerService {//merge this wit the other NFTManager or wahteve
         return this._getAllNFTs();
       }
     }
-
   }
+
 
   getOwner(nft: NFT): Promise<string | null> {
     this._contracts.getNFTOwner(nft)
@@ -143,8 +142,8 @@ export class NFTManagerService {//merge this wit the other NFTManager or wahteve
     }
   }
 
-  private _getAllNFTs(): Observable<NFTCollection> {
-    return this._remote.getAllNFTs();
+  private _getAllNFTs<NFTType extends NFT>(): Observable<NFTCollection<NFTType>> {
+    return this._remote.getAllNFT<NFTType>();
   }
 
   /**
@@ -153,7 +152,7 @@ export class NFTManagerService {//merge this wit the other NFTManager or wahteve
    * @param searchValue 
    * @returns 
    */
-  private _getNFTs(searchParameter: string, searchValue: string): Observable<NFTCollection | null> {
+  private _getNFTs<NFTType extends NFT>(searchParameter: string, searchValue: string): Observable<NFTCollection<NFTType> | null> {
     return this._remote.getNFTs(searchParameter, searchValue);
   }
 }

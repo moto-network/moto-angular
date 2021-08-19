@@ -25,7 +25,7 @@ export class BuyerMenuComponent implements OnInit {
   approvedAmount = new BigNumber(0);
   priceInSubUnits = new BigNumber(0);
   nft: Partial<ListingNFT> & FileNFT | null = null;
-  loading = false;
+  loading = true;
   //numberWithSpaces(getFormattedPrice('229834792384'))
   constructor(private _market: MarketService,
     private _nftMananger: NFTManagerService, private _router: Router,
@@ -38,6 +38,7 @@ export class BuyerMenuComponent implements OnInit {
         if (nft) {
           this.nft = nft;
           this.priceInSubUnits = new BigNumber(this.nft.order!.price!);
+          
         }
       });
     this.initAccountData();
@@ -46,6 +47,7 @@ export class BuyerMenuComponent implements OnInit {
   buyNFT() {
     this.loading = true;
     if (this.nft) {
+      this._profile.openSnackBar("Communication with Blockchain", 4000, false);
       this._market.buyNFT(this.nft, this.priceInSubUnits.toString())
         .then((listing:Listing) => {
           if (listing) {
@@ -144,6 +146,7 @@ export class BuyerMenuComponent implements OnInit {
     }
   }
 
+  
   isApprovedSufficient(): boolean {
     return this.approvedAmount.gte(this.priceInSubUnits) && this.approvedAmount.gt(0);
   }

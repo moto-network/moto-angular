@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { FileNFT, NFTCollection } from 'src/declaration';
+import { FileNFT, NFT, NFTCollection } from 'src/declaration';
 import { NFTManagerService } from '../Services/nft-manager.service';
 import { SessionManagerService } from '../Services/session-manager.service';
 
@@ -13,18 +13,18 @@ declare var anime: any;
   styleUrls: ['./discover.component.css']
 })
 export class DiscoverComponent implements OnInit {
-  nftCollection: NFTCollection = {};
+  nftCollection: NFTCollection<FileNFT> = {} as NFTCollection<FileNFT>;
   scrollPosition: any;
   loadingAnimation: any = null;
   session_id = "moto_discover";
   loadNFTSub: Subscription | null = null;
   constructor(private _nftManager: NFTManagerService,
-    private _router: Router, private _sessionManager:SessionManagerService) {
+    private _router: Router, private _sessionManager: SessionManagerService) {
   }
 
   ngOnInit(): void {
     let sessionData = this._sessionManager.get("moto_discover_nftCollection");
-    
+
     if (!sessionData) {
       this.loadNFTs();
     }
@@ -33,7 +33,7 @@ export class DiscoverComponent implements OnInit {
     }
   }
 
-  private localLoad(nftCollection: NFTCollection): void {
+  private localLoad(nftCollection: NFTCollection<NFT>): void {
     console.log("lcoaal calleld");
     this.nftCollection = nftCollection;
     if (this._sessionManager.get("moto_discover_scrollTop")) {
@@ -45,7 +45,7 @@ export class DiscoverComponent implements OnInit {
   }
   loadNFTs() {
     this.loadNFTSub = this._nftManager.getNFTs()
-      .subscribe((collection: NFTCollection | null) => {
+      .subscribe((collection: NFTCollection<NFT> | null) => {
         if (collection) {
           this.loadingAnimation.pause();
           this.loadingAnimation.reset();
@@ -69,12 +69,12 @@ export class DiscoverComponent implements OnInit {
         translateX: [0, -5, 4, 0],
       });
 
-    if (Object.keys(this.nftCollection).length == 0 ) {
+    if (Object.keys(this.nftCollection).length == 0) {
       this.loadingAnimation.play();
     }
 
-  
-    
+
+
   }
 
   ngOnDestroy(): void {
@@ -90,6 +90,8 @@ export class DiscoverComponent implements OnInit {
   }
 
   get NFTs() {
+
     return Object.keys(this.nftCollection);
+
   }
 }

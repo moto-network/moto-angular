@@ -49,8 +49,8 @@ export type ListingCollection = {
   [id: string]: Listing;
 }
 
-export type NFTCollection = {
-  [tokenId: string]: FileNFT;
+export type NFTCollection<NFTType extends NFT> = {
+  [tokenId: string]: NFTType;
 }
 
 export type LocalSession = {
@@ -73,5 +73,4 @@ export interface TransactionReceipt {
   gasUsed?: number;
   logs?:any[] //array of logs ..change
 }
-
 

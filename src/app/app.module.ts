@@ -35,6 +35,7 @@ import { UniversalDialogComponent } from './universal-dialog/universal-dialog.co
 import { DownloadLinkDialogComponent } from './download-link-dialog/download-link-dialog.component';
 import { MarketComponent } from './market/market.component';
 import { AuthInterceptorInterceptor } from './auth-interceptor.interceptor';
+import { LoadingComponent } from './loading/loading.component';
 
 @NgModule({
   declarations: [
@@ -55,6 +56,7 @@ import { AuthInterceptorInterceptor } from './auth-interceptor.interceptor';
     UniversalDialogComponent,
     DownloadLinkDialogComponent,
     MarketComponent,
+    LoadingComponent,
   ],
   imports: [
     BrowserAnimationsModule,

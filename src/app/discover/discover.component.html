@@ -6,7 +6,8 @@
 <!--<div id="gallery" class="gg-container">-->
 <div id="gallery">
 
-  <img class="nft-img" *ngFor="let tokenId of NFTs" 
-  src="{{nftCollection[tokenId].smImg}}" (click)="display(nftCollection[tokenId])">
+  <img class="nft-img" *ngFor="let tokenId of NFTs"
+  src="{{nftCollection[tokenId].smImg}}" 
+  (click)="display(nftCollection[tokenId])">
 
 </div>

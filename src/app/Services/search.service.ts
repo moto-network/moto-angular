@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { FileNFT, NFTCollection, SearchResults } from 'src/declaration';
+import { FileNFT, NFTCollection, SearchResults, NFT } from 'src/declaration';
 import { RemoteDataService } from './remote-data.service';
 
 @Injectable({
@@ -69,10 +69,10 @@ export class SearchService {
     return resultsObservable;
   }
 
-  private _searchCollection(value: string): Observable<SearchResults>{
+  private _searchCollection<NFTType extends NFT>(value: string): Observable<SearchResults>{
     const resultsObservable: Subject<SearchResults> = new Subject<SearchResults>();
-    this._remote.getNFTs("creator", value)
-      .subscribe((nftCollection: NFTCollection | null) => {
+    this._remote.getNFTs<NFTType>("creator", value)
+      .subscribe((nftCollection: NFTCollection<NFTType> | null) => {
         if (nftCollection) {
           const results: SearchResults = {
             query:value,

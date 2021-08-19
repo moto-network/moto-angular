@@ -82,17 +82,17 @@ export class RemoteDataService {
     return this.http.post<any>(FINALIZE_ORDER, formData)
       .pipe(take(1), map(data => data as Listing));
   }
-  public getAllNFTs(): Observable<NFTCollection> {
-    const nftCollection: NFTCollection = {};
+  public getAllNFT<NFTType extends NFT>(): Observable<NFTCollection<NFTType>> {
+    const nftCollection: NFTCollection<NFTType> = {};
     if (this.isChina) {
       return this._china.getAllNFTs();
     }
     else {
-      const collectionSubject: Subject<NFTCollection> = new Subject<NFTCollection>();
+      const collectionSubject: Subject<NFTCollection<NFTType>> = new Subject<NFTCollection<NFTType>>();
       this._db.collection("NFTs").get()
         .subscribe((querySnapshot) => {
           querySnapshot.forEach((doc) => {
-            let nft: FileNFT = doc.data() as FileNFT;
+            let nft: NFTType = doc.data() as NFTType;
             nftCollection[nft.tokenId] = nft;
             collectionSubject.next(nftCollection);
           });
@@ -113,9 +113,9 @@ export class RemoteDataService {
       .pipe(take(1));
   }
 
-  public getNFTs(searchParameter: string, searchValue: string): Observable<NFTCollection | null> {
-    const nftCollection: NFTCollection = {};
-    const collectionSubject: Subject<NFTCollection | null> = new Subject<NFTCollection | null>();
+  public getNFTs<NFTType extends NFT>(searchParameter: string, searchValue: string): Observable<NFTCollection<NFTType> | null> {
+    let nftCollection: NFTCollection<NFTType> & {} = { };
+    const collectionSubject: Subject<NFTCollection<NFTType> | null> = new Subject<NFTCollection<NFTType> | null>();
     if (this.isChina) {
       return this._china.getMultipleNFTs(searchParameter);
     }
@@ -129,7 +129,7 @@ export class RemoteDataService {
             collectionSubject.next(null);
           }
           querySnapshot.forEach((doc) => {
-            let nft: FileNFT = doc.data() as FileNFT;
+            let nft: NFTType = doc.data() as NFTType;
             nftCollection[nft.tokenId] = nft;
             collectionSubject.next(nftCollection);
           });

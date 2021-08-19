@@ -52,6 +52,7 @@ h2{
 .table-row-img{
   width:80px;
   border-radius: 8px;
+  cursor: pointer;
 }
 
 #nfts-table{

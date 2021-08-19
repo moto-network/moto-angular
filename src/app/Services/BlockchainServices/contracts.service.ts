@@ -12,20 +12,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { NullTemplateVisitor } from '@angular/compiler';
 import { access } from 'node:fs';
 
-/*function initWeb3<T>(initPromise: Promise<Web3>): Promise<T> {
-  return new Promise<T>((resolve, reject) => {
-    initPromise
-      .then((web3) => {
-        if (web3) {
-          resolve(target);
-        }
-        else {
-          reject(new Error("web3 error");
-        }
-      })
-  });
-}*/
-
 @Injectable({
   providedIn: 'root'
 })
@@ -191,7 +177,7 @@ export class ContractsService {
     });
   }
 
-  buyNFT(coin: string, nft: NFT, nftPrice: string) {
+  buyNFT(coin: string, nft: NFT, nftPrice: string):Promise<string> {
     console.log("inside buyNFT");
     return new Promise((resolve, reject) => {
       this._initWalletProvider(this.userAccount?.network!)

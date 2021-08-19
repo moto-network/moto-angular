@@ -3,10 +3,11 @@ import { Injectable } from '@angular/core';
 
 import { BehaviorSubject, Observable } from 'rxjs';
 import { getContract } from 'src/app.config';
-import { NFT, Listing as Listing, FileNFT, ListingNFT, Account } from 'src/declaration';
+import { NFT, Listing as Listing, FileNFT, ListingNFT, Account , } from 'src/declaration';
 import { ContractsService } from './BlockchainServices/contracts.service';
 import { RemoteDataService } from './remote-data.service';
 import { BigNumber } from "bignumber.js";
+import { TransactionsService } from './transactions.service';
 
 @Injectable({
   providedIn: 'root'
@@ -24,7 +25,8 @@ export class MarketService {
     "expiresAt": "10000000000"
   };
   listingObservable: BehaviorSubject<Listing | null> = new BehaviorSubject<Listing | null>(null);
-  constructor(private _contracts: ContractsService, private _remote: RemoteDataService) { }
+  constructor(private _contracts: ContractsService, private _remote: RemoteDataService,
+  private _transactions:TransactionsService) { }
 
   setListing(listing: Listing) {
     this.listing = listing;
@@ -125,19 +127,25 @@ export class MarketService {
     return this._remote.updateListingDB(nft);
   }
 
-  buyNFT(nft: NFT, price: string): Promise<any> {
-    return new Promise((resolve, reject) => {
+  buyNFT(nft: NFT, price: string): Promise<Listing> {
+    return new Promise<Listing>((resolve, reject) => {
       this._contracts.buyNFT('moto', nft, price)
-        .then((hash) => {
+        .then((hash:string) => {
           if (hash) {
-            this._remote.finalizeOrder(nft)
-              .subscribe((listing: Listing) => {
-                if (listing) {
-                  this.setListing(listing);
-                  console.log("listing");
-                  resolve(listing);
+            this._transactions.getTransactionStatus(nft, hash)
+              .subscribe((receipt) => {
+                if (receipt) {
+                  this._remote.finalizeOrder(nft)
+                    .subscribe((listing: Listing) => {
+                      if (listing) {
+                        this.setListing(listing);
+                        console.log("listing");
+                        resolve(listing);
+                      }
+                    });
                 }
-              });
+              }
+              );
           }
         })
         .catch((err) => {

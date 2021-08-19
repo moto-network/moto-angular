@@ -151,7 +151,7 @@ export class DisplayNFTComponent implements OnInit, OnDestroy {
   }
 
   public showMenu(): boolean {
-    return this._isOwner();
+    return this._isOwner() && !this.nft.onSale;
   }
   /**
    * they will drop in here from the outside link must be clickable from here. 

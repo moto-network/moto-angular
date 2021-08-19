@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { FileNFT, NFTCollection } from 'src/declaration';
+import { FileNFT, ListingNFT, NFTCollection } from 'src/declaration';
 import { NFTManagerService } from '../Services/nft-manager.service';
 import { SessionManagerService } from '../Services/session-manager.service';
 
@@ -13,7 +13,7 @@ declare var anime: any;
   styleUrls: ['./market.component.css']
 })
 export class MarketComponent implements OnInit {
-  nftCollection: NFTCollection = {};
+  nftCollection: NFTCollection<ListingNFT> = {};
   scrollPosition: any;
   loadingAnimation: any = null;
   session_id = "moto_discover";
@@ -33,7 +33,7 @@ export class MarketComponent implements OnInit {
     }
   }
 
-  private localLoad(nftCollection: NFTCollection): void {
+  private localLoad(nftCollection: NFTCollection<ListingNFT>): void {
     console.log("lcoaal calleld");
     this.nftCollection = nftCollection;
     if (this._sessionManager.get("moto_discover_scrollTop")) {
@@ -44,8 +44,8 @@ export class MarketComponent implements OnInit {
 
   }
   loadNFTs() {
-    this.loadNFTSub = this._nftManager.getNFTs()
-      .subscribe((collection: NFTCollection | null) => {
+    this.loadNFTSub = this._nftManager.getNFTs<ListingNFT>()
+      .subscribe((collection: NFTCollection<ListingNFT> | null) => {
         if (collection) {
           this.loadingAnimation.pause();
           this.loadingAnimation.reset();

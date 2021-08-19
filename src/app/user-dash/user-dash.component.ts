@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subscription } from 'rxjs';
-import { Account, FileNFT, Listing, NFT, NFTCollection } from 'src/declaration';
+import { Account, FileNFT, Listing, ListingNFT, NFT, NFTCollection } from 'src/declaration';
 import { faDownload, faEye, faUserCircle, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { WalletService } from '../Services/BlockchainServices/wallet.service';
 import { MarketService } from '../Services/market.service';
@@ -21,11 +21,11 @@ export class UserDashComponent implements OnInit, OnDestroy {
   view = faEye;
   user = faUserCircle;
   add = faPlusCircle;
-  nft: FileNFT | null = null;
+  nft: Partial<ListingNFT> & FileNFT | null = null;
   listing: Listing | null = null;
   listingSub: Subscription | null = null;
   nftSub: Subscription | null = null;
-  nftCollection: NFTCollection = {};
+  nftCollection: NFTCollection<Partial<ListingNFT> & FileNFT> | null =null ;
   nftCollectionSub: Subscription | null = null;
   account: Account | null = null;
   accountSub: Subscription | null = null;
@@ -139,6 +139,21 @@ export class UserDashComponent implements OnInit, OnDestroy {
 
   }
 
+  onSale(tokenId: string): boolean {
+    if (this.nftCollection) {
+      if (this.nftCollection[tokenId].onSale) {
+        return this.nftCollection[tokenId].onSale!;
+      }
+      else {
+        return false;
+      }
+    }
+    else {
+      return false;
+    }
+    
+  }
+
   goToNFT(nft: FileNFT) {
     this._nftManager.setNFT(nft);
     this._router.navigate(['nft']);
@@ -156,6 +171,11 @@ export class UserDashComponent implements OnInit, OnDestroy {
   }
 
   get ProfileNFTs() {
-    return Object.keys(this.nftCollection);
+    if (this.nftCollection) {
+      return Object.keys(this.nftCollection);
+    }
+    else {
+      return [];
+    }
   }
 }

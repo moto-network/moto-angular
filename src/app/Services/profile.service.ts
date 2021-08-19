@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { BehaviorSubject, combineLatest, from, iif, Observable, Subject, throwError } from 'rxjs';
+import { BehaviorSubject, combineLatest, from, Observable, Subject, throwError } from 'rxjs';
 import { filter, flatMap, map, mergeMap, take } from 'rxjs/operators';
 import { Account, FileNFT, NFT, NFTCollection, TransactionReceipt } from 'src/declaration';
 import { AuthenticationService } from './authentication.service';
@@ -16,8 +16,8 @@ import { TransactionsService } from './transactions.service';
 export class ProfileService {
   address: string | null = null;
   isCreator: boolean = false;
-  nftCollection: NFTCollection | null = null;
-  collectionObservable: BehaviorSubject<NFTCollection | null> = new BehaviorSubject<NFTCollection | null>(this.nftCollection);
+  nftCollection: NFTCollection<FileNFT> | null = null;
+  collectionObservable: BehaviorSubject<NFTCollection<FileNFT> | null> = new BehaviorSubject<NFTCollection<FileNFT> | null>(this.nftCollection);
   nft: FileNFT | null = null;
   constructor(private _nftManager: NFTManagerService, private _wallet: WalletService,
     private _remote: RemoteDataService, private auth: AuthenticationService,
@@ -90,7 +90,7 @@ export class ProfileService {
   initProfile(address: string): void {
     this.address = address;
     this._getRemoteNFTs(this.address)
-      .subscribe((collection: NFTCollection) => {
+      .subscribe((collection: NFTCollection<NFT | FileNFT>) => {
         if (collection) {
           this.nftCollection = collection;
         }
@@ -109,12 +109,15 @@ export class ProfileService {
     this.openSnackBar("Transaction Confirmed.", 4000, false);
   }
 
-  getNFTCollection(): Observable<NFTCollection | null> {
+  getNFTCollection(): Observable<NFTCollection<FileNFT> | null> {
     if (!this.nftCollection && this.address) {
 
       return this._getRemoteNFTs(this.address);
     }
-    return this.collectionObservable;
+    else {
+      return this.collectionObservable;
+    }
+   
   }
 
   setNFT(nft: FileNFT): void {
@@ -122,11 +125,14 @@ export class ProfileService {
     this._nftManager.setNFT(nft);
   }
 
-  setNFTCollection(collection: NFTCollection) {
+  setNFTCollection(collection: NFTCollection<NFT>) {
 
     this.nftCollection = collection;
     this.collectionObservable.next(this.nftCollection);
-    this.address = this._getAddress(collection, "creator");
+    const address = this._getAddress(collection, "creator");
+    if (address && this.address) {
+      this.address = address;
+     }
   }
 
   getNFT(): FileNFT | null {
@@ -145,10 +151,10 @@ export class ProfileService {
       .verifySignature(account, nonce!, signature).toPromise();
   }
 
-  private _getRemoteNFTs(address: string): Observable<NFTCollection> {
-    const collectionObservable: Subject<NFTCollection> = new Subject<NFTCollection>();
-    this._nftManager.getNFTs("creator", address)
-      .subscribe((remoteCollection: NFTCollection | null) => {
+  private _getRemoteNFTs(address: string): Observable<NFTCollection<FileNFT>> {
+    const collectionObservable: Subject<NFTCollection<FileNFT>> = new Subject<NFTCollection<FileNFT>>();
+    this._nftManager.getNFTs<FileNFT>("creator", address)
+      .subscribe((remoteCollection: NFTCollection<FileNFT> | null) => {
         if (remoteCollection) {
           this.nftCollection = remoteCollection;
           collectionObservable.next(remoteCollection);
@@ -158,7 +164,7 @@ export class ProfileService {
     return collectionObservable;
   }
 
-  private _getAddress(nftCollection: NFTCollection, whichAddress: string): string | null {
+  private _getAddress(nftCollection: NFTCollection<NFT>, whichAddress: string): string | null {
     const tokenId = Object.keys(nftCollection)[0];
     const nft: NFT = nftCollection[tokenId];
     if (whichAddress == "creator") {
