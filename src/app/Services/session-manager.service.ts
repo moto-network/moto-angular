@@ -7,6 +7,7 @@ import { LocalSession ,SessionData} from 'src/declaration';
 export class SessionManagerService {
 
   constructor() {
+    sessionStorage.clear();
   }
 
   set(name:string, value:any): void {

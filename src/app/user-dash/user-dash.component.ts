@@ -44,6 +44,7 @@ export class UserDashComponent implements OnInit, OnDestroy {
       .subscribe((account) => {
         this.loading = true;
         if (account) {
+          this.account = account;
 //          this.getLatestListing();
           this.getBalances(account);
           setTimeout(() => { this.loading = false }, 5000);

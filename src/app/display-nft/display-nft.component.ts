@@ -150,7 +150,7 @@ export class DisplayNFTComponent implements OnInit, OnDestroy {
     return isOnSale && !this._isOwner();
   }
 
-  public showMenu(): boolean {
+  public showSell(): boolean {
     return this._isOwner() && !this.nft.onSale;
   }
   /**

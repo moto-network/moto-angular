@@ -34,8 +34,8 @@
   </div>
 </div>
 
-<div class="management-bar" *ngIf="showMenu()"><!--()-->
-
+<div class="management-bar" ><!--()-->
+<p class="title" *ngIf="this.nft.onSale">currently on the market</p>
   <div class="button-container" id="left-corner-button">
    <!-- <button class="moto-button" id='burn-button'>
       <fa-icon [icon]="burn"></fa-icon> | destroy
@@ -46,7 +46,7 @@
       <fa-icon [icon]="give"></fa-icon> | give
     </button>-->
     <button class="action-button moto-button" 
-    id="sell-button" (click)="sellNFT()">
+    id="sell-button" (click)="sellNFT()" *ngIf="showSell()">
      sell
     </button>
   </div>

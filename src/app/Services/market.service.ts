@@ -1,13 +1,14 @@
 import { compileDirectiveFromRender2 } from '@angular/compiler/src/render3/view/compiler';
 import { Injectable } from '@angular/core';
 
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, from, Observable, throwError } from 'rxjs';
 import { getContract } from 'src/app.config';
-import { NFT, Listing as Listing, FileNFT, ListingNFT, Account , } from 'src/declaration';
+import { NFT, Listing as Listing, FileNFT, ListingNFT, Account, TransactionReceipt, } from 'src/declaration';
 import { ContractsService } from './BlockchainServices/contracts.service';
 import { RemoteDataService } from './remote-data.service';
 import { BigNumber } from "bignumber.js";
 import { TransactionsService } from './transactions.service';
+import { filter, map, mergeMap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -26,7 +27,7 @@ export class MarketService {
   };
   listingObservable: BehaviorSubject<Listing | null> = new BehaviorSubject<Listing | null>(null);
   constructor(private _contracts: ContractsService, private _remote: RemoteDataService,
-  private _transactions:TransactionsService) { }
+    private _transactions: TransactionsService) { }
 
   setListing(listing: Listing) {
     this.listing = listing;
@@ -40,11 +41,11 @@ export class MarketService {
     return this.listingObservable;
   }
 
-  getCoinBalance(account:Account) :Promise<string>{
+  getCoinBalance(account: Account): Promise<string> {
     return this._contracts.getCoinBalance(account);
   }
 
-  getNFTBalance(account:Account): Promise<string> {
+  getNFTBalance(account: Account): Promise<string> {
     return this._contracts.getMotoNFTBalance(account);
   }
 
@@ -59,9 +60,9 @@ export class MarketService {
     return this._contracts.grantMarketTotalPermission(nft);
   }
 
-  addToMarket(nft: NFT, price:string): Promise<any> {
+  addToMarket(nft: NFT, price: string): Promise<any> {
     return new Promise((resolve, reject) => {
-      
+
       this.canMarketControlSingle(nft)
         .then((hasPermission: boolean) => {
 
@@ -69,13 +70,13 @@ export class MarketService {
             console.log("have permission");
             const priceBN = new BigNumber(price);
             const motoSubUnitPrice = priceBN.multipliedBy(1000000);
-            resolve(this._contracts.addNFTtoMarket(nft,motoSubUnitPrice.toString()));
+            resolve(this._contracts.addNFTtoMarket(nft, motoSubUnitPrice.toString()));
           }
           else {
             this.requestSinglePermission(nft)
               .then((transactionHash: string) => {
                 if (transactionHash) {
-                  resolve(this._contracts.addNFTtoMarket(nft,price));
+                  resolve(this._contracts.addNFTtoMarket(nft, price));
                 }
                 else {
                   reject(new Error("Error interacting with contract. might be connection issue"));
@@ -127,35 +128,21 @@ export class MarketService {
     return this._remote.updateListingDB(nft);
   }
 
-  buyNFT(nft: NFT, price: string): Promise<Listing> {
-    return new Promise<Listing>((resolve, reject) => {
-      this._contracts.buyNFT('moto', nft, price)
-        .then((hash:string) => {
-          if (hash) {
-            this._transactions.getTransactionStatus(nft, hash)
-              .subscribe((receipt) => {
-                if (receipt) {
-                  this._remote.finalizeOrder(nft)
-                    .subscribe((listing: Listing) => {
-                      if (listing) {
-                        this.setListing(listing);
-                        console.log("listing");
-                        resolve(listing);
-                      }
-                    });
-                }
-              }
-              );
-          }
-        })
-        .catch((err) => {
-          reject(err);
-        });
-    });
-    
+  async buyNFT(nft: ListingNFT, price: string): Promise<Listing> {
+    const hash:string = await this._contracts.buyNFT('moto', nft, price) as string;
+    if (hash) {
+      return this._transactions.getTransactionStatus(nft, hash)
+        .pipe(
+          filter(status => status == true),
+          mergeMap(() => this._remote.finalizeOrder(nft,hash))
+        ).toPromise();
+    }
+    else {
+      return Promise.reject(new Error("Market Update Error."));
+    }    
   }
 
-  increaseAllocationForMarket(coin:string , amount:string): Promise<string> {
+  increaseAllocationForMarket(coin: string, amount: string): Promise<string> {
     return this._contracts.increaseAllocation(coin, amount);
   }
 
@@ -163,9 +150,22 @@ export class MarketService {
     return this._contracts.decreaseAllocation(coin, amount);
   }
 
-  approveExactAmount(coin: string, nft: NFT, price: string): Promise<string> {
+  approveExactAmount(coin: string, nft: NFT, price: string): Promise<boolean> {
     console.log("approveExactAmoouunt function in ");
-    return this._contracts.setExactAllocation(coin, nft, price);
+    return from(this._contracts.setExactAllocation(coin, nft, price))
+      .pipe(
+        mergeMap(result => {
+          if (result) {
+            console.log("pipe results ", result);
+            return this._transactions.getTransactionStatus(nft, result)
+          }
+          else {
+            throw throwError("No result found");
+          }
+        })
+      ).toPromise();
+
+    
   }
 
 }

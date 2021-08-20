@@ -178,8 +178,7 @@ export class ContractsService {
   }
 
   buyNFT(coin: string, nft: NFT, nftPrice: string):Promise<string> {
-    console.log("inside buyNFT");
-    return new Promise((resolve, reject) => {
+    return new Promise<string>((resolve, reject) => {
       this._initWalletProvider(this.userAccount?.network!)
         .then((web3) => {
           if (!(web3 && this.userAccount?.network!)) {
@@ -235,13 +234,14 @@ export class ContractsService {
    * @param {string} amount 
    * @returns {Promise<string>}
    */
-  setExactAllocation(coin: string, nft: NFT, price: string): Promise<string> {
+   setExactAllocation(coin: string, nft: NFT, price: string): Promise<string> {
     return new Promise((resolve, reject) => {
       this._initWalletProvider(this.userAccount?.network!)
         .then((web3) => {
           if (!web3) {
             reject(new Error("Unable to connect to blockchain server"));
           }
+
           resolve(this._setExactAllocation(coin, nft, price, web3!))
         })
         .catch((err) => {
@@ -477,12 +477,13 @@ export class ContractsService {
     });
   }
 
-  private _requestAllocationFromContract(data: any, toAddress: string): Promise<string> {
+  private async _requestAllocationFromContract(data: any, toAddress: string): Promise<string> {
+    
     return this._sendTransaction('0x0', toAddress, this.userAccount?.network!!, data);
   }
 
   private async _sendTransaction(valueInHex: string,
-    to: string, chainId: number, data: any) {
+    to: string, chainId: number, data: any):Promise<string> {
 
     const transactionParameters = {
 

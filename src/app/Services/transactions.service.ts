@@ -80,9 +80,10 @@ export class TransactionsService {
         let receipt: TransactionReceipt = await this.getTransactionReceipt(unconfirmed.nft, unconfirmed.hash) as TransactionReceipt;
         if (receipt != null) {
           if (receipt.status) {
-            this._profile.openSnackBar("Transaction Receipt Received.")
-            this.confirmTransaction(unconfirmed);
+            this._profile.openSnackBar("Transaction Receipt Received.");
             clearInterval(this.interval);
+            this.confirmTransaction(unconfirmed);
+            
           }
      
         }
@@ -92,7 +93,7 @@ export class TransactionsService {
       });
     }
 
-      , 3 * 1000);
+      , 3.5 * 1000);
   }
 
   private storeUnconfirmed(nft: NFT, hash: string, file?: File) {
@@ -123,6 +124,7 @@ export class TransactionsService {
     const file = this.unconfirmedTransactions[index].file
     this._profile.notifyAboutTransaction(nft);
     this.transactionSubject.next(true);
+    console.log("transaction sub sent next");
     if (file) {
       const uploadSub = this._nftManager.uploadNFT(nft, file).subscribe((status) => {
         if (status) {

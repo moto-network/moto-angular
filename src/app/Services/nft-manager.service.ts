@@ -6,6 +6,7 @@ import { CryptoService } from './crypto.service';
 import { Account, FileNFT, ListingNFT, NFT, NFTCollection } from "src/declaration";
 import { getContract, getProvider } from "src/app.config";
 import { RemoteDataService } from './remote-data.service';
+import { take } from 'rxjs/operators';
 
 
 @Injectable({
@@ -79,7 +80,7 @@ export class NFTManagerService {//merge this wit the other NFTManager or wahteve
   }
 
   public uploadNFT(nft: NFT, file: File) :Observable<boolean>{
-    return this._remote.uploadFile(nft, file);
+    return this._remote.uploadFile(nft, file).pipe(take(1));
   }
 
   getNFT<NFTType extends NFT>(parameter?: string, value?: string): Observable<NFTType | null> {
@@ -87,6 +88,7 @@ export class NFTManagerService {//merge this wit the other NFTManager or wahteve
     if (value && parameter) {
       return this._remote.getNFT<NFTType>(parameter, value);
     }
+    console.log("this nft from nft manager ", this.nft);
     nftObservable.next(this.nft as NFTType);
     return nftObservable;
   }

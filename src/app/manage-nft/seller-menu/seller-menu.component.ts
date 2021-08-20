@@ -1,4 +1,4 @@
-import { Component, ComponentFactoryResolver, OnInit } from '@angular/core';
+import { Component, ComponentFactoryResolver, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
@@ -55,7 +55,8 @@ export class SellerMenuComponent implements OnInit {
           console.log("account in seller menu", account);
         }
       });
-
+    
+    
     this._nftManager.getNFT()
       .subscribe((nft: FileNFT | null) => {
         if (nft) {
@@ -93,6 +94,9 @@ export class SellerMenuComponent implements OnInit {
     })
    }
 
+  ngOnDestroy(): void {
+    this.tranSub?.unsubscribe();
+  }
   /**
    * this is behind a locked input so it cant be called before input is validated
    */
@@ -177,7 +181,7 @@ export class SellerMenuComponent implements OnInit {
       this._market.requestSinglePermission(this.nft)
         .then((result: string) => {
           if (result) {
-            this._profile.openSnackBar("Permission Granted");
+            this._profile.openSnackBar("Permission Granted", 3000, false);
             this.allowOne = true;
             this.yellowLight = true;
           }

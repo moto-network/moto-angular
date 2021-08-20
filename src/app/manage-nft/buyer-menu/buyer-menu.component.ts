@@ -25,7 +25,7 @@ export class BuyerMenuComponent implements OnInit {
   approvedAmount = new BigNumber(0);
   priceInSubUnits = new BigNumber(0);
   nft: Partial<ListingNFT> & FileNFT | null = null;
-  loading = true;
+  loading = false;
   //numberWithSpaces(getFormattedPrice('229834792384'))
   constructor(private _market: MarketService,
     private _nftMananger: NFTManagerService, private _router: Router,
@@ -47,12 +47,17 @@ export class BuyerMenuComponent implements OnInit {
   buyNFT() {
     this.loading = true;
     if (this.nft) {
+      console.log(this.nft);
       this._profile.openSnackBar("Communication with Blockchain", 4000, false);
-      this._market.buyNFT(this.nft, this.priceInSubUnits.toString())
-        .then((listing:Listing) => {
+      this._market.buyNFT(this.nft as ListingNFT, this.priceInSubUnits.toString())
+        .then((listing: Listing) => {
           if (listing) {
             this._router.navigate(['user-dashboard']);
           }
+        })
+        .catch((err) => {
+          this.loading = false;
+          this._profile.openSnackBar(err, 3000);
         });
     }
     
@@ -97,18 +102,20 @@ export class BuyerMenuComponent implements OnInit {
 
   approveExactAmount() {
     if (this.nft) {
+      this.loading = true;
       this._market.approveExactAmount('moto', this.nft, this.priceInSubUnits.toString())
-        .then((approvedAmount) => {
-          console.log("approved amount from contract ", approvedAmount);
-          this.approvedAmount = new BigNumber(approvedAmount);
-          console.log("approved amount from Big NUMbe ",this.approvedAmount);
-          const formattedAmount = this.getFormattedPrice(approvedAmount.toString());
-          console.log("formattedAmount ", formattedAmount);
-          const message = formattedAmount + " has been approved.";
-          this._profile.openSnackBar(message, 4000, false);
+        .then((approved) => {
+          console.log("approved is ", approved);
+          if (approved) {
+            this.loading = false;
+            this.getAvailableAllowance();
+          }
+          else {
+            Promise.reject(new Error("approval error."));
+          }
         })
         .catch((err) => {
-          this.openDialog("Allocation Error", err.message);
+          this._profile.openSnackBar(err, 4000);
         });
     }
   }
