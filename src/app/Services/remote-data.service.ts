@@ -60,10 +60,11 @@ export class RemoteDataService {
     return this.http.post<any>(UPLOAD_NFT_URL, formData).pipe(take(1));
   }
 
-  public updateListingDB(nft: NFT): Promise<Listing> {
+  public updateListingDB(nft: NFT, hash:string): Promise<Listing> {
     return new Promise<Listing>((resolve, reject) => {
       const formData = new FormData();
       formData.append('nft', JSON.stringify(nft));
+      formData.append("transactionHash", hash);
       this.http.post<any>(CREATE_ORDER_URL, formData)
         .subscribe((response) => {
 

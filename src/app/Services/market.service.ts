@@ -52,12 +52,26 @@ export class MarketService {
   getAllowance(): Promise<string> {
     return this._contracts.getAllocation('moto');
   }
-  requestSinglePermission(nft: NFT): Promise<string> {
-    return this._contracts.grantMarketSinglePermission(nft);
+
+  requestSinglePermission(nft: NFT): Promise<boolean> {
+    return this._contracts.grantMarketSinglePermission(nft)
+      .then((hash: string) => {
+        if (hash) {
+          return this._transactions.waitForUnconfirmed(nft, hash);
+        }
+        else {
+          return Promise.reject("No transaction.");
+        }
+       })
+
+      
   }
 
-  grantTotalPermission(nft: NFT): Promise<any> {
-    return this._contracts.grantMarketTotalPermission(nft);
+  grantTotalPermission(nft: NFT): Promise<boolean> {
+    return from(this._contracts.grantMarketTotalPermission(nft))
+      .pipe(
+        mergeMap(hash => this._transactions.waitForUnconfirmed(nft, hash))
+      ).toPromise();
   }
 
   addToMarket(nft: NFT, price: string): Promise<any> {
@@ -74,8 +88,8 @@ export class MarketService {
           }
           else {
             this.requestSinglePermission(nft)
-              .then((transactionHash: string) => {
-                if (transactionHash) {
+              .then((permission: boolean) => {
+                if (permission) {
                   resolve(this._contracts.addNFTtoMarket(nft, price));
                 }
                 else {
@@ -124,22 +138,27 @@ export class MarketService {
     return priceBN.div(decimals).toString();
   }
 
-  updateListingDB(nft: NFT): Promise<Listing> {
-    return this._remote.updateListingDB(nft);
+  updateListingDB(nft: NFT, hash:string): Promise<Listing> {
+    return this._remote.updateListingDB(nft, hash);
   }
 
   async buyNFT(nft: ListingNFT, price: string): Promise<Listing> {
-    const hash:string = await this._contracts.buyNFT('moto', nft, price) as string;
+    console.log("listing nft ", nft);
+    const hash: string = await this._contracts.buyNFT('moto', nft, price) as string;
     if (hash) {
-      return this._transactions.getTransactionStatus(nft, hash)
-        .pipe(
-          filter(status => status == true),
-          mergeMap(() => this._remote.finalizeOrder(nft,hash))
-        ).toPromise();
+      return this._transactions.waitForUnconfirmed(nft, hash)
+        .then((status:boolean) => {
+          if (status) {
+            return this._remote.finalizeOrder(nft, hash).toPromise();
+          }
+          else {
+            return Promise.reject("some error");
+          }
+        })
     }
     else {
       return Promise.reject(new Error("Market Update Error."));
-    }    
+    }
   }
 
   increaseAllocationForMarket(coin: string, amount: string): Promise<string> {
@@ -152,20 +171,18 @@ export class MarketService {
 
   approveExactAmount(coin: string, nft: NFT, price: string): Promise<boolean> {
     console.log("approveExactAmoouunt function in ");
-    return from(this._contracts.setExactAllocation(coin, nft, price))
-      .pipe(
-        mergeMap(result => {
-          if (result) {
-            console.log("pipe results ", result);
-            return this._transactions.getTransactionStatus(nft, result)
-          }
-          else {
-            throw throwError("No result found");
-          }
-        })
-      ).toPromise();
+    return this._contracts.setExactAllocation(coin, nft, price)
+      .then((hash) => {
+        if (hash) {
+          return this._transactions.waitForUnconfirmed(nft, hash);
+        }
+        else {
+          return Promise.reject("");
+        }
+      })
+     
 
-    
+
   }
 
 }

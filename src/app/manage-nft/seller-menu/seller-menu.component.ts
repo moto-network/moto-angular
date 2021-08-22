@@ -107,13 +107,16 @@ export class SellerMenuComponent implements OnInit {
         .then((transactionHash) => {
           if (transactionHash) {
             this.updating = true;
-            this.tranSub = this._transactions.getTransactionStatus(this.nft, transactionHash)
-              .subscribe((status) => {
+            this._profile.openSnackBar("Updating Market Data.", 2000, false);
+            this._transactions.waitForUnconfirmed(this.nft, transactionHash)
+              .then((status) => {
                 if (status) {
-                  this._market.updateListingDB(this.nft)
+                  this._profile.openSnackBar("Decentralized Market Updated.", 2500, false);
+                  this._market.updateListingDB(this.nft, transactionHash)
                     .then((listing) => {
                       console.log("listing", listing);
                       if (listing) {
+                        this._profile.openSnackBar("Moto Database Updated.", 2500, false);
                         this._market.setListing(listing);
                         this._router.navigate(['manage-nft', 'listing-management']);
                         this.stopAnimations();
@@ -133,7 +136,7 @@ export class SellerMenuComponent implements OnInit {
         });
     }
     else {
-      this._profile.openSnackBar("Missing Price", 3000);
+      this._profile.openSnackBar("Missing Price.", 2000);
     }
     
   }
@@ -177,11 +180,15 @@ export class SellerMenuComponent implements OnInit {
   }
 
   grantMarketSinglePermission(): void {
+    this.allowOne = true;
+    this._profile.openSnackBar("Please wait...", 2000, false);
     if (this._nftManager.nft) {
       this._market.requestSinglePermission(this.nft)
-        .then((result: string) => {
+        .then((result: boolean) => {
+          console.log('result i s', result);
           if (result) {
-            this._profile.openSnackBar("Permission Granted", 3000, false);
+            console.log("got it ");
+            this._profile.openSnackBar("Permission Granted.", 2000, false);
             this.allowOne = true;
             this.yellowLight = true;
           }
@@ -190,11 +197,13 @@ export class SellerMenuComponent implements OnInit {
   }
 
   grantMarketTotalPermission(): void {
+    this.allowAll = true;
+    this._profile.openSnackBar("Please wait...", 2000, false);
     if (this._nftManager.nft) {
       this._market.grantTotalPermission(this.nft)
-        .then((result: string) => {
+        .then((result: boolean) => {
           if (result) {
-            this._profile.openSnackBar("Permission Granted",2000, false);
+            this._profile.openSnackBar("Permission Granted.",2000, false);
             this.allowAll = true;
             this.allowOne = true;
             this.yellowLight = true;

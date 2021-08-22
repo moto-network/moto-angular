@@ -105,7 +105,7 @@ export class BuyerMenuComponent implements OnInit {
       this.loading = true;
       this._market.approveExactAmount('moto', this.nft, this.priceInSubUnits.toString())
         .then((approved) => {
-          console.log("approved is ", approved);
+
           if (approved) {
             this.loading = false;
             this.getAvailableAllowance();

@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { TransactionsService } from '../../services/transactions/transactions.service';
+import { TransactionsService} from "../Services/transactions.service"
 
 describe('TransactionsService', () => {
   let service: TransactionsService;

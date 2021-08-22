@@ -20,13 +20,10 @@ interface UnconfirmedTransaction {
   providedIn: 'root'
 })
 export class TransactionsService {
-  unconfirmedTransactions: UnconfirmedTransaction[] = [];
-  pendingReceipts: any = {};
-  pendingNFTs: any = {};
+
   file: File | null = null;
   nft: NFT | null = null;
-  interval: any | null = null;
-  transactionSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  unconfirmed: UnconfirmedTransaction | null = null;
   constructor(private _db: AngularFirestore, private _profile: ProfileService, private _nftManager: NFTManagerService) {
 
   }
@@ -38,66 +35,43 @@ export class TransactionsService {
     return results;
   }
 
-  public getTransactionStatus(nft: NFT, transactionHash: string, file?: File): Observable<boolean> {
-    
+  public waitForUnconfirmed(nft: NFT, transactionHash: string): Promise<boolean> {
+    this.unconfirmed = { "nft": nft, "hash": transactionHash };
     const promise = new Promise<boolean>((resolve, reject) => {
+
       this.getTransactionReceipt(nft, transactionHash)
         .then((receipt: TransactionReceipt | null) => {
           if (receipt) {
             resolve(receipt.status);
           }
           else {
-            this.waitForUnconfirmed(nft, transactionHash, file);
+            resolve(this.startBackgroundCheck(nft, transactionHash));
           }
         })
         .catch((err) => {
           reject(err);
         })
     });
-
-    return merge(this.transactionSubject, from(promise));
+    return promise;
   }
 
+  private startBackgroundCheck(nft: NFT, hash: string): Promise<boolean> {
+    return new Promise(async (resolve, reject) => {
+      var status: boolean = false;
+      while (this.unconfirmed) {
 
-
-  waitForUnconfirmed(nft: NFT, hash: any, file?: File) {
-    this.storeUnconfirmed(nft, hash, file);
-    console.log("gonna check transaction status in the background");
-    this.updateUnconfirmed();
-  }
-  
-  private updateUnconfirmed(unconfirmed?: UnconfirmedTransaction) {
-    clearInterval(this.interval);
-    if (unconfirmed) {
-      const index = this.unconfirmedTransactions.indexOf(unconfirmed);
-      if (index > -1) {
-        this.unconfirmedTransactions.splice(index, 1);
-      }
-    }
-    this.interval = setInterval(async () => {
-
-      this.unconfirmedTransactions.forEach(async (unconfirmed) => {
-        let receipt: TransactionReceipt = await this.getTransactionReceipt(unconfirmed.nft, unconfirmed.hash) as TransactionReceipt;
-        if (receipt != null) {
-          if (receipt.status) {
-            this._profile.openSnackBar("Transaction Receipt Received.");
-            clearInterval(this.interval);
-            this.confirmTransaction(unconfirmed);
-            
+        try {
+          const receipt = await this.getTransactionReceipt(nft, hash);
+          if (receipt) {
+            this.unconfirmed = null;
+            resolve(receipt.status);
           }
-     
         }
-        else {
-          console.log("background transaction checking..");
+        catch (err) {
+          reject(err);
         }
-      });
-    }
-
-      , 3.5 * 1000);
-  }
-
-  private storeUnconfirmed(nft: NFT, hash: string, file?: File) {
-    this.unconfirmedTransactions.push({ "nft": nft, "file": file, "hash": hash } as UnconfirmedTransaction);
+      }
+    });
   }
 
   private async getTransactionReceipt(nft: NFT, hash: string): Promise<TransactionReceipt | null> {
@@ -117,24 +91,4 @@ export class TransactionsService {
       });
   }
 
-  private confirmTransaction(unconfirmed: UnconfirmedTransaction) {
-    const index = this.unconfirmedTransactions.indexOf(unconfirmed);
-    clearInterval(this.interval)
-    const nft = this.unconfirmedTransactions[index].nft;
-    const file = this.unconfirmedTransactions[index].file
-    this._profile.notifyAboutTransaction(nft);
-    this.transactionSubject.next(true);
-    console.log("transaction sub sent next");
-    if (file) {
-      const uploadSub = this._nftManager.uploadNFT(nft, file).subscribe((status) => {
-        if (status) {
-          this.updateUnconfirmed(unconfirmed);
-          this._profile.openSnackBar("File uploaded.", 3000, false);
-          uploadSub.unsubscribe();
-        }
-      });
-    }
-  
-
-  }
 }
