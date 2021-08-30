@@ -151,7 +151,8 @@ export class WalletService {
   }
 
   private prepSignatureData(account: Account, nonce: string) {
-
+    let userMessage = `We will sign you in using the account info below. The nonce below represents random data\
+    that can be signed to uniquely identify you.`;
     let data = {
       "domain": {
         name: "Moto Network",
@@ -171,7 +172,7 @@ export class WalletService {
         ]
       },
       "primaryType": "Identity",
-      "message": { account: account.address, nonce: nonce, chainId: account.network }
+      "message": {info:userMessage, account: account.address, nonce: nonce, chainId: account.network }
     };
     console.log("signature data prepared ", data);
     return JSON.stringify(data);

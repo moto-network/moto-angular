@@ -17,7 +17,7 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  goToCreate() {
-    this._router.navigate(['create']);
+  gettingStarted() {
+    this._router.navigate(['getting-started']);
   }
 }

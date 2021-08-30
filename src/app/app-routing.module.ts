@@ -6,7 +6,7 @@ import { SignUpComponent } from './sign-up/sign-up.component';
 import { AuthGuard } from './auth.guard';
 
 import { OnRampComponent } from './on-ramp/on-ramp.component';
-import { CreateNFTComponent } from './create-nft/create-nft.component';
+import { CreateNFTComponent } from './dashboard/create-nft/create-nft.component';
 import { DiscoverComponent } from './discover/discover.component';
 import { DisplayNFTComponent } from './display-nft/display-nft.component';
 import { NftCreationResultsComponent } from './nft-creation-results/nft-creation-results.component';
@@ -15,6 +15,7 @@ import { OnlyAccountGuard } from './only-account.guard';
 import { SimpleMessageDialogComponent } from './simple-message-dialog/simple-message-dialog.component';
 import { UserDashComponent } from './user-dash/user-dash.component';
 import { MarketComponent } from './market/market.component';
+import { GettingStartedComponent } from './getting-started/getting-started.component';
 const routes: Routes = [{ path: "", component: HomeComponent },
 { path: "login", component: LoginComponent },
 { path: "signup", component: SignUpComponent },
@@ -26,22 +27,23 @@ const routes: Routes = [{ path: "", component: HomeComponent },
 { path: "user-dashboard", component: UserDashComponent, canActivate: [AuthGuard] },
 { path: "universal", component: SimpleMessageDialogComponent },
 { path: "nft-results", component: NftCreationResultsComponent },
+{ path: "getting-started", component: GettingStartedComponent },
 {
   path: "manage-nft",
   loadChildren: () => import('./manage-nft/manage-nft.module')
     .then(m => m.ManageNftModule),
-  canLoad:[OnlyAccountGuard]
+  canLoad: [OnlyAccountGuard]
 },
 {
   path: "profile",
   loadChildren: () => import('./profile/profile.module')
     .then(m => m.ProfileModule)
-  },
-  {
-    path: "control-panel",
-    loadChildren: () => import('./control-panel/control-panel.module')
-      .then(m => m.ControlPanelModule)
-  }
+},
+{
+  path: "dashboard",
+  loadChildren: () => import('./dashboard/dashboard-module')
+    .then(m => m.ControlPanelModule)
+}
 ];
 
 @NgModule({

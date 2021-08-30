@@ -1,0 +1,44 @@
+button{
+  background-color: var(--moto-pink);
+  color:white;
+  margin-bottom:16px;
+}
+h3{
+  width:80%;
+}
+.top-action-section{
+  width:300px;
+  height:400px;
+
+box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-radius: 8px;
+  align-items: center;
+  flex-grow: 1;
+  flex-shrink: 1;
+  padding:24px;
+}
+
+#top-section{
+  width:100%;
+  height:auto;
+  display:flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+
+  justify-content: center;
+}
+
+#action-container{
+  width:95%;
+  height:auto;
+
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  gap:8px;
+  padding:16px;
+}

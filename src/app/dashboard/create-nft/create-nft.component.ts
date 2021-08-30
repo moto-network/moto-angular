@@ -2,19 +2,18 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { faArrowAltCircleRight, faCaretSquareUp, faCog } from "@fortawesome/free-solid-svg-icons";
-import { getContractAddress, getProvider } from 'src/app.config';
+import { getContractAddress } from 'src/app.config';
 import { WalletService } from 'src/app/Services/BlockchainServices\
 /wallet.service';
 import { FileManagerService } from 'src/app/Services/file-manager.service';
-import { NFTManagerService } from '../Services/nft-manager.service';
+import { NFTManagerService } from '../../Services/nft-manager.service';
 import { Account, NFT } from 'src/declaration';
-import { ProfileService } from '../Services/profile.service';
-import { Observable, Subscription } from 'rxjs';
+import { ProfileService } from '../../Services/profile.service';
+import {  Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
-import { LoginComponent } from '../login/login.component';
-import { UniversalDialogComponent } from '../universal-dialog/universal-dialog.component';
+import { LoginComponent } from '../../login/login.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { TransactionsService } from '../Services/transactions.service';
+import { TransactionsService } from '../../Services/transactions.service';
 
 @Component({
   selector: 'app-create-nft',

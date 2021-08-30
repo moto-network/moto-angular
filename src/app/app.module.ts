@@ -23,7 +23,7 @@ import { OnRampComponent } from './on-ramp/on-ramp.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { ProfileComponent } from './profile/profile.component';
-import { CreateNFTComponent } from './create-nft/create-nft.component';
+
 import { DiscoverComponent } from './discover/discover.component';
 
 import { SearchService } from './Services/search.service';
@@ -36,6 +36,10 @@ import { DownloadLinkDialogComponent } from './download-link-dialog/download-lin
 import { MarketComponent } from './market/market.component';
 import { AuthInterceptorInterceptor } from './auth-interceptor.interceptor';
 import { LoadingComponent } from './loading/loading.component';
+import { CreateTiersComponent } from './dashboard/create-tiers/create-tiers.component';
+import { CoinExchangeComponent } from './dashboard/coin-exchange/coin-exchange.component';
+import { GettingStartedComponent } from './getting-started/getting-started.component';
+import { NoTiersLandingComponent } from './dashboard/no-tiers-landing/no-tiers-landing.component';
 
 
 @NgModule({
@@ -48,7 +52,7 @@ import { LoadingComponent } from './loading/loading.component';
     OnRampComponent,
     NotFoundComponent,
     ProfileComponent,
-    CreateNFTComponent,
+   
     DiscoverComponent,
     NftCreationResultsComponent,
     SimpleMessageDialogComponent,
@@ -57,6 +61,10 @@ import { LoadingComponent } from './loading/loading.component';
     DownloadLinkDialogComponent,
     MarketComponent,
     LoadingComponent,
+    CreateTiersComponent,
+    CoinExchangeComponent,
+    GettingStartedComponent,
+    NoTiersLandingComponent,
   ],
   imports: [
     BrowserAnimationsModule,

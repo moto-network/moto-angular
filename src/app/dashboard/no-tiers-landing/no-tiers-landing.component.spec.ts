@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ControlPanelComponent } from './control-panel.component';
+import { NoTiersLandingComponent } from './no-tiers-landing.component';
 
-describe('ControlPanelComponent', () => {
-  let component: ControlPanelComponent;
-  let fixture: ComponentFixture<ControlPanelComponent>;
+describe('NoTiersLandingComponent', () => {
+  let component: NoTiersLandingComponent;
+  let fixture: ComponentFixture<NoTiersLandingComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ControlPanelComponent ]
+      declarations: [ NoTiersLandingComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ControlPanelComponent);
+    fixture = TestBed.createComponent(NoTiersLandingComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

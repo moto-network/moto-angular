@@ -58,6 +58,19 @@ export type LocalSession = {
   data?: SessionData;
 }
 
+export type Tier = {
+  valid: boolean;
+  creator: string;
+  network: number;
+  priceInBaseUnits: string;
+  commissionInBaseUnits: string;
+}
+
+export type Subscription = {
+  tier: Tier;
+  expirationDate: string;
+}
+
 export type SessionData = {
   [dataId: string]: any;
 }
