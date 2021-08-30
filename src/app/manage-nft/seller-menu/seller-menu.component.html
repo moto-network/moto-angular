@@ -1,4 +1,4 @@
-<div id="action-container" *ngIf="!updating">
+<div id="action-container" *ngIf="!loading">
   <h2 class="moto-title title">allow <span class="moto-name">moto </span> <span class="moto-sub-system">sancus </span>
     to manage this item</h2>
   <div class="row-info">
@@ -47,9 +47,12 @@
 
   
 </div>
-<div id="updating" *ngIf="updating">
+<div id="updating" *ngIf="loading">
   <div id="loading">
     <img src="../../../assets/loading.webp" style="width:400px;height:auto">
   </div>
   <h2 style="font-weight:200">please wait while we update the blockchain.</h2>
+  <h3 style="font-weight:300">
+    this may take between 3 to 15 seconds, depending on the network.
+  </h3>
 </div>

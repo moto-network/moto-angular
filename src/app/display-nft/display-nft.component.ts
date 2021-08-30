@@ -76,6 +76,7 @@ export class DisplayNFTComponent implements OnInit, OnDestroy {
   }
 
   buyNFT() {
+    console.log("this account ", this.account);
     if (this.account) {
       this._nftManager.setNFT(this.nft);
       this._router.navigate(['manage-nft', 'buyer-menu']);
@@ -85,6 +86,7 @@ export class DisplayNFTComponent implements OnInit, OnDestroy {
       this._dialog.open(LoginComponent, { height: "500px", width: "400px" });
       this._dialog.afterAllClosed.subscribe(() => {
         if (this.account) {
+          console.log("its true");
           this._nftManager.setNFT(this.nft);
           this._router.navigate(['manage-nft', 'buyer-menu']);
         }

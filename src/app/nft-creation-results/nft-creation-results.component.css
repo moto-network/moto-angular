@@ -2,7 +2,7 @@ p{
   font-weight:200;
   word-wrap: break-word;
   line-height: 2ch;
-  
+  max-width: 230px;
 }
 
 a{

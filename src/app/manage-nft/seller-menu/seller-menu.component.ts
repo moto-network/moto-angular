@@ -11,7 +11,7 @@ import { MarketService } from 'src/app/Services/market.service';
 import { NFTManagerService } from 'src/app/Services/nft-manager.service';
 import { TransactionsService } from 'src/app/Services/transactions.service';
 import { FileNFT, ListingNFT, NFT } from 'src/declaration';
-declare var anime:any;
+declare var anime: any;
 @Component({
   selector: 'seller-menu',
   templateUrl: './seller-menu.component.html',
@@ -21,7 +21,7 @@ export class SellerMenuComponent implements OnInit {
 
   constructor(private _wallet: WalletService, private _nftManager: NFTManagerService,
     private _router: Router, private _market: MarketService,
-  private _profile:ProfileService, private _transactions:TransactionsService) { }
+    private _profile: ProfileService, private _transactions: TransactionsService) { }
   nft: NFT & Partial<ListingNFT> = {
     name: "Nothing To Show",
     tokenId: "0x0000000",
@@ -31,7 +31,7 @@ export class SellerMenuComponent implements OnInit {
     contentHash: "0x000000",
     contractAddress: "0x0000000"
   };
-  updating: boolean = false;
+  loading: boolean = false;
   price: string = "";
   messageForUser: string = "";
   marketPermission: boolean = false;
@@ -55,8 +55,8 @@ export class SellerMenuComponent implements OnInit {
           console.log("account in seller menu", account);
         }
       });
-    
-    
+
+
     this._nftManager.getNFT()
       .subscribe((nft: FileNFT | null) => {
         if (nft) {
@@ -82,17 +82,17 @@ export class SellerMenuComponent implements OnInit {
       })
 
   }
-  ngAfterViewInit(): void{
-  
+  ngAfterViewInit(): void {
+
     this.scalingAnimation = anime({
       targets: '#main-content-container',
-      scale:[1,0.98,1],
+      scale: [1, 0.98, 1],
       duration: 3000,
-      easing:"easeInOutSine",
+      easing: "easeInOutSine",
       loop: true,
       autoplay: false
     })
-   }
+  }
 
   ngOnDestroy(): void {
     this.tranSub?.unsubscribe();
@@ -104,30 +104,18 @@ export class SellerMenuComponent implements OnInit {
     this.startLoadingAnimation();
     if (this.nft && this.price) {
       this._market.addToMarket(this.nft, this.price)
-        .then((transactionHash) => {
-          if (transactionHash) {
-            this.updating = true;
-            this._profile.openSnackBar("Updating Market Data.", 2000, false);
-            this._transactions.waitForUnconfirmed(this.nft, transactionHash)
-              .then((status) => {
-                if (status) {
-                  this._profile.openSnackBar("Decentralized Market Updated.", 2500, false);
-                  this._market.updateListingDB(this.nft, transactionHash)
-                    .then((listing) => {
-                      console.log("listing", listing);
-                      if (listing) {
-                        this._profile.openSnackBar("Moto Database Updated.", 2500, false);
-                        this._market.setListing(listing);
-                        this._router.navigate(['manage-nft', 'listing-management']);
-                        this.stopAnimations();
-                      }
-                      else {
-                        this._profile.openSnackBar("something went wrong", 3000);
-                      }
-                    });
-                }
-              }); 
+        .then((successStatus) => {
+          this.loading = true;
+          if (successStatus) {
+            this._profile.openSnackBar("Moto Database Updated.", 2500, false);
+            this._router.navigate(['manage-nft', 'listing-management']);
+            this.stopAnimations();
           }
+          else {
+            this._profile.openSnackBar("something went wrong", 3000);
+          }
+
+
         })
         .catch((err) => {
           if (err) {
@@ -138,21 +126,22 @@ export class SellerMenuComponent implements OnInit {
     else {
       this._profile.openSnackBar("Missing Price.", 2000);
     }
-    
+
   }
 
   startLoadingAnimation() {
+    this.loading = true;
     let sellbutton = document.getElementById("sell-button");
     if (sellbutton) {
       console.log("sellbutton found")
       sellbutton.style.pointerEvents = "none";
-      sellbutton.style.visibility="hidden";
+      sellbutton.style.visibility = "hidden";
     }
   }
 
   stopAnimations() {
     let sellbutton = document.getElementById("sell-button");
-    if ( sellbutton) {
+    if (sellbutton) {
       sellbutton.style.pointerEvents = "all";
       sellbutton.style.visibility = "visible";
     }
@@ -164,6 +153,7 @@ export class SellerMenuComponent implements OnInit {
         if (permission) {
           this.yellowLight = true;
           this.allowOne = true;
+          this.marketPermission = true;
         }
       });
   }
@@ -181,12 +171,14 @@ export class SellerMenuComponent implements OnInit {
 
   grantMarketSinglePermission(): void {
     this.allowOne = true;
+    this.loading = true;
     this._profile.openSnackBar("Please wait...", 2000, false);
     if (this._nftManager.nft) {
       this._market.requestSinglePermission(this.nft)
         .then((result: boolean) => {
           console.log('result i s', result);
           if (result) {
+            this.loading = false;
             console.log("got it ");
             this._profile.openSnackBar("Permission Granted.", 2000, false);
             this.allowOne = true;
@@ -203,7 +195,7 @@ export class SellerMenuComponent implements OnInit {
       this._market.grantTotalPermission(this.nft)
         .then((result: boolean) => {
           if (result) {
-            this._profile.openSnackBar("Permission Granted.",2000, false);
+            this._profile.openSnackBar("Permission Granted.", 2000, false);
             this.allowAll = true;
             this.allowOne = true;
             this.yellowLight = true;
@@ -219,7 +211,7 @@ export class SellerMenuComponent implements OnInit {
     }
   }
 
-  
+
   isOwner(): boolean {
     if (this.nft && this.account) {
 
@@ -249,7 +241,10 @@ export class SellerMenuComponent implements OnInit {
   }
 
   private unlock() {
-    this.readyForMarket = true;
-    this.yellowLight = false;
+    console.log("permission is ", this.marketPermission);
+    if (this.marketPermission) {
+      this.readyForMarket = true;
+      this.yellowLight = false;
+    }
   }
 }

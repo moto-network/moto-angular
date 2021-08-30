@@ -37,7 +37,7 @@ export class NFTManagerService {//merge this wit the other NFTManager or wahteve
     _walletService.networkObservable.subscribe((network) => {
       this.currentNetwork = network;
     });
-       //this.nft = this.testnft;
+    
   }
 
   initFee(): void {
@@ -93,7 +93,7 @@ export class NFTManagerService {//merge this wit the other NFTManager or wahteve
     return nftObservable;
   }
 
-  getNFTs<NFTType extends NFT>(parameters?: string, value?: string): Observable<NFTCollection<NFTType> | null> {
+  getNFTs<NFTType extends NFT>(parameters?: string, value?: string | boolean): Observable<NFTCollection<NFTType> | null> {
     const nftObservable: Subject<NFTCollection<NFTType>> = new Subject<NFTCollection<NFTType>>();
     if (parameters && value) {
       return this._getNFTs<NFTType>(parameters, value);
@@ -110,6 +110,9 @@ export class NFTManagerService {//merge this wit the other NFTManager or wahteve
     }
   }
 
+  clearCollection(): void {
+    this.nftCollection = null;
+  }
 
   getOwner(nft: NFT): Promise<string | null> {
     this._contracts.getNFTOwner(nft)
@@ -154,7 +157,7 @@ export class NFTManagerService {//merge this wit the other NFTManager or wahteve
    * @param searchValue 
    * @returns 
    */
-  private _getNFTs<NFTType extends NFT>(searchParameter: string, searchValue: string): Observable<NFTCollection<NFTType> | null> {
+  private _getNFTs<NFTType extends NFT>(searchParameter: string, searchValue: string | boolean): Observable<NFTCollection<NFTType> | null> {
     return this._remote.getNFTs(searchParameter, searchValue);
   }
 }

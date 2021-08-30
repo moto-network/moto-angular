@@ -37,6 +37,7 @@ import { MarketComponent } from './market/market.component';
 import { AuthInterceptorInterceptor } from './auth-interceptor.interceptor';
 import { LoadingComponent } from './loading/loading.component';
 
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -44,7 +45,6 @@ import { LoadingComponent } from './loading/loading.component';
     HomeComponent,
     SignUpComponent,
     ThankYouComponent,
-
     OnRampComponent,
     NotFoundComponent,
     ProfileComponent,

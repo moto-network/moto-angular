@@ -1,1 +1,12 @@
-<p>market works!</p>
+<h2 class="title">
+  market
+</h2>
+<div id="gallery"  *ngIf="!loading">
+
+  <img class="nft-img" *ngFor="let tokenId of NFTs" src="{{nftCollection[tokenId].smImg}}"
+    (click)="display(nftCollection[tokenId])">
+
+</div>
+<div id="loading" *ngIf="loading">
+  <img src="../../assets/loading.webp" style="width:200px;height:auto;"/>
+</div>

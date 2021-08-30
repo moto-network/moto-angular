@@ -14,27 +14,34 @@ import { NftCreationResultsComponent } from './nft-creation-results/nft-creation
 import { OnlyAccountGuard } from './only-account.guard';
 import { SimpleMessageDialogComponent } from './simple-message-dialog/simple-message-dialog.component';
 import { UserDashComponent } from './user-dash/user-dash.component';
+import { MarketComponent } from './market/market.component';
 const routes: Routes = [{ path: "", component: HomeComponent },
 { path: "login", component: LoginComponent },
 { path: "signup", component: SignUpComponent },
 { path: "create", component: CreateNFTComponent },
 { path: "discover", component: DiscoverComponent },
 { path: "nft", component: DisplayNFTComponent },
+{ path: "market", component: MarketComponent },
 { path: "on-ramp", component: OnRampComponent },
-{ path: "user-dashboard", component: UserDashComponent, canActivate: [AuthGuard]},
+{ path: "user-dashboard", component: UserDashComponent, canActivate: [AuthGuard] },
 { path: "universal", component: SimpleMessageDialogComponent },
 { path: "nft-results", component: NftCreationResultsComponent },
 {
   path: "manage-nft",
   loadChildren: () => import('./manage-nft/manage-nft.module')
     .then(m => m.ManageNftModule),
-  //canLoad:[OnlyAccountGuard]
+  canLoad:[OnlyAccountGuard]
 },
 {
   path: "profile",
   loadChildren: () => import('./profile/profile.module')
     .then(m => m.ProfileModule)
-}
+  },
+  {
+    path: "control-panel",
+    loadChildren: () => import('./control-panel/control-panel.module')
+      .then(m => m.ControlPanelModule)
+  }
 ];
 
 @NgModule({

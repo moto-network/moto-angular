@@ -67,6 +67,7 @@ export class ProfileService {
   }
 
   getDownloadLink(nft: NFT): Promise<string | void> {
+    this.openSnackBar('Generating Link...', 2000, false);
     return new Promise((resolve, reject) => {
       this.getUserAccountToken()
         .then((token) => {

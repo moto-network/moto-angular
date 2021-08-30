@@ -5,6 +5,7 @@ import { SellerMenuComponent } from './seller-menu/seller-menu.component';
 import { ManageNftComponent} from './manage-nft.component'
 import { ListingManagementComponent } from './listing-management/listing-management.component';
 import { BuyerMenuComponent } from './buyer-menu/buyer-menu.component';
+import { OnlyAccountGuard } from '../only-account.guard';
 
 const routes: Routes = [{
   path: "",
@@ -14,7 +15,7 @@ const routes: Routes = [{
     { path: "buyer-menu" , component: BuyerMenuComponent},
     {path:"listing-management",component:ListingManagementComponent}
   ],
-//  canActivateChild:[OnlyOwnerGuard]
+
 }
  ];
 

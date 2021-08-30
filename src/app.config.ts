@@ -141,11 +141,11 @@ export function getNetworkName(chainId: number): string {
   return "N/Available";
 }
 
-export const UPLOAD_NFT_URL: string = "https://us-central1-motonetwork.cloudfunctions.net/uploadNFT";
-export const CREATE_ORDER_URL: string = "http://localhost:5001/motonetwork/us-central1/orderCreated";
-export const GET_NONCE_URL: string = "https://us-central1-motonetwork.cloudfunctions.net/getNonce";
-export const VERIFY_SIG_URL: string = "https://us-central1-motonetwork.cloudfunctions.net/verifySignature";
-export const GEN_LINK: string = "http://localhost:5001/motonetwork/us-central1/generateFileLink";
-export const FINALIZE_ORDER: string = "http://localhost:5001/motonetwork/us-central1/finalizeBuyOrder";
+export const UPLOAD_NFT_URL: string = "http://13.57.198.122:4139/uploadNFT";
+export const CREATE_ORDER_URL: string = "http://13.57.198.122:4139/orderCreated";
+export const GET_NONCE_URL: string = "http://13.57.198.122:4139/getNonce";
+export const VERIFY_SIG_URL: string = "http://13.57.198.122:4139/verifySignature";
+export const GEN_LINK: string = "http://13.57.198.122:4139/generateFileLink";
+export const FINALIZE_ORDER: string = "http://13.57.198.122:4139/finalizeBuyOrder";
 
 

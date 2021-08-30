@@ -27,9 +27,11 @@ export class NftCreationResultsComponent implements OnInit {
         if (nft) {
           this.nft = nft;
         }
+
       });
     console.log("this nft", this.nft);
     this.transactionHash = _nftManager.lastSuccessfulTransaction;
+    this.nft = this.testnft;
   }
   testnft = {
     "chainId": 97,

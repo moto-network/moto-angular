@@ -115,7 +115,7 @@ export class RemoteDataService {
       .pipe(take(1));
   }
 
-  public getNFTs<NFTType extends NFT>(searchParameter: string, searchValue: string): Observable<NFTCollection<NFTType> | null> {
+  public getNFTs<NFTType extends NFT>(searchParameter: string, searchValue: string | boolean): Observable<NFTCollection<NFTType> | null> {
     let nftCollection: NFTCollection<NFTType> & {} = { };
     const collectionSubject: Subject<NFTCollection<NFTType> | null> = new Subject<NFTCollection<NFTType> | null>();
     if (this.isChina) {
@@ -124,7 +124,7 @@ export class RemoteDataService {
     else {
 
       this._db
-        .collection("NFTs", ref => ref.where(searchParameter, '==', searchValue.toLowerCase()))
+        .collection("NFTs", ref => ref.where(searchParameter, '==', searchValue))
         .get()
         .subscribe((querySnapshot) => {
           if (querySnapshot.empty) {

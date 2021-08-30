@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CanLoad, Route, UrlSegment, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router } from '@angular/router';
 import { Observable } from 'rxjs';
+import { Account } from 'src/declaration';
 
 import { WalletService } from './Services/BlockchainServices/wallet.service';
 
@@ -9,14 +10,14 @@ import { WalletService } from './Services/BlockchainServices/wallet.service';
 })
 export class OnlyAccountGuard implements CanLoad {
   constructor(private _wallet: WalletService, private _router:Router) {
-    this._wallet.listenForAddress()
+    this._wallet.getAccount()
       .subscribe((account) => {
         if (account) {
           this.account = account;
         }
       });
   }
-  account: string | null = null;
+  account: Account | null = null;
   canLoad(
     route: Route,
     segments: UrlSegment[]): Observable<boolean | UrlTree>

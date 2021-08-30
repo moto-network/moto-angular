@@ -27,10 +27,12 @@
     <h3 class="moto-title">{{nftCollection[tokenId].name}}</h3>
     <div>
 
-        <img src="../../assets/market_icon.png" *ngIf="onSale(tokenId)" id='on-sale-icon'>
+        <img src="../../assets/market_icon.png" *ngIf="onSale(tokenId)" id='on-sale-icon' > 
 
-
-      <button class="moto-button" id="display-nft-button" (click)="goToNFT(nftCollection[tokenId])">
+      <button class="moto-button" id="sell-nft-button" (click)="sell(nftCollection[tokenId])" *ngIf="!onSale(tokenId)">
+        <fa-icon [icon]="store"></fa-icon>
+      </button>
+       <button class="moto-button" id="display-nft-button" (click)="goToNFT(nftCollection[tokenId])">
         <fa-icon [icon]="view"></fa-icon>
       </button>
       <button class="moto-button" id="generate-link-button" (click)="downloadNFT(nftCollection[tokenId])">

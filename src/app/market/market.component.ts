@@ -13,9 +13,9 @@ declare var anime: any;
   styleUrls: ['./market.component.css']
 })
 export class MarketComponent implements OnInit {
-  nftCollection: NFTCollection<ListingNFT> = {};
+  nftCollection: NFTCollection<ListingNFT & Partial<FileNFT>> = {} as NFTCollection<ListingNFT & Partial<FileNFT>>;
   scrollPosition: any;
-  loadingAnimation: any = null;
+  loading: boolean = false;
   session_id = "moto_discover";
   loadNFTSub: Subscription | null = null;
   constructor(private _nftManager: NFTManagerService,
@@ -25,12 +25,7 @@ export class MarketComponent implements OnInit {
   ngOnInit(): void {
     let sessionData = this._sessionManager.get("moto_discover_nftCollection");
 
-    if (!sessionData) {
-      this.loadNFTs();
-    }
-    else {
-      this.localLoad(sessionData);
-    }
+    this.loadNFTs();
   }
 
   private localLoad(nftCollection: NFTCollection<ListingNFT>): void {
@@ -44,35 +39,20 @@ export class MarketComponent implements OnInit {
 
   }
   loadNFTs() {
-    this.loadNFTSub = this._nftManager.getNFTs<ListingNFT>()
+    this.loadNFTSub = this._nftManager.getNFTs<ListingNFT>("onSale",true)
       .subscribe((collection: NFTCollection<ListingNFT> | null) => {
         if (collection) {
-          this.loadingAnimation.pause();
-          this.loadingAnimation.reset();
+          
           this.nftCollection = collection;
         }
       });
     setTimeout(() => {
-      this.loadingAnimation.pause();
-      this.loadingAnimation.reset();
+      
     }, 5000);
   }
 
   ngAfterViewInit(): void {
-    this.loadingAnimation = anime.timeline({
-      loop: true,
-      autoplay: false,
-      easing: 'easeInQuad'
-    })
-      .add({
-        targets: "#main-content-container",
-        translateX: [0, -5, 4, 0],
-      });
-
-    if (Object.keys(this.nftCollection).length == 0) {
-      this.loadingAnimation.play();
-    }
-
+    
 
 
   }

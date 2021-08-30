@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subscription } from 'rxjs';
 import { Account, FileNFT, Listing, ListingNFT, NFT, NFTCollection } from 'src/declaration';
-import { faDownload, faEye, faUserCircle, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
+import { faDownload, faEye, faUserCircle, faPlusCircle, faDollarSign } from '@fortawesome/free-solid-svg-icons';
 import { WalletService } from '../Services/BlockchainServices/wallet.service';
 import { MarketService } from '../Services/market.service';
 import { NFTManagerService } from '../Services/nft-manager.service';
@@ -10,6 +10,7 @@ import { ProfileService } from '../Services/profile.service';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { DownloadLinkDialogComponent } from '../download-link-dialog/download-link-dialog.component';
+import { SessionManagerService } from '../Services/session-manager.service';
 
 @Component({
   selector: 'app-user-dash',
@@ -19,6 +20,7 @@ import { DownloadLinkDialogComponent } from '../download-link-dialog/download-li
 export class UserDashComponent implements OnInit, OnDestroy {
   download = faDownload;
   view = faEye;
+  store = faDollarSign;
   user = faUserCircle;
   add = faPlusCircle;
   nft: Partial<ListingNFT> & FileNFT | null = null;
@@ -34,12 +36,14 @@ export class UserDashComponent implements OnInit, OnDestroy {
   loading: boolean = false;
   constructor(private _profile: ProfileService, private _market: MarketService,
     private _nftManager: NFTManagerService, private _wallet: WalletService,
-    public snackBar: MatSnackBar, private _router: Router, public dialog: MatDialog
+    public snackBar: MatSnackBar, private _router: Router, public dialog: MatDialog,
+    private _session:SessionManagerService
   ) {
 
   }
 
   ngOnInit(): void {
+    this._session.clearAll();
     this.accountSub =  this._wallet.getAccount()
       .subscribe((account) => {
         this.loading = true;
@@ -155,6 +159,11 @@ export class UserDashComponent implements OnInit, OnDestroy {
     
   }
 
+  sell(nft: NFT) {
+    this._nftManager.setNFT(nft);
+    this._router.navigate(['manage-nft', 'seller-menu']);
+  }
+  
   goToNFT(nft: FileNFT) {
     this._nftManager.setNFT(nft);
     this._router.navigate(['nft']);

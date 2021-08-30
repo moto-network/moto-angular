@@ -121,3 +121,9 @@ color:white;
   color:var(--moto-blue);
   margin-right:8px;
 }
+
+#sell-nft-button{
+    background-color: green;
+  color:white;
+  margin-right:8px;
+}

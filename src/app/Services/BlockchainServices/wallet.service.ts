@@ -2,8 +2,10 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, combineLatest, from, Observable, Subject } from 'rxjs';
 import { filter, map, mergeMap, startWith, switchMap, take } from 'rxjs/operators';
+import { getProvider } from 'src/app.config';
 
 import { Account } from 'src/declaration';
+import Web3 from 'web3';
 import { RemoteDataService } from '../remote-data.service';
 const config = require("../../../app.config");
 const WAValidator = require('crypto-wallet-address-validator');
@@ -121,7 +123,10 @@ export class WalletService {
       this.networkObservable.next(parseInt(chainId, 16));
     });
     this._walletInterface.on('accountsChanged', (accounts: string[]) => {
-      this.addressObservable.next(accounts[0]);
+      const web3 = new Web3(getProvider(parseInt(this._walletInterface.chainId, 16)));
+
+      console.log("accoount", accounts[0]);
+      this.addressObservable.next(web3.utils.toChecksumAddress(accounts[0]))
     });
   }
 
@@ -132,9 +137,12 @@ export class WalletService {
     }
     return this._walletInterface.request({ method: 'eth_requestAccounts' })
       .then((accounts: string[]) => {
-        console.log('getting accocunt ', accounts[0]);
+        const web3 = new Web3(getProvider(parseInt(this._walletInterface.chainId, 16)));
+        console.log('getting accocunt ', web3.utils.toChecksumAddress(accounts[0]));
         this.networkObservable.next(parseInt(this._walletInterface.chainId, 16));
-        this.addressObservable.next(accounts[0])
+        
+
+        this.addressObservable.next(web3.utils.toChecksumAddress(accounts[0]))
         return true;
       })
       .catch((err: any) => {
