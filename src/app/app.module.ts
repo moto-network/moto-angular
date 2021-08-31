@@ -40,6 +40,7 @@ import { CreateTiersComponent } from './dashboard/create-tiers/create-tiers.comp
 import { CoinExchangeComponent } from './dashboard/coin-exchange/coin-exchange.component';
 import { GettingStartedComponent } from './getting-started/getting-started.component';
 import { NoTiersLandingComponent } from './dashboard/no-tiers-landing/no-tiers-landing.component';
+import { CreateTierDialogComponent } from './dashboard/create-tier-dialog/create-tier-dialog.component';
 
 
 @NgModule({
@@ -65,6 +66,7 @@ import { NoTiersLandingComponent } from './dashboard/no-tiers-landing/no-tiers-l
     CoinExchangeComponent,
     GettingStartedComponent,
     NoTiersLandingComponent,
+    CreateTierDialogComponent,
   ],
   imports: [
     BrowserAnimationsModule,

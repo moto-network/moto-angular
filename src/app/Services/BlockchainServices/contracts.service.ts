@@ -3,7 +3,7 @@ import Web3 from "web3";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import { getProvider, Contract, getContract } from "src/app.config"
 import { WalletService } from './wallet.service';
-import { Account, FileNFT, ListingNFT, NFT } from 'src/declaration';
+import { Account, FileNFT, ListingNFT, NFT, Subscription, Tier } from 'src/declaration';
 import { noNetworkDetected } from 'src/errors';
 
 import { BigNumber } from "bignumber.js";
@@ -338,7 +338,13 @@ export class ContractsService {
     });
   }
 
+  updateSubscription(sub: Subscription):Promise<string> {
+    return Promise.resolve("hello");
+  }
 
+  updateTier(tier: Tier): Promise<string> {
+    return Promise.resolve("String");
+  }
 
   grantMarketSinglePermission(nft: NFT): Promise<any> {
     const nftContract = getContract(nft.chainId, 'nft');

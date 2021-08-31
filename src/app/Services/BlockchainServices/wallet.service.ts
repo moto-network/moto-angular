@@ -4,7 +4,7 @@ import { BehaviorSubject, combineLatest, from, Observable, Subject } from 'rxjs'
 import { filter, map, mergeMap, startWith, switchMap, take } from 'rxjs/operators';
 import { getProvider } from 'src/app.config';
 
-import { Account } from 'src/declaration';
+import { Account, TransactionReceipt } from 'src/declaration';
 import Web3 from 'web3';
 import { RemoteDataService } from '../remote-data.service';
 const config = require("../../../app.config");
@@ -50,10 +50,27 @@ export class WalletService {
   listenForAddress(): Observable<string | null> {
     return this.addressObservable
       .pipe(
-       
-        
+
+
       )
-   }
+  }
+
+  async getTransactionReceipt(hash: string, network: number): Promise<TransactionReceipt | null> {
+    const web3 = await new Web3(getProvider(network));
+    return web3.eth.getTransactionReceipt(hash)
+      .then((receipt) => {
+        if (receipt) {
+          console.log("receipt ", receipt);
+          return receipt as TransactionReceipt;
+        }
+        else {
+          return null;
+        }
+      })
+      .catch((err) => {
+        return Promise.reject(err);
+      });
+  }
 
   getNetwork(): Observable<number | null> {
     return this.networkObservable;
@@ -62,7 +79,7 @@ export class WalletService {
   getAddress(): Observable<string | null> {
     return this.addressObservable;
   }
-  
+
   sendTransaction(transaction: any): Promise<string> {
     return new Promise<string>((resolve, reject) => {
       if (!this._walletInterface) {
@@ -76,7 +93,7 @@ export class WalletService {
         }));
       }
     });
-    
+
   }
 
   isValidBTCaddress(address: string, network: string): boolean {
@@ -104,7 +121,7 @@ export class WalletService {
       });
 
   }
-  
+
   private _resolveWalletInterface(): Promise<boolean> {
     //do a popup later so they can decide between ethereum
     if (window.ethereum) {
@@ -140,7 +157,7 @@ export class WalletService {
         const web3 = new Web3(getProvider(parseInt(this._walletInterface.chainId, 16)));
         console.log('getting accocunt ', web3.utils.toChecksumAddress(accounts[0]));
         this.networkObservable.next(parseInt(this._walletInterface.chainId, 16));
-        
+
 
         this.addressObservable.next(web3.utils.toChecksumAddress(accounts[0]))
         return true;
@@ -172,7 +189,7 @@ export class WalletService {
         ]
       },
       "primaryType": "Identity",
-      "message": {info:userMessage, account: account.address, nonce: nonce, chainId: account.network }
+      "message": { info: userMessage, account: account.address, nonce: nonce, chainId: account.network }
     };
     console.log("signature data prepared ", data);
     return JSON.stringify(data);

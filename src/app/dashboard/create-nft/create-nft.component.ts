@@ -109,7 +109,7 @@ export class CreateNFTComponent implements OnInit {
           this.visible = false;
           this._profile.openSnackBar("Verifying data.", 3000, false);
           console.log("CreateNFT: transactionHash ", transactionHash);
-          this._transactions.waitForUnconfirmed(nft, transactionHash)
+          this._transactions.waitForTransaction(nft, transactionHash)
             .then((receiptAndConfirmed) => {//only transactions with receipts output here
               if (receiptAndConfirmed) {
                 this._profile.openSnackBar("Data confirmed.", 2500, false);
@@ -131,7 +131,7 @@ export class CreateNFTComponent implements OnInit {
               }
               else {//no receipt
                 this.loading = false;
-                this._transactions.waitForUnconfirmed(this.nft, transactionHash);
+                this._transactions.waitForTransaction(this.nft, transactionHash);
                 this._profile.openSnackBar("Please wait...", 2000, false);
               }
             });

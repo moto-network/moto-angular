@@ -60,7 +60,7 @@ export class MarketService {
     return this._contracts.grantMarketSinglePermission(nft)
       .then((hash: string) => {
         if (hash) {
-          return this._transactions.waitForUnconfirmed(nft, hash);
+          return this._transactions.waitForTransaction(nft, hash);
         }
         else {
           return Promise.reject("No transaction.");
@@ -73,7 +73,7 @@ export class MarketService {
   grantTotalPermission(nft: NFT): Promise<boolean> {
     return from(this._contracts.grantMarketTotalPermission(nft))
       .pipe(
-        mergeMap(hash => this._transactions.waitForUnconfirmed(nft, hash))
+        mergeMap(hash => this._transactions.waitForTransaction(nft, hash))
       ).toPromise();
   }
 
@@ -110,7 +110,7 @@ export class MarketService {
       this._contracts.addNFTtoMarket(nft, motoSubUnitPrice.toString())
         .then((hash: string) => {
           if (hash) {
-            this._transactions.waitForUnconfirmed(nft, hash)
+            this._transactions.waitForTransaction(nft, hash)
               .then((status: boolean) => {
                 if (status) {
                   return this.updateListingDB(nft, hash)
@@ -181,7 +181,7 @@ export class MarketService {
     console.log("listing nft ", nft);
     const hash: string = await this._contracts.buyNFT('moto', nft, price) as string;
     if (hash) {
-      return this._transactions.waitForUnconfirmed(nft, hash)
+      return this._transactions.waitForTransaction(nft, hash)
         .then((status: boolean) => {
           if (status) {
             return this._remote.finalizeOrder(nft, hash).toPromise();
@@ -209,7 +209,7 @@ export class MarketService {
     return this._contracts.setExactAllocation(coin, nft, price)
       .then((hash) => {
         if (hash) {
-          return this._transactions.waitForUnconfirmed(nft, hash);
+          return this._transactions.waitForTransaction(nft, hash);
         }
         else {
           return Promise.reject("");

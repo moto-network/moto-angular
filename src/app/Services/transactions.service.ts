@@ -9,23 +9,14 @@ import { getProvider } from 'src/app.config';
 import { NFT, TransactionReceipt } from 'src/declaration';
 import Web3 from "web3";
 import { ProfileService } from './profile.service';
-
-interface UnconfirmedTransaction {
-  hash: string;
-  nft: NFT;
-  file?: File;
-}
+import { WalletService } from './BlockchainServices/wallet.service';
+import { faFlushed } from '@fortawesome/free-solid-svg-icons';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TransactionsService {
-
-  file: File | null = null;
-  nft: NFT | null = null;
-  unconfirmed: UnconfirmedTransaction | null = null;
-  constructor(private _db: AngularFirestore, private _profile: ProfileService, private _nftManager: NFTManagerService) {
-
+  constructor(private _db: AngularFirestore, private _wallet: WalletService) {
   }
 
   getTransactions(uid: string): Observable<any> {
@@ -35,60 +26,30 @@ export class TransactionsService {
     return results;
   }
 
-  public waitForUnconfirmed(nft: NFT, transactionHash: string): Promise<boolean> {
-    this.unconfirmed = { "nft": nft, "hash": transactionHash };
-    const promise = new Promise<boolean>((resolve, reject) => {
-
-      this.getTransactionReceipt(nft, transactionHash)
-        .then((receipt: TransactionReceipt | null) => {
-          if (receipt) {
-            resolve(receipt.status);
-          }
-          else {
-            resolve(this.startBackgroundCheck(nft, transactionHash));
-          }
-        })
-        .catch((err) => {
-          reject(err);
-        })
-    });
-    return promise;
+  public async pendingTransaction(transaction: Promise<string>, network: number): Promise<boolean> {
+    return transaction
+      .then((hash: string) => { return hash ? hash : Promise.reject(new Error("no hash.")) })
+      .then((hash: string) => {
+        return this._startBackgroundCheck(hash, network);
+      })
   }
 
-  private startBackgroundCheck(nft: NFT, hash: string): Promise<boolean> {
+  private _startBackgroundCheck(hash: string, network: number): Promise<boolean> {
     return new Promise(async (resolve, reject) => {
-      var status: boolean = false;
-      while (this.unconfirmed) {
-
+      const interval = setInterval(async () => {
         try {
-          const receipt = await this.getTransactionReceipt(nft, hash);
-          if (receipt) {
-            this.unconfirmed = null;
+          const receipt = await this._wallet.getTransactionReceipt(hash, network);
+          if (receipt && receipt.status) {
+            clearInterval(interval);
             resolve(receipt.status);
           }
         }
         catch (err) {
           reject(err);
         }
-      }
-    });
-  }
+      }, 1000);
 
-  private async getTransactionReceipt(nft: NFT, hash: string): Promise<TransactionReceipt | null> {
-    const web3 = await new Web3(getProvider(nft.chainId));
-    return web3.eth.getTransactionReceipt(hash)
-      .then((receipt) => {
-        if (receipt) {
-          console.log("receipt ", receipt);
-          return receipt as TransactionReceipt;
-        }
-        else {
-          return null;
-        }
-      })
-      .catch((err) => {
-        return Promise.reject(err);
-      });
+    });
   }
 
 }

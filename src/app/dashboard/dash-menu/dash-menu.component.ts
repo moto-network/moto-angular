@@ -1,8 +1,9 @@
+import { NullTemplateVisitor } from '@angular/compiler';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { WalletService } from 'src/app/Services/BlockchainServices/wallet.service';
 import { SubscriptionsManagerService } from 'src/app/Services/subscriptions-manager.service';
-import { Account } from 'src/declaration';
+import { Account, Tier } from 'src/declaration';
 
 @Component({
   selector: 'app-dash-menu',
@@ -11,6 +12,7 @@ import { Account } from 'src/declaration';
 })
 export class DashMenuComponent implements OnInit {
   account: Account | null = null;
+  tiers: Tier[] | null = null;
   constructor(private _router: Router,
     private _subscriptions: SubscriptionsManagerService,
   private _wallet:WalletService) { }
@@ -42,7 +44,8 @@ export class DashMenuComponent implements OnInit {
     this._router.navigate(['dashboard', 'exchange']);
   }
 
-  private _getActiveTiers(account: Account) :Promise<Tiers>{
-    return this._subscriptions.getActiveTiers(account);
+  private _getActiveTiers(account: Account) :Promise<Tier[]>{
+    return this._subscriptions.getTiers(account);
+
   }
 }

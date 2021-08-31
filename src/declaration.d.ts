@@ -59,12 +59,16 @@ export type LocalSession = {
 }
 
 export type Tier = {
+  name?: string;
   valid: boolean;
+  tierId?: string;
+  desc?: string;
   creator: string;
   network: number;
-  priceInBaseUnits: string;
-  commissionInBaseUnits: string;
+  price: string;
+  commission: string;
 }
+
 
 export type Subscription = {
   tier: Tier;

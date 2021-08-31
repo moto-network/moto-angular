@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FileNFT, NFT, NFTCollection, Listing as Listing, Account, ListingNFT } from "src/declaration";
+import { FileNFT, NFT, NFTCollection, Listing as Listing, Account, ListingNFT, Tier } from "src/declaration";
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { CREATE_ORDER_URL, FINALIZE_ORDER, GEN_LINK, GET_NONCE_URL, UPLOAD_NFT_URL, VERIFY_SIG_URL } from "src/app.config";
@@ -60,7 +60,7 @@ export class RemoteDataService {
     return this.http.post<any>(UPLOAD_NFT_URL, formData).pipe(take(1));
   }
 
-  public updateListingDB(nft: NFT, hash:string): Promise<Listing> {
+  public updateListingDB(nft: NFT, hash: string): Promise<Listing> {
     return new Promise<Listing>((resolve, reject) => {
       const formData = new FormData();
       formData.append('nft', JSON.stringify(nft));
@@ -77,13 +77,14 @@ export class RemoteDataService {
 
   }
 
-  public finalizeOrder(nft: ListingNFT, hash:string): Observable<Listing> {
+  public finalizeOrder(nft: ListingNFT, hash: string): Observable<Listing> {
     const formData = new FormData();
     formData.append('nft', JSON.stringify(nft));
     formData.append('transactionHash', hash);
     return this.http.post<any>(FINALIZE_ORDER, formData)
       .pipe(take(1), map(data => data as Listing));
   }
+
   public getAllNFT<NFTType extends NFT>(): Observable<NFTCollection<NFTType>> {
     const nftCollection: NFTCollection<NFTType> = {};
     if (this.isChina) {
@@ -116,7 +117,7 @@ export class RemoteDataService {
   }
 
   public getNFTs<NFTType extends NFT>(searchParameter: string, searchValue: string | boolean): Observable<NFTCollection<NFTType> | null> {
-    let nftCollection: NFTCollection<NFTType> & {} = { };
+    let nftCollection: NFTCollection<NFTType> & {} = {};
     const collectionSubject: Subject<NFTCollection<NFTType> | null> = new Subject<NFTCollection<NFTType> | null>();
     if (this.isChina) {
       return this._china.getMultipleNFTs(searchParameter);
@@ -140,4 +141,9 @@ export class RemoteDataService {
     }
   }
 
+  updateTier(tier: Tier) { }
+  getTiers(account:Account) { }
+  getTier(tier:Tier) { }
+  getSubscription() { }
+  getSubscriptions(account:Account){ }
 }

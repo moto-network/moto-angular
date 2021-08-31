@@ -1,1 +1,26 @@
-<p>create-tiers works!</p>
+<div id="top-section">
+  <h2 class="moto-title title">create subscription tiers</h2>
+  <div id="icons-bar" class="box-shadow">
+    <button id="create-nft-icon" class="icons box-shadow" (click)="manageTier()">
+      <fa-icon [icon]="add"></fa-icon>
+    </button>
+  </div>
+</div>
+<div id="active-subscriptions">
+  <div *ngFor="let tier of tiers">
+    <div class="active-subscription" (click)="manageTier(tier)">
+      <h2 class="moto-title">{{tier.name}}</h2>
+      <p class="subscription-description"> {{tier.desc}}</p>
+      <div style="display:flex;flex-direction: row;gap:4px">
+        <h3 class="moto-title">{{tier.price}} <span class=" moto-title moto-name">moto</span><span
+            style="font-weight:400">coin</span>
+        </h3>
+        <h4 class="moto-title">per month</h4>
+      </div>
+    </div>
+
+    <div id="subscription-info">
+
+    </div>
+  </div>
+</div>
