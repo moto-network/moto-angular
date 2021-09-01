@@ -11,7 +11,7 @@
     <input class="text-inputs" type="text" placeholder="    optional" formControlName="name" />
     <div *ngIf="moreOptions">
       <h3>Network</h3>
-      <select formControlName="chainId" id="chainId" (change)="isValidForm()">
+      <select formControlName="network" id="network" (change)="isValidForm()">
         <!--<option value="56" selected>(BSC) (Mainnet) Binance SmartChain  </option>-->
         <option value="97">(BSC-TestNet) (TestNet) Binance SmartChain </option>
         <option value="1337">Ganache </option>

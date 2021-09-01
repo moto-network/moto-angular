@@ -57,7 +57,7 @@ export class ContractsService {
     return this._initNFTProvider(nft)
       .then((web3) => {
         if (web3) {
-          const marketContract: Contract = getContract(nft.chainId, "market");
+          const marketContract: Contract = getContract(nft.network, "market");
           const web3Contract = new web3.eth.Contract(marketContract.abi, marketContract.address);
           return web3Contract.methods.getPublicationFee().call();
         }
@@ -106,7 +106,7 @@ export class ContractsService {
     return this._initNFTProvider(nft)
       .then((web3) => {
         if (web3 && this.userAccount?.network!) {
-          const marketContract: Contract = getContract(nft.chainId, "market");
+          const marketContract: Contract = getContract(nft.network, "market");
           const web3Contract = new web3.eth.Contract(marketContract.abi, marketContract.address);
           return web3Contract.methods.getMarketFee().call();
         }
@@ -120,7 +120,7 @@ export class ContractsService {
         .then((web3) => {
           if (web3) {
             console.log("web3 called");
-            const nftContract: Contract = getContract(nft.chainId, "nft");
+            const nftContract: Contract = getContract(nft.network, "nft");
             const web3Contract = new web3.eth.Contract(nftContract.abi, nftContract.address);
             web3Contract.methods.getApproved(nft.tokenId).call()
               .then((result: string) => {
@@ -140,9 +140,9 @@ export class ContractsService {
       this._initNFTProvider(nft)
         .then((web3) => {
           if (web3) {
-            const nftContract: Contract = getContract(nft.chainId, "nft");
+            const nftContract: Contract = getContract(nft.network, "nft");
             const web3Contract = new web3.eth.Contract(nftContract.abi, nftContract.address);
-            const marketContract: Contract = getContract(nft.chainId, "market");
+            const marketContract: Contract = getContract(nft.network, "market");
             web3Contract.methods.isApprovedForAll(nft.owner, marketContract.address).call()
               .then((result: boolean) => {
                 if (typeof result !== undefined || typeof result !== null) {
@@ -165,7 +165,7 @@ export class ContractsService {
       this._initNFTProvider(nft)
         .then((web3) => {
           if (web3) {
-            const nftContract: Contract = getContract(nft.chainId, "nft");
+            const nftContract: Contract = getContract(nft.network, "nft");
             const web3Contract = new web3.eth.Contract(nftContract.abi, nftContract.address);
             console.log("contract calling");
             resolve(web3Contract.methods.ownerOf(nft.tokenId).call());
@@ -199,7 +199,7 @@ export class ContractsService {
                 const price = web3!.utils.numberToHex(nftPrice);
                 const data = web3market.methods.executeOrder(nft.contractAddress, nft.tokenId, price)
                   .encodeABI();
-                resolve(this._sendTransaction("0x0", market.address, nft.chainId, data));
+                resolve(this._sendTransaction("0x0", market.address, nft.network, data));
 
               }
             });
@@ -278,7 +278,7 @@ export class ContractsService {
 
   addNFTtoMarket(nft: NFT, priceInSubUnits: string): Promise<any> {
     return new Promise((resolve, reject) => {
-      if (nft.chainId != this.userAccount?.network!) {
+      if (nft.network != this.userAccount?.network!) {
         reject(new Error("User is on a different network than this NFT"));
       }
       this._initWalletProvider(this.userAccount?.network!)
@@ -302,7 +302,7 @@ export class ContractsService {
               value: web3.utils.numberToHex(transactionValueString),
               from: this.userAccount.address,
               data: encodedFunctionData,
-              chainId: "0x" + (nft.chainId).toString(16)
+              network: "0x" + (nft.network).toString(16)
             };
             resolve(this._wallet.sendTransaction(transactionParameters));
           }
@@ -324,11 +324,11 @@ export class ContractsService {
             const nftContract: Contract = getContract(account.network, "nft");
             const web3Contract = new web3.eth.Contract(nftContract.abi, nftContract.address);
             const functionCall = web3Contract.methods
-              .userMint(nft.name, nft.chainId, nft.owner,
+              .userMint(nft.name, nft.network, nft.owner,
                 nft.contentHash, nft.tokenId);
             const encodedFunctionData = functionCall.encodeABI();
 
-            resolve(this._sendTransaction('0x0', nft.contractAddress, nft.chainId, encodedFunctionData));
+            resolve(this._sendTransaction('0x0', nft.contractAddress, nft.network, encodedFunctionData));
           }
         })
         .catch((err) => {
@@ -343,13 +343,27 @@ export class ContractsService {
   }
 
   updateTier(tier: Tier): Promise<string> {
-    return Promise.resolve("String");
+    return new Promise((resolve, reject) => {
+      const subscription = getContract(tier.network, 'subscription');
+      this._initWalletProvider(tier.network)
+        .then((web3) => {
+          if (web3) {
+            const subscriptionWeb3 = new web3.eth
+              .Contract(subscription.abi, subscription.address);
+            const encodedData = subscriptionWeb3.methods.createTier(tier.price).encodeABI();
+            resolve(this._sendTransaction("0x0", subscription.address, tier.network, encodedData))
+          }
+        })
+      .catch ((err) => {
+        reject(err);
+      })
+    });
   }
 
   grantMarketSinglePermission(nft: NFT): Promise<any> {
-    const nftContract = getContract(nft.chainId, 'nft');
-    const marketContract = getContract(nft.chainId, "market");
-    if (nft.chainId != this.userAccount?.network) {
+    const nftContract = getContract(nft.network, 'nft');
+    const marketContract = getContract(nft.network, "market");
+    if (nft.network != this.userAccount?.network) {
       return Promise.reject(new Error("user on different network than NFT"));
     }
     return new Promise((resolve, reject) => {
@@ -360,7 +374,7 @@ export class ContractsService {
             const encodedFunctionData = web3Contract.methods
               .approve(marketContract.address, nft.tokenId).encodeABI();
 
-            resolve(this._sendTransaction("0x0", nft.contractAddress, nft.chainId, encodedFunctionData))
+            resolve(this._sendTransaction("0x0", nft.contractAddress, nft.network, encodedFunctionData))
           }
           else {
             reject(new Error("No Active Network. Make sure your wallet is connnected."))
@@ -373,9 +387,9 @@ export class ContractsService {
   }
 
   grantMarketTotalPermission(nft: NFT): Promise<any> {
-    const nftContract = getContract(nft.chainId, 'nft');
-    const marketContract = getContract(nft.chainId, "market");
-    if (nft.chainId != this.userAccount?.network!) {
+    const nftContract = getContract(nft.network, 'nft');
+    const marketContract = getContract(nft.network, "market");
+    if (nft.network != this.userAccount?.network!) {
       return Promise.reject(new Error("user on different network than NFT"));
     }
     return new Promise((resolve, reject) => {
@@ -386,7 +400,7 @@ export class ContractsService {
             const encodedFunctionData = web3Contract.methods
               .setApprovalForAll(marketContract.address, true).encodeABI();
 
-            resolve(this._sendTransaction("0x0", nft.contractAddress, nft.chainId, encodedFunctionData))
+            resolve(this._sendTransaction("0x0", nft.contractAddress, nft.network, encodedFunctionData))
           }
           else {
             reject(new Error("No Active Network. Make sure your wallet is connnected."))
@@ -489,7 +503,7 @@ export class ContractsService {
   }
 
   private async _sendTransaction(valueInHex: string,
-    to: string, chainId: number, data: any):Promise<string> {
+    to: string, network: number, data: any):Promise<string> {
 
     const transactionParameters = {
 
@@ -497,24 +511,24 @@ export class ContractsService {
       to: to,
       from: this.userAccount?.address,
       data: data,
-      chainId: "0x" + (chainId).toString(16)
+      network: "0x" + (network).toString(16)
     };
     return await this._wallet.sendTransaction(transactionParameters);
   }
 
   private _initNFTProvider(nft: NFT): Promise<Web3 | null> {
-    return this._initProvider(nft.chainId);
+    return this._initProvider(nft.network);
   }
 
-  private _initWalletProvider(chainId: number | null): Promise<Web3 | null> {
-    if (!chainId) {
+  private _initWalletProvider(network: number | null): Promise<Web3 | null> {
+    if (!network) {
       return Promise.reject(new Error("No wallet detected. Did you connect a wallet provider?"));
     }
-    return this._initProvider(chainId);
+    return this._initProvider(network);
   }
 
-  private _initProvider(chainId: number): Promise<Web3 | null> {
-    const provider: string | null = getProvider(chainId);
+  private _initProvider(network: number): Promise<Web3 | null> {
+    const provider: string | null = getProvider(network);
     if (provider) {
       return this._buildWeb3(provider);
     }

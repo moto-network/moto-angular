@@ -61,7 +61,11 @@ export class WalletService {
       .then((receipt) => {
         if (receipt) {
           console.log("receipt ", receipt);
-          return receipt as TransactionReceipt;
+          return receipt as unknown as TransactionReceipt;
+          /**
+           * some error about transaction receipt type not overlapping with the same
+           * definition from web3 library
+           */
         }
         else {
           return null;
@@ -135,12 +139,12 @@ export class WalletService {
 
   private _initWalletInterface(walletInterface: any) {
     this._walletInterface = walletInterface;//typify this.
-    this._walletInterface.on('chainChanged', (chainId: any) => {
-      console.log("network id ", parseInt(chainId, 16));
-      this.networkObservable.next(parseInt(chainId, 16));
+    this._walletInterface.on('chainChanged', (network: any) => {
+      console.log("network id ", parseInt(network, 16));
+      this.networkObservable.next(parseInt(network, 16));
     });
     this._walletInterface.on('accountsChanged', (accounts: string[]) => {
-      const web3 = new Web3(getProvider(parseInt(this._walletInterface.chainId, 16)));
+      const web3 = new Web3(getProvider(parseInt(this._walletInterface.network, 16)));
 
       console.log("accoount", accounts[0]);
       this.addressObservable.next(web3.utils.toChecksumAddress(accounts[0]))
@@ -154,9 +158,9 @@ export class WalletService {
     }
     return this._walletInterface.request({ method: 'eth_requestAccounts' })
       .then((accounts: string[]) => {
-        const web3 = new Web3(getProvider(parseInt(this._walletInterface.chainId, 16)));
+        const web3 = new Web3(getProvider(parseInt(this._walletInterface.network, 16)));
         console.log('getting accocunt ', web3.utils.toChecksumAddress(accounts[0]));
-        this.networkObservable.next(parseInt(this._walletInterface.chainId, 16));
+        this.networkObservable.next(parseInt(this._walletInterface.network, 16));
 
 
         this.addressObservable.next(web3.utils.toChecksumAddress(accounts[0]))
@@ -174,22 +178,22 @@ export class WalletService {
       "domain": {
         name: "Moto Network",
         version: "3",
-        chainId: account.network
+        network: account.network
       },
       "types": {
         "EIP712Domain": [
           { "name": "name", "type": "string" },
           { "name": "version", "type": "string" },
-          { "name": "chainId", "type": "uint256" }
+          { "name": "network", "type": "uint256" }
         ],
         "Identity": [
           { "name": "account", "type": "string" },
           { "name": "nonce", "type": "string" },
-          { "name": "chainId", "type": "uint256" }
+          { "name": "network", "type": "uint256" }
         ]
       },
       "primaryType": "Identity",
-      "message": { info: userMessage, account: account.address, nonce: nonce, chainId: account.network }
+      "message": { info: userMessage, account: account.address, nonce: nonce, network: account.network }
     };
     console.log("signature data prepared ", data);
     return JSON.stringify(data);

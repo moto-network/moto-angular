@@ -30,7 +30,7 @@ export class MarketService {
   };
   watchForListing: BehaviorSubject<Listing | null> = new BehaviorSubject<Listing | null>(null);
   constructor(private _contracts: ContractsService, private _remote: RemoteDataService,
-    private _transactions: TransactionsService,private _profile:ProfileService) { }
+    private _transactions: TransactionsService, private _profile: ProfileService) { }
 
   setListing(listing: Listing) {
     this.listing = listing;
@@ -56,25 +56,12 @@ export class MarketService {
     return this._contracts.getAllocation('moto');
   }
 
-  requestSinglePermission(nft: NFT): Promise<boolean> {
-    return this._contracts.grantMarketSinglePermission(nft)
-      .then((hash: string) => {
-        if (hash) {
-          return this._transactions.waitForTransaction(nft, hash);
-        }
-        else {
-          return Promise.reject("No transaction.");
-        }
-      })
-
-
+  requestSinglePermission(nft: NFT): Promise<string> {
+    return this._contracts.grantMarketSinglePermission(nft);
   }
 
-  grantTotalPermission(nft: NFT): Promise<boolean> {
-    return from(this._contracts.grantMarketTotalPermission(nft))
-      .pipe(
-        mergeMap(hash => this._transactions.waitForTransaction(nft, hash))
-      ).toPromise();
+  grantTotalPermission(nft: NFT): Promise<string> {
+    return this._contracts.grantMarketTotalPermission(nft);
   }
 
   addToMarket(nft: NFT, priceFromUser: string): Promise<boolean> {
@@ -85,9 +72,9 @@ export class MarketService {
             resolve(this._addToMarket(nft, priceFromUser));
           }
           else {
-            this.requestSinglePermission(nft)
-              .then((permission: boolean) => {
-                if (permission) {
+            this._transactions.pendingTransaction(this.requestSinglePermission(nft), nft.network)
+              .then((receipt: TransactionReceipt) => {
+                if (receipt.status) {
                   resolve(this._addToMarket(nft, priceFromUser));
                 }
                 else {
@@ -102,23 +89,16 @@ export class MarketService {
     });
   }
 
-  private _addToMarket(nft: NFT, priceFromUser: string):Promise<boolean> {
+  private _addToMarket(nft: NFT, priceFromUser: string): Promise<boolean> {
     const priceBN = new BigNumber(priceFromUser);
     const motoSubUnitPrice = priceBN.multipliedBy(1000000);
     this._profile.openSnackBar("Updating Market Data.", 2000, false);
     return new Promise<boolean>((resolve, reject) => {
-      this._contracts.addNFTtoMarket(nft, motoSubUnitPrice.toString())
-        .then((hash: string) => {
-          if (hash) {
-            this._transactions.waitForTransaction(nft, hash)
-              .then((status: boolean) => {
-                if (status) {
-                  return this.updateListingDB(nft, hash)
-                }
-                else {
-                  return Promise.reject(new Error("Market update error."));
-                }
-              })
+      this._transactions
+        .pendingTransaction(this._contracts.addNFTtoMarket(nft, motoSubUnitPrice.toString()), nft.network)
+        .then((receipt: TransactionReceipt) => {
+          if (receipt) {
+            this.updateListingDB(nft, receipt.hash)
               .then((listing: Listing) => {
                 this.setListing(listing);
                 resolve(true);
@@ -127,17 +107,12 @@ export class MarketService {
                 reject(err);
               });
           }
-          else {
-            reject(new Error("No transaction hash."));
-          }
         })
         .catch((err) => {
           reject(err);
-         })
-    });
-      
+        });
+    })
   }
-
 
   canMarketControlAll(nft: NFT): Promise<boolean> {
     return this._contracts.canMarketControlAllNFTs(nft);
@@ -147,7 +122,7 @@ export class MarketService {
     return new Promise<boolean>((resolve, reject) => {
       this._contracts.canMarketControlThisNFT(nft)
         .then((controller: string | null | undefined) => {
-          const marketContract = getContract(nft.chainId, "market");
+          const marketContract = getContract(nft.network, "market");
           const marketAddress = marketContract.address;
           if (controller) {
             console.log("controller found", controller);
@@ -179,21 +154,15 @@ export class MarketService {
 
   async buyNFT(nft: ListingNFT, price: string): Promise<Listing> {
     console.log("listing nft ", nft);
-    const hash: string = await this._contracts.buyNFT('moto', nft, price) as string;
-    if (hash) {
-      return this._transactions.waitForTransaction(nft, hash)
-        .then((status: boolean) => {
-          if (status) {
-            return this._remote.finalizeOrder(nft, hash).toPromise();
-          }
-          else {
-            return Promise.reject("some error");
-          }
-        })
-    }
-    else {
-      return Promise.reject(new Error("Market Update Error."));
-    }
+    return this._transactions.pendingTransaction(this._contracts.buyNFT('moto', nft, price), nft.network)
+      .then((receipt) => {
+        if (receipt) {
+          return this._remote.finalizeOrder(nft, receipt.hash).toPromise();
+        }
+        else {
+          return Promise.reject(new Error("buying nft failed."));
+        }
+    })
   }
 
   increaseAllocationForMarket(coin: string, amount: string): Promise<string> {
@@ -206,14 +175,10 @@ export class MarketService {
 
   approveExactAmount(coin: string, nft: NFT, price: string): Promise<boolean> {
     console.log("approveExactAmoouunt function in ");
-    return this._contracts.setExactAllocation(coin, nft, price)
-      .then((hash) => {
-        if (hash) {
-          return this._transactions.waitForTransaction(nft, hash);
-        }
-        else {
-          return Promise.reject("");
-        }
+    return this._transactions
+      .pendingTransaction(this._contracts.setExactAllocation(coin, nft, price), nft.network)
+      .then((receipt) => {
+        return receipt ? receipt.status : Promise.reject(new Error("approving failed."));
       })
   }
 

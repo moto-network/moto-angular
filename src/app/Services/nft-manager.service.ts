@@ -27,7 +27,7 @@ export class NFTManagerService {//merge this wit the other NFTManager or wahteve
     "tokenId": "0x5b201a7d86c7fabb8c99f15ba50c7cff",
     "pHash": "c38e18c047cbc680",
     "owner": "0xDcb982dEa4C22aBE650c12a1678537a3e8Ddd30D",
-    "chainId": 97,
+    "network": 97,
     "name": "Takes Two",
   }
 
@@ -134,11 +134,11 @@ export class NFTManagerService {//merge this wit the other NFTManager or wahteve
     if (nft) {
       let validAddress: boolean = this._walletService
         .isValidAddress(nft?.owner, "ETH");
-      let validNetwork: boolean = getProvider(nft?.chainId) ? true : false;
+      let validNetwork: boolean = getProvider(nft?.network) ? true : false;
       //add verify tokenId and contentHash
       console.table({
         "validAddress": this._walletService.isValidAddress(nft?.owner, "ETH"),
-        "validNetwork": getProvider(nft?.chainId) ? true : false
+        "validNetwork": getProvider(nft?.network) ? true : false
       })
       return validAddress && validNetwork;
     }

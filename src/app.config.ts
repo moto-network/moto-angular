@@ -19,11 +19,11 @@ symbol:string
 }
 
 type NetworkCollection = {
-  [chainId: string]: Network;
+  [network: string]: Network;
 }
 
 type AddressCollection = {
-  [chainId: string]: any;
+  [network: string]: any;
 }
 
 
@@ -52,6 +52,12 @@ const nftTestnet: Contract = {
   address: nftTestnetAddress,
   abi: motoVerifiedNFT.abi,
 };
+
+const subscriptionTestnet: Contract = {
+  name: "subscription",
+  address: "",
+  abi:motoVerifiedNFT.abi
+};
 const binaanceTestMarketContract: Contract = {
   name: 'market',
   address: binanceTestMarketAddress,
@@ -71,7 +77,8 @@ const ganacheNFTContract: Contract = {
 const bscTestnetContracts:ContractCollection = {
   "nft": nftTestnet,
   "market": binaanceTestMarketContract,
-  "moto":motoTestbsc
+  "moto": motoTestbsc,
+  "subscription":subscriptionTestnet
 };
 
 const ganacheContractsCollection: ContractCollection = {
@@ -110,33 +117,33 @@ const networkCollection:NetworkCollection = {
 
 };
 
-export function getProvider(chainId: number):string | null{
-  let index = chainId.toString(10);
+export function getProvider(network: number):string | null{
+  let index = network.toString(10);
   if (typeof networkCollection[index]!== 'undefined') {
     return networkCollection[index].provider;
   }
   return null;
 }
 
-export function getContractAddress(chainId: number, name: string):string {
-  return contractAddresses[chainId][name];
+export function getContractAddress(network: number, name: string):string {
+  return contractAddresses[network][name];
 }
   
-export function getContract(chainId: number, name: string): Contract {
-  return networkCollection[chainId].contracts[name];
+export function getContract(network: number, name: string): Contract {
+  return networkCollection[network].contracts[name];
 }
 
-export function getExplorer(chainId: number): string {
-  return networkCollection[chainId].explorerBaseUrl;
+export function getExplorer(network: number): string {
+  return networkCollection[network].explorerBaseUrl;
 }
 
-export function getNetwork(chainId:number): Network {
-  return networkCollection[chainId];
+export function getNetwork(network:number): Network {
+  return networkCollection[network];
 }
 
-export function getNetworkName(chainId: number): string {
-  if (typeof networkCollection[chainId] !== 'undefined') {
-    return networkCollection[chainId].name;
+export function getNetworkName(network: number): string {
+  if (typeof networkCollection[network] !== 'undefined') {
+    return networkCollection[network].name;
   }
   return "N/Available";
 }

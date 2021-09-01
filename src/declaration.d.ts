@@ -2,7 +2,7 @@
 export interface NFT {
   name: string;
   owner: string;
-  chainId: number;
+  network: number;
   tokenId: string;
   contractAddress: string;
   contentHash: string;
@@ -66,7 +66,7 @@ export type Tier = {
   creator: string;
   network: number;
   price: string;
-  commission: string;
+  commission?: string;
 }
 
 
@@ -81,8 +81,8 @@ export type SessionData = {
 
 export interface TransactionReceipt {
   status: boolean;
-  transactionHash: string;
-  transactionIndex?: number;
+  hash: string;
+  index?: number;
   blockHash?: string;
   blockNumber?: number;
   contractAddress?: string;

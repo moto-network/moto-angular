@@ -31,10 +31,7 @@ export class CreateTiersComponent implements OnInit {
   }
 
   manageTier(tier?: Tier) {
-    if (tier) {
-      this._subscriptions.setTier(tier);
-    }
-    this.matDialog.open(CreateTierDialogComponent, { height: "auto", width: "410px" })
+    this.matDialog.open(CreateTierDialogComponent, { height: "auto", width: "410px", data: tier})
   }
 
   changeActiveTier(tier: Tier) { }

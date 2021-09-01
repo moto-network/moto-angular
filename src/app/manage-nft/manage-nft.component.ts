@@ -18,7 +18,7 @@ export class ManageNftComponent implements OnInit, OnDestroy{
     tokenId: "0x0000000",
     owner: "0x00000000",
     creator: "0x000000000",
-    chainId: 97,
+    network: 97,
     contentHash: "0x000000",
     contractAddress: "0x0000000"
   };
@@ -69,7 +69,7 @@ export class ManageNftComponent implements OnInit, OnDestroy{
   }
 
   private checkNetwork(nft: NFT) {
-    if (this.currentNetwork && (nft.chainId != this.currentNetwork)) {
+    if (this.currentNetwork && (nft.network != this.currentNetwork)) {
      
     }
   }

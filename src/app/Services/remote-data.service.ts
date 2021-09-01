@@ -46,7 +46,7 @@ export class RemoteDataService {
     const formData = new FormData();
     formData.append('account', account.address);
     formData.append('nonce', nonce);
-    formData.append('chainId', account.network.toString());
+    formData.append('network', account.network.toString());
     formData.append('signature', sig);
     return this.http.post<any>(VERIFY_SIG_URL, formData)
       .pipe(take(1), map(res => res.token));

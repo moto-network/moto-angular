@@ -9,7 +9,7 @@ import { FileManagerService } from 'src/app/Services/file-manager.service';
 import { NFTManagerService } from '../../Services/nft-manager.service';
 import { Account, NFT } from 'src/declaration';
 import { ProfileService } from '../../Services/profile.service';
-import {  Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { LoginComponent } from '../../login/login.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -38,7 +38,7 @@ export class CreateNFTComponent implements OnInit {
   nftForm: FormGroup = new FormGroup({
     name: new FormControl(''),
     owner: new FormControl('', Validators.required),
-    chainId: new FormControl('', Validators.required),
+    network: new FormControl('', Validators.required),
     file: new FormControl('', Validators.required)
   });
 
@@ -63,7 +63,7 @@ export class CreateNFTComponent implements OnInit {
         if (account) {
           this.account = account;
           this.nftForm.controls['owner'].setValue(account.address);
-          this.nftForm.controls['chainId'].setValue(account.network.toString());
+          this.nftForm.controls['network'].setValue(account.network.toString());
           this.isValidForm();
         }
       });
@@ -92,55 +92,38 @@ export class CreateNFTComponent implements OnInit {
   public createNFT(): void {
     this.nft.name = this.nftForm.get('name')?.value;
     this.nft.owner = this.nftForm.get('owner')?.value;
-    this.nft.chainId = parseInt(this.nftForm.get('chainId')?.value);
+    this.nft.network = parseInt(this.nftForm.get('network')?.value);
     this.nft.tokenId = this.generateTokenId();
     this.nft.creator = this.account?.address;
-    this.nft.contractAddress = getContractAddress(this.nft.chainId, "nft");
+    this.nft.contractAddress = getContractAddress(this.nft.network, "nft");
     if (this.account) {
       this.mint(this.account, this.nft);
     }
   }
 
   private mint(account: Account, nft: NFT) {
-    
-    this._nftManager.mintNFT(account, nft)
-      .then((transactionHash: string) => {
-        if (transactionHash) {
-          this.visible = false;
-          this._profile.openSnackBar("Verifying data.", 3000, false);
-          console.log("CreateNFT: transactionHash ", transactionHash);
-          this._transactions.waitForTransaction(nft, transactionHash)
-            .then((receiptAndConfirmed) => {//only transactions with receipts output here
-              if (receiptAndConfirmed) {
-                this._profile.openSnackBar("Data confirmed.", 2500, false);
-                this.loading = false;
-                if (this.file) {
-                  this._profile.openSnackBar("Uploading file.", 3000, false);
-                  this._nftManager.uploadNFT(this.nft, this.file)
-                    .subscribe((success) => {
-                      if (success) {
-                        this._profile.openSnackBar("Upload Successful.", 2000, false);
-                        this.router.navigate(['nft-results']);
-                      }
-                    });
-
-                }
-                else {
+    this.visible = false;
+    this.loading = true;
+    this._profile.openSnackBar("Verifying data.", 3000, false);
+    this._transactions.pendingTransaction(this._nftManager.mintNFT(account, nft), nft.network)
+      .then((receipt) => {
+        if (receipt) {
+          this._profile.openSnackBar("Data confirmed.", 2500, false);
+          if (this.file) {
+            this._profile.openSnackBar("Uploading file.", 3000, false);
+            this._nftManager.uploadNFT(this.nft, this.file)
+              .subscribe((success) => {
+                if (success) {
+                  this._profile.openSnackBar("Upload Successful.", 2000, false);
                   this.router.navigate(['nft-results']);
                 }
-              }
-              else {//no receipt
-                this.loading = false;
-                this._transactions.waitForTransaction(this.nft, transactionHash);
-                this._profile.openSnackBar("Please wait...", 2000, false);
-              }
-            });
+              });
+          }
+          else {
+            this.router.navigate(['nft-results']);
+          }
         }
       })
-      .catch((err: any) => {
-        this._profile.openSnackBar(err.message);
-        this.loading = false;
-      });
   }
 
   /**
@@ -224,9 +207,9 @@ export class CreateNFTComponent implements OnInit {
    * @returns {boolean}
    */
   private validChain(): boolean {
-    let formChainId: number = parseInt(this.nftForm.get('chainId')?.value);
+    let formNetwork: number = parseInt(this.nftForm.get('network')?.value);
     if (this.nft) {
-      if (this.account && this.account.network == formChainId) {
+      if (this.account && this.account.network == formNetwork) {
         console.log("is truee");
         return true;
       }

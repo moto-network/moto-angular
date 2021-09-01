@@ -27,7 +27,7 @@ export class SellerMenuComponent implements OnInit {
     tokenId: "0x0000000",
     owner: "0x00000000",
     creator: "0x000000000",
-    chainId: 97,
+    network: 97,
     contentHash: "0x000000",
     contractAddress: "0x0000000"
   };
@@ -162,9 +162,9 @@ export class SellerMenuComponent implements OnInit {
     return this._market.canMarketControlAll(nft);
   }
 
-  getNetwork(chainId: number): string {
-    if (getNetwork(chainId)) {
-      return getNetwork(chainId).name;
+  getNetwork(network: number): string {
+    if (getNetwork(network)) {
+      return getNetwork(network).name;
     }
     return "N/A";
   }
@@ -174,10 +174,10 @@ export class SellerMenuComponent implements OnInit {
     this.loading = true;
     this._profile.openSnackBar("Please wait...", 2000, false);
     if (this._nftManager.nft) {
-      this._market.requestSinglePermission(this.nft)
-        .then((result: boolean) => {
-          console.log('result i s', result);
-          if (result) {
+      this._transactions
+        .pendingTransaction(this._market.requestSinglePermission(this.nft), this.nft.network)
+        .then((receipt) => {
+          if (receipt.status) {
             this.loading = false;
             console.log("got it ");
             this._profile.openSnackBar("Permission Granted.", 2000, false);
@@ -192,9 +192,10 @@ export class SellerMenuComponent implements OnInit {
     this.allowAll = true;
     this._profile.openSnackBar("Please wait...", 2000, false);
     if (this._nftManager.nft) {
-      this._market.grantTotalPermission(this.nft)
-        .then((result: boolean) => {
-          if (result) {
+      this._transactions
+        .pendingTransaction(this._market.grantTotalPermission(this.nft), this.nft.network)
+        .then((receipt) => {
+          if (receipt) {
             this._profile.openSnackBar("Permission Granted.", 2000, false);
             this.allowAll = true;
             this.allowOne = true;

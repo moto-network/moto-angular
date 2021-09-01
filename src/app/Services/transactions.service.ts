@@ -26,7 +26,7 @@ export class TransactionsService {
     return results;
   }
 
-  public async pendingTransaction(transaction: Promise<string>, network: number): Promise<boolean> {
+  public async pendingTransaction(transaction: Promise<string>, network: number): Promise<TransactionReceipt> {
     return transaction
       .then((hash: string) => { return hash ? hash : Promise.reject(new Error("no hash.")) })
       .then((hash: string) => {
@@ -34,14 +34,14 @@ export class TransactionsService {
       })
   }
 
-  private _startBackgroundCheck(hash: string, network: number): Promise<boolean> {
+  private _startBackgroundCheck(hash: string, network: number): Promise<TransactionReceipt> {
     return new Promise(async (resolve, reject) => {
       const interval = setInterval(async () => {
         try {
           const receipt = await this._wallet.getTransactionReceipt(hash, network);
           if (receipt && receipt.status) {
             clearInterval(interval);
-            resolve(receipt.status);
+            resolve(receipt);
           }
         }
         catch (err) {

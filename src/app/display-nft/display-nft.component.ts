@@ -31,7 +31,7 @@ export class DisplayNFTComponent implements OnInit, OnDestroy {
     "contractAddress": "0x000000000000000000000000000000",
     "contentHash": "0x00000000000000000000000000000000000000000000000000000000000000",
     "name": "NOTHING TO SHOW",
-    "chainId": 97,
+    "network": 97,
     "smImg": " ",
     "owner": "0x000000000000000000000000000000",
     "pHash": "0000000000000000000000000",
@@ -115,7 +115,7 @@ export class DisplayNFTComponent implements OnInit, OnDestroy {
   }
 
   getNetworkName() {
-    return getNetworkName(this.nft.chainId);
+    return getNetworkName(this.nft.network);
   }
 
   private _getOwner(nft: FileNFT): void {

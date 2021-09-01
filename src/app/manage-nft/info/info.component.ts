@@ -22,7 +22,7 @@ export class InfoComponent implements OnInit {
     tokenId: "0x0000000",
     owner: "0x00000000",
     creator: "0x000000000",
-    chainId: 97,
+    network: 97,
     contentHash: "0x000000",
     contractAddress: "0x0000000"
   };
@@ -101,9 +101,9 @@ export class InfoComponent implements OnInit {
     return this._market.canMarketControlAll(nft);
   }
 
-  getNetwork(chainId: number): string {
-    if (getNetwork(chainId)) {
-      return getNetwork(chainId).name;
+  getNetwork(network: number): string {
+    if (getNetwork(network)) {
+      return getNetwork(network).name;
     }
     return "N/A";
   }

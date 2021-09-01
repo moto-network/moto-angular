@@ -7,7 +7,7 @@
     <p>
       you have successful created a NFT representation of your file on
 
-      {{getNetworkName(nft?.chainId)}}
+      {{getNetworkName(nft?.network)}}
 
 
       here are your details:
@@ -34,13 +34,13 @@
     </a>
     <p class="short-paragraph">
       this represents your transaction on the blockchain.
-      click the link to see it on the {{getNetworkName(nft?.chainId)}}
+      click the link to see it on the {{getNetworkName(nft?.network)}}
       explorer.
     </p>
   </div>
   <div class="row-box">
     <h3 class="secondary-title"> network</h3>
-    <p class="strong">{{getNetworkName(nft?.chainId)}}</p>
+    <p class="strong">{{getNetworkName(nft?.network)}}</p>
     <p class="short-paragraph">
       you NFT data is recorded on this decentralized
       network and our internal servers.
@@ -56,7 +56,7 @@
       contracts are special programs
       that define rules and structures.
       your NFT exists at this address on the
-      {{getNetworkName(nft?.chainId)}}.
+      {{getNetworkName(nft?.network)}}.
     </p>
   </div>
   <div class="row-box">

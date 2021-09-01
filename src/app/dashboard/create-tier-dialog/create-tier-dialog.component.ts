@@ -3,6 +3,10 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { SubscriptionsManagerService } from 'src/app/Services/subscriptions-manager.service';
 import { Tier } from 'src/declaration';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Inject } from '@angular/core';
+import { WalletService } from 'src/app/Services/BlockchainServices/wallet.service';
+import { TransactionsService } from 'src/app/Services/transactions.service';
 
 @Component({
   selector: 'app-create-tier-dialog',
@@ -11,46 +15,60 @@ import { Tier } from 'src/declaration';
 })
 export class CreateTierDialogComponent implements OnInit {
   tier: Tier | null = null;
+  loading: boolean = false;
   tierForm: FormGroup = new FormGroup({
     name: new FormControl('', Validators.required),
     desc: new FormControl(''),
     price: new FormControl('', Validators.required)
   });
   constructor(public matDialogRef: MatDialogRef<CreateTierDialogComponent>
-  , private _subscriptions:SubscriptionsManagerService) { }
+    , private _subscriptions: SubscriptionsManagerService,
+    @Inject(MAT_DIALOG_DATA) public data: undefined | Tier,
+  private _wallet:WalletService) { }
 
   ngOnInit(): void {
-    this._subscriptions.getTier()
-      .then((tier) => {
-        if (tier) {
-          this.tier = tier;
-          this._setValues(tier);
-        }
-      });
+    if (this.data) {
+      this.tier = this.data;
+      this._setValues(this.tier);
+    }
   }
 
-  changeTier() {
+  async changeTier() {
+    const name = this.tierForm.get('name')?.value;
+    const desc = this.tierForm.get("desc")?.value;
+    const price = this.tierForm.get("price")?.value;
     if (this.tier) {
-      this.matDialogRef.close();
-      const name = this.tierForm.get('name')?.value;
-      const desc = this.tierForm.get("desc")?.value;
-      const price = this.tierForm.get("price")?.value;
-
       const tempTier = this.tier;
       tempTier.name = name;
       tempTier.desc = desc;
       tempTier.price = price;
-
       if (tempTier != this.tier) {
         this._subscriptions.updateTier(this.tier, tempTier);
       }
     }
     else {
-      
+      this.loading = true;
+      this._wallet.getAccount()
+        .subscribe((account) => {
+          if (account) {
+            const tier: Tier = {
+              name: name,
+              desc: desc,
+              price: price,
+              network: account.network,
+              valid: true,
+              creator:account.address
+            };
+            this._subscriptions.updateTier(tier)
+              .then((result) => {
+                if (result) {
+                  this.loading = false;
+                }
+              });
+          }
+        });
     }
-    
-
-
+    this.matDialogRef.close();
   }
 
   private _setValues(tier: Tier) {

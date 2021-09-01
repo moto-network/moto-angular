@@ -65,9 +65,7 @@ export class SubscriptionsManagerService {
     }
   }
 
-
   getTiers(account?: Account): Promise<Tier[]>{
-    
     return Promise.resolve(this.tiers!);
   }
 
