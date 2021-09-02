@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FileNFT, NFT, NFTCollection, Listing as Listing, Account, ListingNFT, Tier } from "src/declaration";
+import { FileNFT, NFT, NFTCollection, Listing as Listing, Account, ListingNFT, Tier, Subscription } from "src/declaration";
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { CREATE_ORDER_URL, FINALIZE_ORDER, GEN_LINK, GET_NONCE_URL, UPLOAD_NFT_URL, VERIFY_SIG_URL } from "src/app.config";
@@ -74,7 +74,14 @@ export class RemoteDataService {
         }
         );
     });
+  }
 
+  public updateDB(data: Tier | Subscription) {
+    this._db.collection("Tiers")
+  }
+
+  private updateDB<T>(data: T) {
+    this._db.collection
   }
 
   public finalizeOrder(nft: ListingNFT, hash: string): Observable<Listing> {

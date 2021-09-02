@@ -341,7 +341,7 @@ export class ContractsService {
   updateSubscription(sub: Subscription):Promise<string> {
     return Promise.resolve("hello");
   }
-
+  
   updateTier(tier: Tier): Promise<string> {
     return new Promise((resolve, reject) => {
       const subscription = getContract(tier.network, 'subscription');

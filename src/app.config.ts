@@ -31,7 +31,7 @@ import { ContractsService } from "./app/Services/BlockchainServices/contracts.se
 const marketplaceJSON = require("./app/Services/BlockchainServices/contracts/Marketplace.json")
 const motoVerifiedNFT = require("./app/Services/BlockchainServices/contracts/BEPMotoNFT.json");
 const motoJSON = require("./app/Services/BlockchainServices/contracts/BEP20.json");
-
+const subscriptionJSON = require("./app/Services/BlockchainServices/contracts/Subscriptions.json");
 
 const motoBinanceTestAddress: string = "0xdc912E01a97773425adD43dB5dba75ce61Fd4c93";
 const nftTestnetAddress: string = "0x4De41909a50B92b025BA95f8ddf7e7a126dC40Cd";
@@ -55,9 +55,10 @@ const nftTestnet: Contract = {
 
 const subscriptionTestnet: Contract = {
   name: "subscription",
-  address: "",
-  abi:motoVerifiedNFT.abi
+  address: "0xbD1023Ebe5C9433C18C55f9B4b774F9b8F9771D4",
+  abi:subscriptionJSON.abi
 };
+
 const binaanceTestMarketContract: Contract = {
   name: 'market',
   address: binanceTestMarketAddress,
