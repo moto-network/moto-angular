@@ -24,6 +24,26 @@ export class ProfileService {
     private _router: Router, public snackBar: MatSnackBar) {
   }
 
+  login(): Observable<boolean> {
+    this.openSnackBar("Preparing Login Procedure", 3000, false);
+    return from(this._wallet.initAccount())
+      .pipe(
+        mergeMap(account => {
+          console.log("account is ", account);
+          this.openSnackBar("Communicating with Remote server", 3500, false);
+          return from(this.getUserToken(account))
+        }),
+        mergeMap(token => {
+          this.openSnackBar("User Token received.", 3000, false);
+          return from(this.auth.walletSignIn(token))
+        }),
+        map(user => {
+          this.openSnackBar("All done.", 3000, false);
+          return user ? true : false
+        })
+      );
+  }
+
   getUserAccountToken(): Promise<string | undefined> {
     return new Promise((resolve, reject) => {
       this.auth.currentUser()
@@ -42,29 +62,6 @@ export class ProfileService {
 
   }
 
-  login(): Observable<boolean> {
-    this.openSnackBar("Preparing Login Procedure", 3000, false);
-    return from(this._wallet.initWallet())
-      .pipe(
-        filter(status => status == true),
-        mergeMap(() => {
-          this.openSnackBar("Preparing Wallet", 3000, false);
-          return this._wallet.getAccount()
-        }),
-        mergeMap(account => {
-          this.openSnackBar("Communicating with Remote server", 3500, false);
-          return from(this.getUserToken(account))
-        }),
-        mergeMap(token => {
-          this.openSnackBar("User Token received.", 3000, false);
-          return from(this.auth.walletSignIn(token))
-        }),
-        map(user => {
-          this.openSnackBar("All done.", 3000, false);
-          return user ? true : false
-        })
-      );
-  }
 
   getDownloadLink(nft: NFT): Promise<string | void> {
     this.openSnackBar('Generating Link...', 2000, false);

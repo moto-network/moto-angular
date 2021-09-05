@@ -6,6 +6,7 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateTierDialogComponent } from '../create-tier-dialog/create-tier-dialog.component';
 import { ProfileService } from 'src/app/Services/profile.service';
+import { LoginComponent } from 'src/app/login/login.component';
 @Component({
   selector: 'app-create-tiers',
   templateUrl: './create-tiers.component.html',
@@ -17,7 +18,7 @@ export class CreateTiersComponent implements OnInit {
   tiers: Tier[] | null = null;
   constructor(private _subscriptions: SubscriptionsManagerService,
     private _wallet: WalletService, private matDialog: MatDialog,
-  private _profile:ProfileService) { }
+  private _profile:ProfileService, public dialog:MatDialog) { }
 
   ngOnInit(): void {
     this._wallet.getAccount()
@@ -26,12 +27,23 @@ export class CreateTiersComponent implements OnInit {
           this.account = account;
           this._getTiers(account);
         }
+        else {
+        
+        }
       });
     this._getTiers();
   }
 
   manageTier(tier?: Tier) {
-    this.matDialog.open(CreateTierDialogComponent, { height: "auto", width: "410px", data: tier})
+    if (this.account) {
+      this.matDialog.open(CreateTierDialogComponent, { height: "auto", width: "410px", data: tier });
+    }
+    else {
+      this.dialog.open(LoginComponent, { height: "500px", width: "400px" });
+      if (this.account) {
+        this.matDialog.open(CreateTierDialogComponent, { height: "auto", width: "410px", data: tier });
+      }
+    }
   }
 
   changeActiveTier(tier: Tier) { }

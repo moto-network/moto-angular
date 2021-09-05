@@ -24,7 +24,7 @@ export class SellerMenuComponent implements OnInit {
     private _profile: ProfileService, private _transactions: TransactionsService) { }
   nft: NFT & Partial<ListingNFT> = {
     name: "Nothing To Show",
-    tokenId: "0x0000000",
+    id: "0x0000000",
     owner: "0x00000000",
     creator: "0x000000000",
     network: 97,

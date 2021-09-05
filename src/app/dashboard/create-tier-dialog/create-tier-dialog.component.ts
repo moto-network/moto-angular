@@ -7,6 +7,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Inject } from '@angular/core';
 import { WalletService } from 'src/app/Services/BlockchainServices/wallet.service';
 import { TransactionsService } from 'src/app/Services/transactions.service';
+import { ProfileService } from 'src/app/Services/profile.service';
 
 @Component({
   selector: 'app-create-tier-dialog',
@@ -24,16 +25,17 @@ export class CreateTierDialogComponent implements OnInit {
   constructor(public matDialogRef: MatDialogRef<CreateTierDialogComponent>
     , private _subscriptions: SubscriptionsManagerService,
     @Inject(MAT_DIALOG_DATA) public data: undefined | Tier,
-  private _wallet:WalletService) { }
+  private _wallet:WalletService, private _profile:ProfileService) { }
 
   ngOnInit(): void {
     if (this.data) {
       this.tier = this.data;
+      console.log(this.tier);
       this._setValues(this.tier);
     }
   }
 
-  async changeTier() {
+  async manageTier() {
     const name = this.tierForm.get('name')?.value;
     const desc = this.tierForm.get("desc")?.value;
     const price = this.tierForm.get("price")?.value;
@@ -57,18 +59,25 @@ export class CreateTierDialogComponent implements OnInit {
               price: price,
               network: account.network,
               valid: true,
-              creator:account.address
+              owner: account.address,
+              id:"0"
             };
             this._subscriptions.updateTier(tier)
               .then((result) => {
                 if (result) {
                   this.loading = false;
+                  this.matDialogRef.close();
+                  this._subscriptions.getTiers();
                 }
-              });
+              })
+              .catch((err) => {
+                this._profile.openSnackBar("err.message", 4000);
+               });
           }
+         
         });
     }
-    this.matDialogRef.close();
+    
   }
 
   private _setValues(tier: Tier) {

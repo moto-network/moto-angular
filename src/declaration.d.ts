@@ -1,9 +1,13 @@
 
-export interface NFT {
-  name: string;
+
+export interface UniqueOwnable{
   owner: string;
+  id: string;
   network: number;
-  tokenId: string;
+ }
+
+export interface NFT extends UniqueOwnable{
+  name: string;
   contractAddress: string;
   contentHash: string;
   creator: string;
@@ -58,13 +62,10 @@ export type LocalSession = {
   data?: SessionData;
 }
 
-export type Tier = {
+export type Tier = UniqueOwnable & {
   name?: string;
   valid: boolean;
-  tierId?: string;
   desc?: string;
-  creator: string;
-  network: number;
   price: string;
   commission?: string;
 }

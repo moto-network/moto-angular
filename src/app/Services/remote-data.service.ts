@@ -1,11 +1,14 @@
 import { Injectable } from '@angular/core';
-import { FileNFT, NFT, NFTCollection, Listing as Listing, Account, ListingNFT, Tier, Subscription } from "src/declaration";
+import { FileNFT, NFT, NFTCollection, Listing as Listing, Account, ListingNFT, Tier, Subscription, UniqueOwnable } from "src/declaration";
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { CREATE_ORDER_URL, FINALIZE_ORDER, GEN_LINK, GET_NONCE_URL, UPLOAD_NFT_URL, VERIFY_SIG_URL } from "src/app.config";
+import { CREATE_ORDER_URL, FINALIZE_ORDER, GEN_LINK, getProvider, GET_NONCE_URL, UPDATE_TIER_URL, UPLOAD_NFT_URL, VERIFY_SIG_URL } from "src/app.config";
 import { Observable, Subject } from 'rxjs';
 import { ChinaDataService } from './china-data.service';
 import { map, take } from 'rxjs/operators';
+import { query } from '@angular/animations';
+
+
 
 @Injectable({
   providedIn: 'root'
@@ -35,6 +38,13 @@ export class RemoteDataService {
     }
   }
 
+  public updateTierDB(tier: Tier): Promise<boolean> {
+    const formData = new FormData();
+    formData.append('tier', JSON.stringify(tier));
+    return this.http.post<any>(UPDATE_TIER_URL, formData)
+      .pipe(take(1), map(response => response.nonce)).toPromise();
+  }
+
   public getNonce(account: Account): Observable<string | undefined> {
     const formData = new FormData();
     formData.append('account', account.address);
@@ -43,6 +53,7 @@ export class RemoteDataService {
   }
 
   public verifySignature(account: Account, nonce: string, sig: string): Observable<string> {
+    console.log("gonna verify sign");
     const formData = new FormData();
     formData.append('account', account.address);
     formData.append('nonce', nonce);
@@ -76,12 +87,8 @@ export class RemoteDataService {
     });
   }
 
-  public updateDB(data: Tier | Subscription) {
-    this._db.collection("Tiers")
-  }
-
-  private updateDB<T>(data: T) {
-    this._db.collection
+  public getTiers(account: Account): Promise<Tier | Record<string, Tier> | null> {
+    return this.getData<Tier>("Tiers", "owner", account.address).toPromise();
   }
 
   public finalizeOrder(nft: ListingNFT, hash: string): Observable<Listing> {
@@ -103,7 +110,7 @@ export class RemoteDataService {
         .subscribe((querySnapshot) => {
           querySnapshot.forEach((doc) => {
             let nft: NFTType = doc.data() as NFTType;
-            nftCollection[nft.tokenId] = nft;
+            nftCollection[nft.id] = nft;
             collectionSubject.next(nftCollection);
           });
         });
@@ -140,7 +147,7 @@ export class RemoteDataService {
           }
           querySnapshot.forEach((doc) => {
             let nft: NFTType = doc.data() as NFTType;
-            nftCollection[nft.tokenId] = nft;
+            nftCollection[nft.id] = nft;
             collectionSubject.next(nftCollection);
           });
         });
@@ -148,9 +155,24 @@ export class RemoteDataService {
     }
   }
 
-  updateTier(tier: Tier) { }
-  getTiers(account:Account) { }
-  getTier(tier:Tier) { }
-  getSubscription() { }
-  getSubscriptions(account:Account){ }
+  private getData<Data extends UniqueOwnable>(collection: string, parameter: string, value: string): Observable<Data | Record<string, Data> | null> {
+    const collectionSubject: Subject<Data | Record<string, Data> | null> = new Subject<Data | Record<string, Data> | null>();
+    const record: Record<string, Data> = {};
+    this._db
+      .collection(collection, ref => ref.where(parameter, '==', value))
+      .get()
+      .subscribe((querySnapshot) => {
+        if (querySnapshot.empty) {
+          collectionSubject.next(null);
+        }
+        else {
+          querySnapshot.forEach((doc) => {
+            let data: Data = doc.data() as Data;
+            record[data.id] = data;
+            collectionSubject.next(record);
+          })
+        }
+      });
+    return collectionSubject;
+  }
 }

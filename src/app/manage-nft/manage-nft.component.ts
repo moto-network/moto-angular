@@ -15,7 +15,7 @@ import { Subscription } from 'rxjs';
 export class ManageNftComponent implements OnInit, OnDestroy{
   nft: FileNFT = {
     name: "Nothing To Show",
-    tokenId: "0x0000000",
+    id: "0x0000000",
     owner: "0x00000000",
     creator: "0x000000000",
     network: 97,

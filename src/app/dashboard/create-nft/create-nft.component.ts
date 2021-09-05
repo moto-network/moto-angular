@@ -93,7 +93,7 @@ export class CreateNFTComponent implements OnInit {
     this.nft.name = this.nftForm.get('name')?.value;
     this.nft.owner = this.nftForm.get('owner')?.value;
     this.nft.network = parseInt(this.nftForm.get('network')?.value);
-    this.nft.tokenId = this.generateTokenId();
+    this.nft.id = this.generateTokenId();
     this.nft.creator = this.account?.address;
     this.nft.contractAddress = getContractAddress(this.nft.network, "nft");
     if (this.account) {

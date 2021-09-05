@@ -47,6 +47,7 @@ export class AppComponent {
     searchInput: new FormControl('')
   });
   account: Account | null = null;
+
   constructor(private _auth: AuthenticationService,
     private _wallet: WalletService,
     private _router: Router, private _nftManager: NFTManagerService,
@@ -56,12 +57,10 @@ export class AppComponent {
 
 
   ngOnInit(): void {
-    this._auth.afAuth.authState.subscribe((user) => {
-      this.changeActiveUserState();
-    });
+    
     this._wallet.getAccount()
       .subscribe((account) => {
-
+        console.log("account is in app is ", account);
         if (account) {
           this.account = account;
         this.userIconLink = "/user-dashboard";

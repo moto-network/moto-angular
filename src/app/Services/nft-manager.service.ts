@@ -24,7 +24,7 @@ export class NFTManagerService {//merge this wit the other NFTManager or wahteve
     "contentHash": "0x96c339b17672978ea1b0a6cc4e992d4e923b3c0fea50964a3a4a031add3e8c6b",
     "smImg": "https://storage.googleapis.com/motonetworknft/image/sm_0x96c339b17672978ea1b0a6cc4e992d4e923b3c0fea50964a3a4a031add3e8c6b?GoogleAccessId=firebase-master%40motonetwork.iam.gserviceaccount.com&Expires=4780953476&Signature=RzXJ277wMe1pFzBA9YtPufOzHgSHt%2B9yi7sLMsAAkRpf38EJVWsxAE54iva8OITjz%2BzjLBe0SqRygLoZ%2BsUPy43oZDn5qtGYQ62Xpa0fFUesmWE%2BTztN6C5R%2BzxqmjH7tDeoRiU2c%2B2xZ21ria6F6dXuF7tiWLaIg1JoleTISjgjhGGW9In3kyxMbMmIocr5NMUdzh2kHoo8j5RLN50kiQnblzxVA8KGPZ7%2FJrPQU58VonCbujxMhLWoyPbJpQ3DrP3NynDLlHB2KfrYCW%2F1QVVQegHbWIgC6UQjGCD3kKrgkEZxUcJmIsVKLcxDlZNQisrI7NRRL11B6ALoSTp3ug%3D%3D",
     "contractAddress": "0x4De41909a50B92b025BA95f8ddf7e7a126dC40Cd",
-    "tokenId": "0x5b201a7d86c7fabb8c99f15ba50c7cff",
+    "id": "0x5b201a7d86c7fabb8c99f15ba50c7cff",
     "pHash": "c38e18c047cbc680",
     "owner": "0xDcb982dEa4C22aBE650c12a1678537a3e8Ddd30D",
     "network": 97,

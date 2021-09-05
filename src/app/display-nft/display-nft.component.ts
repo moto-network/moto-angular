@@ -27,7 +27,7 @@ export class DisplayNFTComponent implements OnInit, OnDestroy {
   account: Account | null = null
   nftOwner: string | null = null;
   nft: FileNFT & Partial<ListingNFT> = {
-    "tokenId": "0x0000000000000",
+    "id": "0x0000000000000",
     "contractAddress": "0x000000000000000000000000000000",
     "contentHash": "0x00000000000000000000000000000000000000000000000000000000000000",
     "name": "NOTHING TO SHOW",
@@ -111,7 +111,7 @@ export class DisplayNFTComponent implements OnInit, OnDestroy {
 
 
   nftAvailable(): boolean {
-    return (this.nft.tokenId.length > 25);
+    return (this.nft.id.length > 25);
   }
 
   getNetworkName() {

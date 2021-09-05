@@ -25,13 +25,13 @@ export class WalletService {
 
   }
 
-  async initWallet(): Promise<boolean> {
+  async initAccount(): Promise<Account> {
     let interfaceStatus: boolean = await this._resolveWalletInterface();
     console.log("interface status", interfaceStatus);
     if (interfaceStatus) {
       return this._requestAccount();
     }
-    return interfaceStatus;
+    return Promise.reject(new Error('no account.'));
   }
 
   /**
@@ -50,8 +50,6 @@ export class WalletService {
   listenForAddress(): Observable<string | null> {
     return this.addressObservable
       .pipe(
-
-
       )
   }
 
@@ -121,7 +119,7 @@ export class WalletService {
         }
       })
       .catch((err: any) => {
-        return new Error("signature error");
+        return Promise.reject(err);
       });
 
   }
@@ -151,24 +149,29 @@ export class WalletService {
     });
   }
 
-  private _requestAccount(): Promise<boolean> {
-    console.log("requestying ");
+  private _requestAccount(): Promise<Account> {
+    console.log("requesting ");
     if (!this._walletInterface) {
       return Promise.reject(new Error("no interface"));
     }
-    return this._walletInterface.request({ method: 'eth_requestAccounts' })
-      .then((accounts: string[]) => {
-        const web3 = new Web3(getProvider(parseInt(this._walletInterface.network, 16)));
-        console.log('getting accocunt ', web3.utils.toChecksumAddress(accounts[0]));
-        this.networkObservable.next(parseInt(this._walletInterface.network, 16));
-
-
-        this.addressObservable.next(web3.utils.toChecksumAddress(accounts[0]))
-        return true;
-      })
-      .catch((err: any) => {
-        return Promise.reject(err);
+    return Promise.all([this._walletInterface.request({ method: 'eth_requestAccounts' }),
+    this._walletInterface.request({ method: 'eth_chainId' })])
+      .then((result) => {
+        if (result[0] && result[1]) {
+          const account: Account = {
+            address: result[0][0],
+            network: parseInt(result[1],16)
+          } as Account;
+          this.AccountObservable.next(account);
+          this.addressObservable.next(account.address);
+          this.networkObservable.next(account.network);
+          return account;
+        }
+        else {
+          return Promise.reject(new Error("error getting account"));
+        }
       });
+          
   }
 
   private prepSignatureData(account: Account, nonce: string) {

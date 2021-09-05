@@ -4,8 +4,9 @@
   <input type="text" placeholder="    name your tier" formControlName="name" />
   <textarea cols="40" rows="5" placeholder="    give a short description" formControlName="desc"></textarea>
   <input type="number" placeholder="    set a price in moto" formControlName="price" />
-  <button class="moto-button" (click)="changeTier()">done</button>
+  <button class="moto-button" (click)="manageTier()">done</button>
+  
 </form>
-<div id='loading' *ngIf = "loading">
-  <img src="../../../assets/loading.webp"/>
+<div id='loading' *ngIf="loading">
+  <img src="../../../assets/loading.webp" style="width:100px;height:100px;" />
 </div>
