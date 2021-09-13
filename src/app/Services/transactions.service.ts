@@ -27,6 +27,7 @@ export class TransactionsService {
   }
 
   public async pendingTransaction(transaction: Promise<string>, network: number): Promise<TransactionReceipt> {
+    console.log("started pending transaction");
     return transaction
       .then((hash: string) => { return hash ? hash : Promise.reject(new Error("no hash.")) })
       .then((hash: string) => {
@@ -35,11 +36,15 @@ export class TransactionsService {
   }
 
   private _startBackgroundCheck(hash: string, network: number): Promise<TransactionReceipt> {
+    console.log("starting background check");
     return new Promise(async (resolve, reject) => {
       const interval = setInterval(async () => {
         try {
+          console.log("transacytion hash",hash);
           const receipt = await this._wallet.getTransactionReceipt(hash, network);
+          console.log("transactipn receipty", receipt);
           if (receipt && receipt.status) {
+
             clearInterval(interval);
             resolve(receipt);
           }

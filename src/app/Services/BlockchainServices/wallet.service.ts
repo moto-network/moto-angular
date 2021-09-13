@@ -54,6 +54,7 @@ export class WalletService {
   }
 
   async getTransactionReceipt(hash: string, network: number): Promise<TransactionReceipt | null> {
+    console.log("getting receipt");
     const web3 = await new Web3(getProvider(network));
     return web3.eth.getTransactionReceipt(hash)
       .then((receipt) => {
@@ -158,8 +159,9 @@ export class WalletService {
     this._walletInterface.request({ method: 'eth_chainId' })])
       .then((result) => {
         if (result[0] && result[1]) {
+          const web3 = new Web3(getProvider(parseInt(this._walletInterface.network, 16)));
           const account: Account = {
-            address: result[0][0],
+            address: web3.utils.toChecksumAddress(result[0][0]),
             network: parseInt(result[1],16)
           } as Account;
           this.AccountObservable.next(account);

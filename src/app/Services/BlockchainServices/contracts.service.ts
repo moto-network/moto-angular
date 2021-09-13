@@ -393,8 +393,9 @@ export class ContractsService {
 
 
   createTier(tier: Tier): Promise<string> {
+    console.log("contract crreating tier");
     return new Promise((resolve, reject) => {
-      this._initWalletProvider(this.userAccount?.network!)
+      this._initProvider(tier.network)
         .then(async (web3) => {
           if (web3) {
             const subscriptions: Contract = getContract(tier.network, "subscription");

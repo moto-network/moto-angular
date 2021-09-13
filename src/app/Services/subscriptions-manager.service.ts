@@ -56,11 +56,13 @@ export class SubscriptionsManagerService {
       else {
 
         this._transactions.pendingTransaction(this.updateContract(modifiedTier), modifiedTier.network)
-          .then((status) => {
+          .then((transactionReceipt) => {
             const dbTier = modifiedTier;
             dbTier.id = this.createTierId(dbTier.owner, dbTier.price);
             console.log("remote tier ", dbTier);
-            return status ? this.updateTierDB(dbTier): Promise.reject(new Error("tier update error."));
+            this.updateTierDB(dbTier)
+              .then((result) => { console.log("updaatetierdb", result) });
+            transactionReceipt.status ? resolve(this.updateTierDB(dbTier)): reject(new Error("tier update error."));
           })
           .catch((err) => {
             reject(err);
@@ -100,6 +102,7 @@ export class SubscriptionsManagerService {
   }
 
   private updateContract(data: Tier): Promise<string> {
+    console.log("updating contract");
     return this._contracts.createTier(data);
   }
 

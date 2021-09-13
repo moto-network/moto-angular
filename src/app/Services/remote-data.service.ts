@@ -42,7 +42,7 @@ export class RemoteDataService {
     const formData = new FormData();
     formData.append('tier', JSON.stringify(tier));
     return this.http.post<any>(UPDATE_TIER_URL, formData)
-      .pipe(take(1), map(response => response.nonce)).toPromise();
+      .pipe(take(1)).toPromise();
   }
 
   public getNonce(account: Account): Observable<string | undefined> {

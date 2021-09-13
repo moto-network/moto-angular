@@ -40,6 +40,7 @@ export class CreateTierDialogComponent implements OnInit {
     const desc = this.tierForm.get("desc")?.value;
     const price = this.tierForm.get("price")?.value;
     if (this.tier) {
+      console.log("tier found");
       const tempTier = this.tier;
       tempTier.name = name;
       tempTier.desc = desc;
@@ -49,6 +50,7 @@ export class CreateTierDialogComponent implements OnInit {
       }
     }
     else {
+      console.log("tier not found");
       this.loading = true;
       this._wallet.getAccount()
         .subscribe((account) => {
@@ -64,14 +66,16 @@ export class CreateTierDialogComponent implements OnInit {
             };
             this._subscriptions.updateTier(tier)
               .then((result) => {
+                console.log("dialog ", result);
                 if (result) {
+
                   this.loading = false;
                   this.matDialogRef.close();
                   this._subscriptions.getTiers();
                 }
               })
               .catch((err) => {
-                this._profile.openSnackBar("err.message", 4000);
+                this._profile.openSnackBar(err.message, 4000);
                });
           }
          

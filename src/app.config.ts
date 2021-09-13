@@ -97,7 +97,7 @@ const ganacheNetwork: Network = {
 }
 
 const bscTestnetNetwork:Network = {
-  provider: "https://data-seed-prebsc-2-s2.binance.org:8545",
+  provider: "https://data-seed-prebsc-1-s1.binance.org:8545",
   contracts: bscTestnetContracts,
   explorerBaseUrl: "https://testnet.bscscan.com/",
   name: "Binance Smart Chain  TESTNEST",

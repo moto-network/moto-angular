@@ -6,6 +6,12 @@ export interface UniqueOwnable{
   network: number;
  }
 
+export interface Contract {
+  name: string;
+  address: string;
+  abi: any;
+  desc?: string;
+}
 export interface NFT extends UniqueOwnable{
   name: string;
   contractAddress: string;
