@@ -55,7 +55,7 @@ const nftTestnet: Contract = {
 
 const subscriptionTestnet: Contract = {
   name: "subscription",
-  address: "0xbD1023Ebe5C9433C18C55f9B4b774F9b8F9771D4",
+  address: "0xc92D3496D34E1096E19909E084ba587ae5BB2484",
   abi:subscriptionJSON.abi
 };
 
