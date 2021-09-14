@@ -68,14 +68,14 @@ export class CreateTierDialogComponent implements OnInit {
               .then((result) => {
                 console.log("dialog ", result);
                 if (result) {
-
                   this.loading = false;
-                  this.matDialogRef.close();
-                  this._subscriptions.getTiers();
+                  this.matDialogRef.close({changes:true});
+        
                 }
               })
-              .catch((err) => {
-                this._profile.openSnackBar(err.message, 4000);
+              .catch(() => {
+                this._profile.openSnackBar("tier already exists.", 4000);
+                this.matDialogRef.close();
                });
           }
          

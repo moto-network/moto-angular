@@ -12,24 +12,12 @@ import { Account, Tier } from 'src/declaration';
 })
 export class DashMenuComponent implements OnInit {
   account: Account | null = null;
-  tiers: Tier[] | null = null;
+  tiers: Record<string,Tier> | null = null;
   constructor(private _router: Router,
     private _subscriptions: SubscriptionsManagerService,
   private _wallet:WalletService) { }
 
   ngOnInit(): void {
-    this._wallet.getAccount()
-      .subscribe((account) => {
-        if (account) {
-          this._getActiveTiers(account)
-            .then((tiers) => {
-              if (tiers) {
-                this.tiers = tiers;
-              }
-             })
-        
-        }
-      });
   }
 
   createNFT() {
@@ -44,8 +32,7 @@ export class DashMenuComponent implements OnInit {
     this._router.navigate(['dashboard', 'exchange']);
   }
 
-  private _getActiveTiers(account: Account) :Promise<Tier[]>{
+  private _getActiveTiers(account: Account) :Promise<Record<string, Tier> | null>{
     return this._subscriptions.getTiers(account);
-
   }
 }

@@ -6,13 +6,13 @@
     </button>
   </div>
 </div>
-<div id="active-subscriptions">
-  <div *ngFor="let tier of tiers">
-    <div class="active-subscription" (click)="manageTier(tier)">
-      <h2 class="moto-title">{{tier.name}}</h2>
-      <p class="subscription-description"> {{tier.desc}}</p>
+<div id="active-subscriptions" *ngIf="tiers">
+  <div *ngFor="let id of Tiers" >
+    <div class="active-subscription" (click)="manageTier(tiers![id])">
+      <h2 class="moto-title">{{tiers[id].name}}</h2>
+      <p class="subscription-description"> {{tiers[id].desc}}</p>
       <div style="display:flex;flex-direction: row;gap:4px">
-        <h3 class="moto-title">{{tier.price}} <span class=" moto-title moto-name">moto</span><span
+        <h3 class="moto-title">{{tiers[id].price}} <span class=" moto-title moto-name">moto</span><span
             style="font-weight:400">coin</span>
         </h3>
         <h4 class="moto-title">per month</h4>

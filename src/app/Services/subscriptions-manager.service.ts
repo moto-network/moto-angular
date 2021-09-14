@@ -5,47 +5,24 @@ import { ContractsService } from './BlockchainServices/contracts.service';
 import { RemoteDataService } from './remote-data.service';
 import { TransactionsService } from './transactions.service';
 import Web3 from 'web3';
-import { getContract, getProvider } from 'src/app.config';
+import {  getProvider } from 'src/app.config';
 import BigNumber from 'bignumber.js';
-import { AngularFirestore } from '@angular/fire/firestore';
-import { unescapeIdentifier } from '@angular/compiler';
-import { type } from 'os';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class SubscriptionsManagerService {
-  tiers: Tier[] | null = null;
+  tiers: Record<string,Tier> | null = null;
   tier: Tier | null = null;
   constructor(private _contracts: ContractsService,
     private _remote: RemoteDataService, private _transactions:TransactionsService) {
-    this.tiers = this.testTiers;
+
   }
-  testTiers: Tier[] = [{
-    valid: true,
-    name:"sodomy +",
-    owner: "you",
-    network: 3,
-    desc:"painless",
-    price: "433",
-    commission: "322",
-    id:"234"
-  },
-    {
-      valid: true,
-      name:"sodomy",
-      owner: "you",
-      network: 3,
-      desc:"painful",
-      price: "233",
-      commission: "332",
-      id:"2334"
-    }
-  ];
+  
 
   updateTier(modifiedTier: Tier, originalTier?: Tier | null | undefined): Promise<boolean>{
-    console.table({ modTier: modifiedTier, original: originalTier });
-    console.log("type ", typeof originalTier);
+
     return new Promise((resolve, reject) => {
       if (typeof originalTier != 'undefined') {
         if (originalTier?.name != modifiedTier.name || originalTier?.desc != modifiedTier.desc) {
@@ -59,9 +36,6 @@ export class SubscriptionsManagerService {
           .then((transactionReceipt) => {
             const dbTier = modifiedTier;
             dbTier.id = this.createTierId(dbTier.owner, dbTier.price);
-            console.log("remote tier ", dbTier);
-            this.updateTierDB(dbTier)
-              .then((result) => { console.log("updaatetierdb", result) });
             transactionReceipt.status ? resolve(this.updateTierDB(dbTier)): reject(new Error("tier update error."));
           })
           .catch((err) => {
@@ -79,8 +53,8 @@ export class SubscriptionsManagerService {
 
  
 
-  getTiers(account?: Account): Promise<Tier[]>{
-    return Promise.resolve(this.tiers!);
+  getTiers(account: Account): Promise<Record<string, Tier> | null>{
+    return this._remote.getTiers(account);
   }
 
   setTier(tier: Tier) {

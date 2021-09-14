@@ -7,6 +7,7 @@ import { Observable, Subject } from 'rxjs';
 import { ChinaDataService } from './china-data.service';
 import { map, take } from 'rxjs/operators';
 import { query } from '@angular/animations';
+import { faRecordVinyl } from '@fortawesome/free-solid-svg-icons';
 
 
 
@@ -53,7 +54,7 @@ export class RemoteDataService {
   }
 
   public verifySignature(account: Account, nonce: string, sig: string): Observable<string> {
-    console.log("gonna verify sign");
+    console.log("verifying sig");
     const formData = new FormData();
     formData.append('account', account.address);
     formData.append('nonce', nonce);
@@ -87,7 +88,7 @@ export class RemoteDataService {
     });
   }
 
-  public getTiers(account: Account): Promise<Tier | Record<string, Tier> | null> {
+  public getTiers(account: Account): Promise<Record<string, Tier> | null> {
     return this.getData<Tier>("Tiers", "owner", account.address).toPromise();
   }
 
@@ -155,24 +156,22 @@ export class RemoteDataService {
     }
   }
 
-  private getData<Data extends UniqueOwnable>(collection: string, parameter: string, value: string): Observable<Data | Record<string, Data> | null> {
-    const collectionSubject: Subject<Data | Record<string, Data> | null> = new Subject<Data | Record<string, Data> | null>();
-    const record: Record<string, Data> = {};
-    this._db
+  private getData<Data extends UniqueOwnable>(collection: string, parameter: string, value: string): Observable<Record<string, Data> | null> {
+    const collectionSubject: Subject<Record<string, Data> | null> = new Subject<Record<string, Data> | null>();
+
+    return this._db
       .collection(collection, ref => ref.where(parameter, '==', value))
       .get()
-      .subscribe((querySnapshot) => {
-        if (querySnapshot.empty) {
-          collectionSubject.next(null);
-        }
-        else {
-          querySnapshot.forEach((doc) => {
+      .pipe(
+        map(querysnapshot => querysnapshot.empty ? null : querysnapshot),
+        map(snapshot => {
+          const record: Record<string, Data> = {};
+          snapshot?.forEach((doc) => {
             let data: Data = doc.data() as Data;
             record[data.id] = data;
-            collectionSubject.next(record);
           })
-        }
-      });
-    return collectionSubject;
+          return record;
+        })
+      );
   }
 }
